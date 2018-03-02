@@ -97,96 +97,28 @@ extra_field_calculator <- function(fileName, for_year=year(Sys.Date()), FY=TRUE,
 
 }
 
-
-
-
-# Bullet chart function ---------------------------------------------------
-
-bullet_chart <- function() {
-
-
-  # TBD
-
-
-
-
-
-}
-
-################################################# TESTING
-
-
-
-## Inputs
-fileName="Indicators_Targets.com"   # NOT excel file
-fileName="data/Indicators_Targets.xlsx"  # excel file
-for_year = 2018 ## Specify Year the analysis represents
-FY = TRUE       ## Is this a fiscal year? (as opposed to calendar year)
-project_start_date <- "2016/03/01"   # as string! %Y/%D/%M
-
-##
-dataframe <- extra_field_calculator(fileName, for_year = 2018, FY = TRUE, project_start_date = project_start_date)
-df <- extra_field_calculator(fileName, for_year = 2018, FY = TRUE, project_start_date = project_start_date)
-
-
-
-
 # BULLET CHART FUNCTIONs --------------------------------------------------
-
-# 1. define low_level and percenttime as SINGLE values >>> not for each Indicator in df as done by mutate() in calculator function
-## if define both as single value >>> calculations code needed in both functions == duplication...
-## if duplicate calculation of low_level and percenttime inside chart function... not very good separation between the
-## PLOT function and CALCULATION function, should all be in one of other, or one entire function
-
-## Currently using unique() when defining Low_Level so it's defined as one value instead for each row in 'df', a bit hacky but works...
 
 # 2. text above or below indicator bar?
 
-
-
 # bullet plot Version 1 ----------------------------------------------------------
 
-bullet_chart <- function(df) {
-
-  Low_Level <- df$Low_Level[1]
-
-  g <- ggplot(data = df, aes(x = IndicatorName))
-  g <- g + geom_col(aes(y = Perc, width = 0.1, fill = BehindBy), color = "black")
-  g <- g + scale_fill_gradient("Indicator\nBehind By:", limits = c(Low_Level, 0),
-                               low = "red", high = "green", guide = FALSE)
-  g <- g + scale_y_continuous(breaks = scales::pretty_breaks())
-  g <- g + geom_point(aes(y = PercWeek, shape = "Last Week"), size = 6, stroke = 1)
-  g <- g + geom_point(aes(y = PercYear, shape = "Last Year"), size = 6, stroke = 1)
-  g <- g + scale_shape_manual(" ", values = c(23, 21))
-  g <- g + geom_col(aes(y = 100, width = 0.5), alpha = 0.25)
-  g <- g + geom_text(y = 1, aes(label = text), vjust = 1.5, hjust = 0)
-  g <- g + geom_hline(yintercept = df$PercentTime, alpha = 0.33)
-  g <- g + annotate("text", x = 0, y = df$PercentTime + 1.5, hjust = 0, label = "Today",
-                    angle = 90, alpha = 0.5, size = 5)
-  g <- g + coord_flip()
-  g <- g + labs(y = "Percent of Yearly Target\n&\n Percent of Year",
-                x = " ")
-  g <- g + ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = ""))
-  g <- g + theme_minimal()
-  g <- g + theme(axis.text.y = element_text(size = 15, face = "bold"),
-                 axis.title.x = element_text(size = 12, face = "bold",
-                                             margin = margin(t = 25, r = 0, b = 20, l = 0)),
-                 axis.text.x = element_text(size = 14, face = "bold"),
-                 title = element_text(size = 14, face = "bold"),
-                 plot.title = element_text(hjust = 0.5),
-                 plot.subtitle = element_text(hjust = 0.5, size = 8),
-                 legend.position = c(0.8, -0.1),
-                 legend.key.size = unit(1.5, "lines"))
-  g <- g + expand_limits(x = 6.75, y = 102)
-
-  return(g)
-
-}
-
-bullet_chart(df = dataframe)
-
-
-# alternative style:
+#' @title bullet_chart
+#' @description creates bullet chart with symbols
+#' @param df data frame of indicator data passed through extra_field_calculator function
+#' @return bullet chart with symbols for "last week" and "last year"
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[scales]{pretty_breaks}}
+#' @rdname bullet_chart
+#' @export
+#' @importFrom scales pretty_breaks
 
 bullet_chart <- function(df) {
 
@@ -223,10 +155,7 @@ bullet_chart <- function(df) {
 
 }
 
-bullet_chart(df = df)
-
-
-# multiple bars bullet plot -----------------------------------------------
+# bullet plot: multiple bars -----------------------------------------------
 
 bullet_chart2 <- function(df) {
 
@@ -258,4 +187,25 @@ bullet_chart2 <- function(df) {
 
 }
 
+
+
+################################################# TESTING
+
+
+
+## Inputs
+fileName="Indicators_Targets.com"   # NOT excel file
+fileName="data/Indicators_Targets.xlsx"  # excel file
+for_year = 2018 ## Specify Year the analysis represents
+FY = TRUE       ## Is this a fiscal year? (as opposed to calendar year)
+project_start_date <- "2016/03/01"   # as string! %Y/%D/%M
+
+##
+dataframe <- extra_field_calculator(fileName, for_year = 2018, FY = TRUE, project_start_date = project_start_date)
+df <- extra_field_calculator(fileName, for_year = 2018, FY = TRUE, project_start_date = project_start_date)
+
+bullet_chart(df = df)
+bullet_chart(df = dataframe)
+
 bullet_chart2(df = df)
+bullet_chart2(df = dataframe)
