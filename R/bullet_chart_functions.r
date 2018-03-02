@@ -25,7 +25,7 @@ library(testthat)
 #' @seealso
 #'  \code{\link[dplyr]{mutate}}
 
-#'  \code{\link[xlsx]{read.xlsx}}
+#'  \code{\link[readxl]{read.xlsx}}
 #' @rdname extra_field_calculator
 #' @export
 #' @importFrom dplyr mutate %>%
@@ -42,7 +42,7 @@ extra_field_calculator <- function(fileName, ShetName="Sheet1", for_year=year(Sy
   })
 
   ## Read in Excel file:
-  df <- read_xlsx(fileName, sheet = sheetName)
+  df <- readxl::read_xlsx(fileName, sheet = sheetName)
 
 
   # If df is empty, break function and output empty chart
@@ -126,38 +126,7 @@ extra_field_calculator <- function(fileName, ShetName="Sheet1", for_year=year(Sy
 
 
 
-# Bullet chart function ---------------------------------------------------
-
-bullet_chart <- function() {
-
-
-  # TBD
-
-
-
-
-
-}
-
-################################################# TESTING
-
-
-
-# ## Inputs
-# fileName="Indicators_Targets.com"   # NOT excel file
-# fileName="data/Indicators_Targets.xlsx"  # excel file
-# for_year = 2018 ## Specify Year the analysis represents
-# FY = TRUE       ## Is this a fiscal year? (as opposed to calendar year)
-# project_start_date <- "2016/03/01"   # as string! %Y/%D/%M
-#
-# ##
-# dataframe <- extra_field_calculator("data/Indicators_Targets.xlsx", for_year = 2018, FY = TRUE, project_start_date = project_start_date)
-# df <- extra_field_calculator(fileName, for_year = 2018, FY = TRUE, project_start_date = project_start_date)
-
-
-
-
-# BULLET CHART FUNCTIONs --------------------------------------------------
+# BULLET CHART FUNCTIONS --------------------------------------------------
 
 # 1. define low_level and percenttime as SINGLE values >>> not for each Indicator in df as done by mutate() in calculator function
 ## if define both as single value >>> calculations code needed in both functions == duplication...
@@ -171,7 +140,13 @@ bullet_chart <- function() {
 
 
 # bullet plot Version 1 ----------------------------------------------------------
-bullet_chart <- function(df) {
+bullet_chart <- function(fileName, ShetName="Sheet1", for_year=year(Sys.Date()),
+                         FY=TRUE, project_start_date=NULL) {
+
+  browser()
+
+  df <- extra_field_calculator(fileName, ShetName, for_year,
+                               FY, project_start_date)
 
   Low_Level <- df$Low_Level[1]
 
@@ -237,3 +212,15 @@ bullet_chart2 <- function(df) {
 
 
 }
+
+# ## Inputs
+# fileName="Indicators_Targets.com"   # NOT excel file
+# fileName="data/Indicators_Targets.xlsx"  # excel file
+# for_year = 2018 ## Specify Year the analysis represents
+# FY = TRUE       ## Is this a fiscal year? (as opposed to calendar year)
+# project_start_date <- "2016/03/01"   # as string! %Y/%D/%M
+#
+# ##
+# dataframe <- extra_field_calculator("data/Indicators_Targets.xlsx", for_year = 2018, FY = TRUE, project_start_date = project_start_date)
+# df <- extra_field_calculator(fileName, for_year = 2018, FY = TRUE, project_start_date = project_start_date)
+
