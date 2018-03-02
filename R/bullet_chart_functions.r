@@ -1,12 +1,38 @@
 ### These functions allow one to input an excel file and output a nice bulletchart
-
 library(ggplot2)
 library(dplyr)
 library(lubridate)
-library(xlsx)
+library(readxl)
 library(testthat)
 
-extra_field_calculator <- function(fileName, for_year=year(Sys.Date()), FY=TRUE, project_start_date=NULL) {
+
+#' @title extra_field_calculator
+#' @description FUNCTION_DESCRIPTION
+#' @param fileName PARAM_DESCRIPTION
+#' @param for_year PARAM_DESCRIPTION, Default: year(Sys.Date())
+#' @param FY PARAM_DESCRIPTION, Default: TRUE
+#' @param project_start_date PARAM_DESCRIPTION, Default: NULL
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' extra_field_calculator("data/Indicators_Targets.xlsx", for_year = 2018, FY = TRUE,
+#' project_start_date = project_start_date)
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[dplyr]{mutate}}
+
+#'  \code{\link[readxl]{read.xlsx}}
+#' @rdname extra_field_calculator
+#' @export
+#' @importFrom dplyr mutate %>%
+#' @importFrom testthat test_that
+#' @importFrom readxl read_xlsx
+extra_field_calculator <- function(fileName, ShetName="Sheet1", for_year=year(Sys.Date()),
+                                   FY=TRUE, project_start_date=NULL) {
 
   test_that("Does the specified file exist in the directory?", {
 
@@ -16,7 +42,7 @@ extra_field_calculator <- function(fileName, for_year=year(Sys.Date()), FY=TRUE,
   })
 
   ## Read in Excel file:
-  df <- read.xlsx(fileName, sheetName = "Sheet1", stringsAsFactors = FALSE)
+  df <- readxl::read_xlsx(fileName, sheet = sheetName)
 
 
   # If df is empty, break function and output empty chart
@@ -27,7 +53,7 @@ extra_field_calculator <- function(fileName, for_year=year(Sys.Date()), FY=TRUE,
 
 
   # Create percentage variables
-  df <- df %>% mutate(Perc = Actual/(Target + 0.0000000000001) * 100,
+  df <- df %>% dplyr::mutate(Perc = Actual/(Target + 0.0000000000001) * 100,
                       PercWeek = Actual_lastWeek/(Target + 0.0000000000001) * 100,
                       PercYear = Actual_lastYear/(Target + 0.0000000000001) * 100)
 
@@ -97,12 +123,22 @@ extra_field_calculator <- function(fileName, for_year=year(Sys.Date()), FY=TRUE,
 
 }
 
+<<<<<<< HEAD
 # BULLET CHART FUNCTIONs --------------------------------------------------
+=======
+
+
+
+# BULLET CHART FUNCTIONS --------------------------------------------------
+>>>>>>> cf1457e7e791c0881c1716eb3ea5de42858a9be6
 
 # 2. text above or below indicator bar?
 
 # bullet plot Version 1 ----------------------------------------------------------
+bullet_chart <- function(fileName, ShetName="Sheet1", for_year=year(Sys.Date()),
+                         FY=TRUE, project_start_date=NULL) {
 
+<<<<<<< HEAD
 #' @title bullet_chart
 #' @description creates bullet chart with symbols
 #' @param df data frame of indicator data passed through extra_field_calculator function
@@ -121,6 +157,12 @@ extra_field_calculator <- function(fileName, for_year=year(Sys.Date()), FY=TRUE,
 #' @importFrom scales pretty_breaks
 
 bullet_chart <- function(df) {
+=======
+  browser()
+
+  df <- extra_field_calculator(fileName, ShetName, for_year,
+                               FY, project_start_date)
+>>>>>>> cf1457e7e791c0881c1716eb3ea5de42858a9be6
 
   Low_Level <- df$Low_Level[1]
 
@@ -155,7 +197,11 @@ bullet_chart <- function(df) {
 
 }
 
+<<<<<<< HEAD
 # bullet plot: multiple bars -----------------------------------------------
+=======
+# multiple bars bullet plot -----------------------------------------------
+>>>>>>> cf1457e7e791c0881c1716eb3ea5de42858a9be6
 
 bullet_chart2 <- function(df) {
 
@@ -187,6 +233,7 @@ bullet_chart2 <- function(df) {
 
 }
 
+<<<<<<< HEAD
 
 
 ################################################# TESTING
@@ -209,3 +256,16 @@ bullet_chart(df = dataframe)
 
 bullet_chart2(df = df)
 bullet_chart2(df = dataframe)
+=======
+# ## Inputs
+# fileName="Indicators_Targets.com"   # NOT excel file
+# fileName="data/Indicators_Targets.xlsx"  # excel file
+# for_year = 2018 ## Specify Year the analysis represents
+# FY = TRUE       ## Is this a fiscal year? (as opposed to calendar year)
+# project_start_date <- "2016/03/01"   # as string! %Y/%D/%M
+#
+# ##
+# dataframe <- extra_field_calculator("data/Indicators_Targets.xlsx", for_year = 2018, FY = TRUE, project_start_date = project_start_date)
+# df <- extra_field_calculator(fileName, for_year = 2018, FY = TRUE, project_start_date = project_start_date)
+
+>>>>>>> cf1457e7e791c0881c1716eb3ea5de42858a9be6
