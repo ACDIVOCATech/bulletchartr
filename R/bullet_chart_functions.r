@@ -123,14 +123,7 @@ extra_field_calculator <- function(fileName, ShetName="Sheet1", for_year=year(Sy
 
 }
 
-<<<<<<< HEAD
-# BULLET CHART FUNCTIONs --------------------------------------------------
-=======
-
-
-
 # BULLET CHART FUNCTIONS --------------------------------------------------
->>>>>>> cf1457e7e791c0881c1716eb3ea5de42858a9be6
 
 # 2. text above or below indicator bar?
 
@@ -138,7 +131,6 @@ extra_field_calculator <- function(fileName, ShetName="Sheet1", for_year=year(Sy
 bullet_chart <- function(fileName, ShetName="Sheet1", for_year=year(Sys.Date()),
                          FY=TRUE, project_start_date=NULL) {
 
-<<<<<<< HEAD
 #' @title bullet_chart
 #' @description creates bullet chart with symbols
 #' @param df data frame of indicator data passed through extra_field_calculator function
@@ -157,12 +149,11 @@ bullet_chart <- function(fileName, ShetName="Sheet1", for_year=year(Sys.Date()),
 #' @importFrom scales pretty_breaks
 
 bullet_chart <- function(df) {
-=======
+
   browser()
 
   df <- extra_field_calculator(fileName, ShetName, for_year,
                                FY, project_start_date)
->>>>>>> cf1457e7e791c0881c1716eb3ea5de42858a9be6
 
   Low_Level <- df$Low_Level[1]
 
@@ -197,11 +188,8 @@ bullet_chart <- function(df) {
 
 }
 
-<<<<<<< HEAD
-# bullet plot: multiple bars -----------------------------------------------
-=======
+
 # multiple bars bullet plot -----------------------------------------------
->>>>>>> cf1457e7e791c0881c1716eb3ea5de42858a9be6
 
 bullet_chart2 <- function(df) {
 
@@ -233,30 +221,9 @@ bullet_chart2 <- function(df) {
 
 }
 
-<<<<<<< HEAD
-
-
 ################################################# TESTING
 
 
-
-## Inputs
-fileName="Indicators_Targets.com"   # NOT excel file
-fileName="data/Indicators_Targets.xlsx"  # excel file
-for_year = 2018 ## Specify Year the analysis represents
-FY = TRUE       ## Is this a fiscal year? (as opposed to calendar year)
-project_start_date <- "2016/03/01"   # as string! %Y/%D/%M
-
-##
-dataframe <- extra_field_calculator(fileName, for_year = 2018, FY = TRUE, project_start_date = project_start_date)
-df <- extra_field_calculator(fileName, for_year = 2018, FY = TRUE, project_start_date = project_start_date)
-
-bullet_chart(df = df)
-bullet_chart(df = dataframe)
-
-bullet_chart2(df = df)
-bullet_chart2(df = dataframe)
-=======
 # ## Inputs
 # fileName="Indicators_Targets.com"   # NOT excel file
 # fileName="data/Indicators_Targets.xlsx"  # excel file
@@ -267,5 +234,3 @@ bullet_chart2(df = dataframe)
 # ##
 # dataframe <- extra_field_calculator("data/Indicators_Targets.xlsx", for_year = 2018, FY = TRUE, project_start_date = project_start_date)
 # df <- extra_field_calculator(fileName, for_year = 2018, FY = TRUE, project_start_date = project_start_date)
-
->>>>>>> cf1457e7e791c0881c1716eb3ea5de42858a9be6
