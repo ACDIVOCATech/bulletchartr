@@ -119,7 +119,7 @@ bullet_chart <- function() {
 
 ## Inputs
 fileName="Indicators_Targets.com"   # NOT excel file
-fileName="Indicators_Targets.xlsx"  # excel file
+fileName="data/Indicators_Targets.xlsx"  # excel file
 for_year = 2018 ## Specify Year the analysis represents
 FY = TRUE       ## Is this a fiscal year? (as opposed to calendar year)
 project_start_date <- "2016/03/01"   # as string! %Y/%D/%M
