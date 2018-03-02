@@ -4,8 +4,8 @@
 \alias{extra_field_calculator}
 \title{extra_field_calculator}
 \usage{
-extra_field_calculator(fileName, for_year = year(Sys.Date()), FY = TRUE,
-  project_start_date = NULL)
+extra_field_calculator(fileName, ShetName = "Sheet1",
+  for_year = year(Sys.Date()), FY = TRUE, project_start_date = NULL)
 }
 \arguments{
 \item{fileName}{PARAM_DESCRIPTION}

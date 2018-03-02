@@ -2,7 +2,7 @@
 library(ggplot2)
 library(dplyr)
 library(lubridate)
-library(xlsx)
+library(readxl)
 library(testthat)
 
 
@@ -30,8 +30,9 @@ library(testthat)
 #' @export
 #' @importFrom dplyr mutate %>%
 #' @importFrom testthat test_that
-#' @importFrom xlsx read.xlsx
-extra_field_calculator <- function(fileName, for_year=year(Sys.Date()), FY=TRUE, project_start_date=NULL) {
+#' @importFrom readxl read_xlsx
+extra_field_calculator <- function(fileName, ShetName="Sheet1", for_year=year(Sys.Date()),
+                                   FY=TRUE, project_start_date=NULL) {
 
   test_that("Does the specified file exist in the directory?", {
 
@@ -41,7 +42,7 @@ extra_field_calculator <- function(fileName, for_year=year(Sys.Date()), FY=TRUE,
   })
 
   ## Read in Excel file:
-  df <- xlsx::read.xlsx(fileName, sheetName = "Sheet1", stringsAsFactors = FALSE)
+  df <- read_xlsx(fileName, sheet = sheetName)
 
 
   # If df is empty, break function and output empty chart

@@ -3,5 +3,5 @@
 export(extra_field_calculator)
 importFrom(dplyr,"%>%")
 importFrom(dplyr,mutate)
+importFrom(readxl,read_xlsx)
 importFrom(testthat,test_that)
-importFrom(xlsx,read.xlsx)
