@@ -170,49 +170,6 @@ bullet_chart <- function() {
 
 
 # bullet plot Version 1 ----------------------------------------------------------
-
-bullet_chart <- function(df) {
-
-  Low_Level <- df$Low_Level[1]
-
-  g <- ggplot(data = df, aes(x = IndicatorName))
-  g <- g + geom_col(aes(y = Perc, width = 0.1, fill = BehindBy), color = "black")
-  g <- g + scale_fill_gradient("Indicator\nBehind By:", limits = c(Low_Level, 0),
-                               low = "red", high = "green", guide = FALSE)
-  g <- g + scale_y_continuous(breaks = scales::pretty_breaks())
-  g <- g + geom_point(aes(y = PercWeek, shape = "Last Week"), size = 6, stroke = 1)
-  g <- g + geom_point(aes(y = PercYear, shape = "Last Year"), size = 6, stroke = 1)
-  g <- g + scale_shape_manual(" ", values = c(23, 21))
-  g <- g + geom_col(aes(y = 100, width = 0.5), alpha = 0.25)
-  g <- g + geom_text(y = 1, aes(label = text), vjust = 1.5, hjust = 0)
-  g <- g + geom_hline(yintercept = df$PercentTime, alpha = 0.33)
-  g <- g + annotate("text", x = 0, y = df$PercentTime + 1.5, hjust = 0, label = "Today",
-                    angle = 90, alpha = 0.5, size = 5)
-  g <- g + coord_flip()
-  g <- g + labs(y = "Percent of Yearly Target\n&\n Percent of Year",
-                x = " ")
-  g <- g + ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = ""))
-  g <- g + theme_minimal()
-  g <- g + theme(axis.text.y = element_text(size = 15, face = "bold"),
-                 axis.title.x = element_text(size = 12, face = "bold",
-                                             margin = margin(t = 25, r = 0, b = 20, l = 0)),
-                 axis.text.x = element_text(size = 14, face = "bold"),
-                 title = element_text(size = 14, face = "bold"),
-                 plot.title = element_text(hjust = 0.5),
-                 plot.subtitle = element_text(hjust = 0.5, size = 8),
-                 legend.position = c(0.8, -0.1),
-                 legend.key.size = unit(1.5, "lines"))
-  g <- g + expand_limits(x = 6.75, y = 102)
-
-  return(g)
-
-}
-
-bullet_chart(df = dataframe)
-
-
-# alternative style:
-
 bullet_chart <- function(df) {
 
   Low_Level <- df$Low_Level[1]
@@ -248,9 +205,6 @@ bullet_chart <- function(df) {
 
 }
 
-bullet_chart(df = df)
-
-
 # multiple bars bullet plot -----------------------------------------------
 
 bullet_chart2 <- function(df) {
@@ -282,5 +236,3 @@ bullet_chart2 <- function(df) {
 
 
 }
-
-bullet_chart2(df = df)

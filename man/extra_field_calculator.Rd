@@ -26,9 +26,15 @@ FUNCTION_DESCRIPTION
 DETAILS
 }
 \examples{
+extra_field_calculator("data/Indicators_Targets.xlsx", for_year = 2018, FY = TRUE,
+project_start_date = project_start_date)
 \dontrun{
 if(interactive()){
  #EXAMPLE1
  }
 }
+}
+\seealso{
+\code{\link[dplyr]{mutate}}
+ \code{\link[xlsx]{read.xlsx}}
 }
