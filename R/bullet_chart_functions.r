@@ -1,17 +1,15 @@
 ### These functions allow one to input an excel file and output a nice bulletchart
-library(ggplot2)
-library(dplyr)
-library(lubridate)
-library(readxl)
-library(testthat)
 
+
+# internal functions ------------------------------------------------------
 
 #' @title extra_field_calculator
-#' @description FUNCTION_DESCRIPTION
-#' @param fileName PARAM_DESCRIPTION
-#' @param for_year PARAM_DESCRIPTION, Default: year(Sys.Date())
-#' @param FY PARAM_DESCRIPTION, Default: TRUE
-#' @param project_start_date PARAM_DESCRIPTION, Default: NULL
+#' @description internal function for calculating the extra fields needed for bullet charts
+#' @param fileName path of Excel file
+#' @param sheet_name specify which sheet in Excel file
+#' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
+#' @param FY current fiscal year, Default: TRUE
+#' @param project_start_date specify start date of the project as %Y/%D/%M string
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -27,22 +25,23 @@ library(testthat)
 
 #'  \code{\link[readxl]{read.xlsx}}
 #' @rdname extra_field_calculator
-#' @export
-#' @importFrom dplyr mutate %>%
-#' @importFrom testthat test_that
+#' @importFrom dplyr mutate %>% case_when
+#' @importFrom testthat test_that expect_equal
 #' @importFrom readxl read_xlsx
-extra_field_calculator <- function(fileName, ShetName="Sheet1", for_year=year(Sys.Date()),
-                                   FY=TRUE, project_start_date=NULL) {
+#' @importFrom lubridate year month
 
-  test_that("Does the specified file exist in the directory?", {
+extra_field_calculator <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
+                                   FY = TRUE, project_start_date) {
 
-    expect_equal(TRUE, file.exists(fileName)
+  testthat::test_that("Does the specified file exist in the directory?", {
+
+    testthat::expect_equal(TRUE, file.exists(file_name)
     )
 
   })
 
   ## Read in Excel file:
-  df <- readxl::read_xlsx(fileName, sheet = sheetName)
+  df <- readxl::read_xlsx(path = file_name, sheet = sheet_name)
 
 
   # If df is empty, break function and output empty chart
@@ -75,10 +74,6 @@ extra_field_calculator <- function(fileName, ShetName="Sheet1", for_year=year(Sy
 
   # Calculate "Today" within specified Fiscal Year
   if(FY == TRUE){
-    ## ||TODO If FY is true, then we know the project starts in some october, so we don't actually give a crap about the
-    ## Startdate... this section of the if should be simplified so that it doesn't require `project_start_date` at all
-    ## because as you can see from the inputs with defaults, right now the user only needs to provide a filename. Cool, no?
-    ## I think we should be able to make this work just with the `for_year` indicator. What do you think?
 
     if(month(project_start_date) != 10) {project_start_date <- as.Date(paste("01 10", year(project_start_date)), format = "%d %m %Y")}
 
@@ -123,19 +118,21 @@ extra_field_calculator <- function(fileName, ShetName="Sheet1", for_year=year(Sy
 
 }
 
-# BULLET CHART FUNCTIONS --------------------------------------------------
+# plotting functions --------------------------------------------------
 
 # 2. text above or below indicator bar?
 
-# bullet plot Version 1 ----------------------------------------------------------
-bullet_chart <- function(fileName, ShetName="Sheet1", for_year=year(Sys.Date()),
-                         FY=TRUE, project_start_date=NULL) {
+# bullet plot Version 1: symbols ----------------------------------------------------------
 
 #' @title bullet_chart
 #' @description creates bullet chart with symbols
-#' @param df data frame of indicator data passed through extra_field_calculator function
+#' @param fileName path of Excel file
+#' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
+#' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
+#' @param FY current fiscal year, Default: TRUE
+#' @param project_start_date specify start date of the project as %Y/%D/%M string
 #' @return bullet chart with symbols for "last week" and "last year"
-#' @details DETAILS
+#' @details DETAILS...
 #' @examples
 #' \dontrun{
 #' if(interactive()){
@@ -143,21 +140,20 @@ bullet_chart <- function(fileName, ShetName="Sheet1", for_year=year(Sys.Date()),
 #'  }
 #' }
 #' @seealso
-#'  \code{\link[scales]{pretty_breaks}}
+#'  \code{\link[ggplot2]{geom_col}}
 #' @rdname bullet_chart
 #' @export
-#' @importFrom scales pretty_breaks
+#' @import ggplot2
 
-bullet_chart <- function(df) {
+bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
+                         FY = TRUE, project_start_date) {
 
-  browser()
-
-  df <- extra_field_calculator(fileName, ShetName, for_year,
+  df <- extra_field_calculator(file_name, sheet_name, for_year,
                                FY, project_start_date)
 
   Low_Level <- df$Low_Level[1]
 
-  g <- ggplot(df, aes(x = IndicatorName)) +
+  g <- ggplot2::ggplot(df, aes(x = IndicatorName)) +
     geom_col(aes(y = Perc, width = 0.1, fill = BehindBy), color = "black") +
     scale_fill_gradient("Indicator\nBehind By:", limits = c(Low_Level, 0), low = "red", high = "green",
                         guide = FALSE) +
@@ -189,13 +185,38 @@ bullet_chart <- function(df) {
 }
 
 
-# multiple bars bullet plot -----------------------------------------------
+# bullet plot Version 2: multiple bars -----------------------------------------------
 
-bullet_chart2 <- function(df) {
+#' @title bullet_chart2
+#' @description create bullet chart with multiple bars
+#' @param fileName path of Excel file
+#' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
+#' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
+#' @param FY current fiscal year, Default: TRUE
+#' @param project_start_date specify start date of the project as %Y/%D/%M string
+#' @return bullet chart with multiple bars
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[ggplot2]{ggplot}}
+#' @rdname bullet_chart2
+#' @export
+#' @import ggplot2
 
-  Low_Level <- -0.2 * df$PercentTime %>% unique()
+bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
+                          FY = TRUE, project_start_date) {
 
-  g <- ggplot(df, aes(x = IndicatorName)) +
+  df <- extra_field_calculator(file_name, sheet_name, for_year,
+                               FY, project_start_date)
+
+  Low_Level <- df$Low_Level[1]
+
+  g <- ggplot2::ggplot(df, aes(x = IndicatorName)) +
     geom_col(aes(y = PercWeek, width = 0.5), alpha = 0.6) +
     geom_col(aes(y = PercYear, width = 0.75), alpha = 0.3) +
     geom_col(aes(y = Perc, width = 0.15, fill = BehindBy), color = "black") +
@@ -218,19 +239,4 @@ bullet_chart2 <- function(df) {
 
   print(g)
 
-
 }
-
-################################################# TESTING
-
-
-# ## Inputs
-# fileName="Indicators_Targets.com"   # NOT excel file
-# fileName="data/Indicators_Targets.xlsx"  # excel file
-# for_year = 2018 ## Specify Year the analysis represents
-# FY = TRUE       ## Is this a fiscal year? (as opposed to calendar year)
-# project_start_date <- "2016/03/01"   # as string! %Y/%D/%M
-#
-# ##
-# dataframe <- extra_field_calculator("data/Indicators_Targets.xlsx", for_year = 2018, FY = TRUE, project_start_date = project_start_date)
-# df <- extra_field_calculator(fileName, for_year = 2018, FY = TRUE, project_start_date = project_start_date)

@@ -4,23 +4,25 @@
 \alias{extra_field_calculator}
 \title{extra_field_calculator}
 \usage{
-extra_field_calculator(fileName, ShetName = "Sheet1",
-  for_year = year(Sys.Date()), FY = TRUE, project_start_date = NULL)
+extra_field_calculator(file_name, sheet_name = "Sheet1",
+  for_year = year(Sys.Date()), FY = TRUE, project_start_date)
 }
 \arguments{
-\item{fileName}{PARAM_DESCRIPTION}
+\item{sheet_name}{specify which sheet in Excel file}
 
-\item{for_year}{PARAM_DESCRIPTION, Default: year(Sys.Date())}
+\item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
 
-\item{FY}{PARAM_DESCRIPTION, Default: TRUE}
+\item{FY}{current fiscal year, Default: TRUE}
 
-\item{project_start_date}{PARAM_DESCRIPTION, Default: NULL}
+\item{project_start_date}{specify start date of the project as %Y/%D/%M string}
+
+\item{fileName}{path of Excel file}
 }
 \value{
 OUTPUT_DESCRIPTION
 }
 \description{
-FUNCTION_DESCRIPTION
+internal function for calculating the extra fields needed for bullet charts
 }
 \details{
 DETAILS
@@ -36,5 +38,5 @@ if(interactive()){
 }
 \seealso{
 \code{\link[dplyr]{mutate}}
- \code{\link[xlsx]{read.xlsx}}
+ \code{\link[readxl]{read.xlsx}}
 }
