@@ -8,15 +8,15 @@ extra_field_calculator(file_name, sheet_name = "Sheet1",
   for_year = year(Sys.Date()), FY = TRUE, project_start_date)
 }
 \arguments{
+\item{file_name}{path of Excel file}
+
 \item{sheet_name}{specify which sheet in Excel file}
 
 \item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
 
 \item{FY}{current fiscal year, Default: TRUE}
 
-\item{project_start_date}{specify start date of the project as %Y/%D/%M string}
-
-\item{fileName}{path of Excel file}
+\item{project_start_date}{specify start date of the project as \%Y/\%D/\%M string}
 }
 \value{
 OUTPUT_DESCRIPTION
@@ -38,5 +38,5 @@ if(interactive()){
 }
 \seealso{
 \code{\link[dplyr]{mutate}}
- \code{\link[readxl]{read.xlsx}}
+ \code{\link[readxl]{read_excel}}
 }

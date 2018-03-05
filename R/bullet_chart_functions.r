@@ -5,11 +5,11 @@
 
 #' @title extra_field_calculator
 #' @description internal function for calculating the extra fields needed for bullet charts
-#' @param fileName path of Excel file
+#' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file
 #' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
 #' @param FY current fiscal year, Default: TRUE
-#' @param project_start_date specify start date of the project as %Y/%D/%M string
+#' @param project_start_date specify start date of the project as \%Y/\%D/\%M string
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -23,7 +23,7 @@
 #' @seealso
 #'  \code{\link[dplyr]{mutate}}
 
-#'  \code{\link[readxl]{read.xlsx}}
+#'  \code{\link[readxl]{read_excel}}
 #' @rdname extra_field_calculator
 #' @importFrom dplyr mutate %>% case_when
 #' @importFrom testthat test_that expect_equal
@@ -126,11 +126,11 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1", for_year = 
 
 #' @title bullet_chart
 #' @description creates bullet chart with symbols
-#' @param fileName path of Excel file
+#' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
 #' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
 #' @param FY current fiscal year, Default: TRUE
-#' @param project_start_date specify start date of the project as %Y/%D/%M string
+#' @param project_start_date specify start date of the project as \%Y/\%D/\%M string
 #' @return bullet chart with symbols for "last week" and "last year"
 #' @details DETAILS...
 #' @examples
@@ -140,7 +140,7 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1", for_year = 
 #'  }
 #' }
 #' @seealso
-#'  \code{\link[ggplot2]{geom_col}}
+#'  \code{\link[ggplot2]{geom_bar}}
 #' @rdname bullet_chart
 #' @export
 #' @import ggplot2
@@ -189,11 +189,11 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.D
 
 #' @title bullet_chart2
 #' @description create bullet chart with multiple bars
-#' @param fileName path of Excel file
+#' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
 #' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
 #' @param FY current fiscal year, Default: TRUE
-#' @param project_start_date specify start date of the project as %Y/%D/%M string
+#' @param project_start_date specify start date of the project as \%Y/\%D/\%M string
 #' @return bullet chart with multiple bars
 #' @details DETAILS
 #' @examples
@@ -203,7 +203,7 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.D
 #'  }
 #' }
 #' @seealso
-#'  \code{\link[ggplot2]{ggplot}}
+#'  \code{\link[ggplot2]{geom_bar}}
 #' @rdname bullet_chart2
 #' @export
 #' @import ggplot2
