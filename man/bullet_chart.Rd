@@ -14,9 +14,9 @@ bullet_chart(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
 
 \item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
 
-\item{FY}{current fiscal year, Default: TRUE}
+\item{FY}{fiscal year or calendar year? Default: TRUE}
 
-\item{project_start_date}{specify start date of the project as \%Y/\%D/\%M string}
+\item{project_start_date}{specify start date of the project as \%Y/\%D/\%M format string}
 }
 \value{
 bullet chart with symbols for "last week" and "last year"
@@ -25,15 +25,18 @@ bullet chart with symbols for "last week" and "last year"
 creates bullet chart with symbols
 }
 \details{
-DETAILS...
+The bar for each Indicator show the progression along the horizontal-axis presenting
+the percentage #' of the yearly target completed. This axis also shows the percent of the year
+gone by with the vertical line indicating what exact percentage "Today" is, along this percentage.
+
+Each bar is colored "green" if the Indicator completion is close to or past "Today", "orange" if
+it's close, and "red" if it is far off track.
 }
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+ bullet_chart(file_name = "data/Indicators_Targets.xlsx", project_start_date = "2016/03/01")
 }
 }
 \seealso{
-\code{\link[ggplot2]{geom_bar}}
+\code{\link[ggplot2]{geom_bar}}, \code{\link[ggplot2]{scale_shape_manual}}
 }

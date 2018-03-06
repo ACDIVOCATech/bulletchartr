@@ -14,9 +14,9 @@ extra_field_calculator(file_name, sheet_name = "Sheet1",
 
 \item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
 
-\item{FY}{current fiscal year, Default: TRUE}
+\item{FY}{fiscal year or calendar year? Default: TRUE}
 
-\item{project_start_date}{specify start date of the project as \%Y/\%D/\%M string}
+\item{project_start_date}{specify start date of the project as \%Y/\%D/\%M format string}
 }
 \value{
 OUTPUT_DESCRIPTION

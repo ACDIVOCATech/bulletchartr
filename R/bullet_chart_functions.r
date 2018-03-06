@@ -8,8 +8,8 @@
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file
 #' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
-#' @param FY current fiscal year, Default: TRUE
-#' @param project_start_date specify start date of the project as \%Y/\%D/\%M string
+#' @param FY fiscal year or calendar year? Default: TRUE
+#' @param project_start_date specify start date of the project as \%Y/\%D/\%M format string
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
@@ -129,18 +129,21 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1", for_year = 
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
 #' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
-#' @param FY current fiscal year, Default: TRUE
-#' @param project_start_date specify start date of the project as \%Y/\%D/\%M string
+#' @param FY fiscal year or calendar year? Default: TRUE
+#' @param project_start_date specify start date of the project as \%Y/\%D/\%M format string
 #' @return bullet chart with symbols for "last week" and "last year"
-#' @details DETAILS...
+#' @details The bar for each Indicator show the progression along the horizontal-axis presenting
+#' the percentage #' of the yearly target completed. This axis also shows the percent of the year
+#' gone by with the vertical line indicating what exact percentage "Today" is, along this percentage.
+#'
+#' Each bar is colored "green" if the Indicator completion is close to or past "Today", "orange" if
+#' it's close, and "red" if it is far off track.
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#'  bullet_chart(file_name = "data/Indicators_Targets.xlsx", project_start_date = "2016/03/01")
 #' }
 #' @seealso
-#'  \code{\link[ggplot2]{geom_bar}}
+#'  \code{\link[ggplot2]{geom_bar}}, \code{\link[ggplot2]{scale_manual}}
 #' @rdname bullet_chart
 #' @export
 #' @import ggplot2
@@ -154,13 +157,13 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.D
   Low_Level <- df$Low_Level[1]
 
   g <- ggplot2::ggplot(df, aes(x = IndicatorName)) +
-    geom_col(aes(y = Perc, width = 0.1, fill = BehindBy), color = "black") +
+    geom_col(aes(y = Perc, fill = BehindBy), width = 0.1, color = "black") +
     scale_fill_gradient("Indicator\nBehind By:", limits = c(Low_Level, 0), low = "red", high = "green",
                         guide = FALSE) +
     geom_point(aes(y = PercWeek, shape = "Last Week"), size = 6, stroke = 1) +
     geom_point(aes(y = PercYear, shape = "Last Year"), size = 6, stroke = 1) +
     scale_shape_manual(" ", values = c(23, 21)) +
-    geom_col(aes(y = 100, width = 0.5), alpha = 0.25) +
+    geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
     geom_text(y = 1, aes(label = text), vjust = -1.5, hjust = 0) +
     geom_hline(yintercept = df$PercentTime, alpha = 0.33) +
     annotate("text", x = 0, y = df$PercentTime + 1.5, hjust = 0, label = "Today",
@@ -171,7 +174,8 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.D
     ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
     theme_minimal() +
     theme(axis.text.y = element_text(size = 15, face = "bold"),
-          axis.title.x = element_text(face = "bold", size = 10),
+          axis.title.x = element_text(face = "bold", size = 10,
+                                      margin = margin(t = 25, r = 0, b = 20, l = 0)),
           axis.text.x = element_text(face = "bold", size = 14),
           title = element_text(face = "bold", size = 14),
           plot.title = element_text(hjust = 0.5),
@@ -192,15 +196,16 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.D
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
 #' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
-#' @param FY current fiscal year, Default: TRUE
-#' @param project_start_date specify start date of the project as \%Y/\%D/\%M string
+#' @param FY fiscal year or calendar year? Default: TRUE
+#' @param project_start_date specify start date of the project as \%Y/\%D/\%M format string
 #' @return bullet chart with multiple bars
-#' @details DETAILS
+#' @details This version conforms more closely with the standard bullet chart design. This function
+#' uses different thicknesses for the bars as the benchmarks for previous time points to further
+#' accentuate the difference graphically.
 #' @examples
 #' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
+#' bullet_chart2(file_name = "data/Indicators_Targets.xlsx", project_start_date = "2016/03/01")
+#'
 #' }
 #' @seealso
 #'  \code{\link[ggplot2]{geom_bar}}
@@ -217,9 +222,9 @@ bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
   Low_Level <- df$Low_Level[1]
 
   g <- ggplot2::ggplot(df, aes(x = IndicatorName)) +
-    geom_col(aes(y = PercWeek, width = 0.5), alpha = 0.6) +
-    geom_col(aes(y = PercYear, width = 0.75), alpha = 0.3) +
-    geom_col(aes(y = Perc, width = 0.15, fill = BehindBy), color = "black") +
+    geom_col(aes(y = PercWeek), width = 0.5, alpha = 0.6) +
+    geom_col(aes(y = PercYear), width = 0.75, alpha = 0.3) +
+    geom_col(aes(y = Perc, fill = BehindBy), width = 0.15, color = "black") +
     scale_fill_gradient("Indicator\nBehind By:", limits = c(Low_Level, 0), low = "red", high = "green") +
     geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
     geom_hline(yintercept = df$PercentTime, alpha = 0.33) +
@@ -230,7 +235,8 @@ bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
     ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
     theme_minimal() +
     theme(axis.text.y = element_text(size = 15, face = "bold"),
-          axis.title.x = element_text(face = "bold", size = 10),
+          axis.title.x = element_text(face = "bold", size = 10,
+                                      margin = margin(t = 25, r = 0, b = 20, l = 0)),
           axis.text.x = element_text(face = "bold", size = 12),
           title = element_text(face = "bold"),
           plot.title = element_text(hjust = 0.5),

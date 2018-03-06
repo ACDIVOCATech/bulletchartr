@@ -14,9 +14,9 @@ bullet_chart2(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
 
 \item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
 
-\item{FY}{current fiscal year, Default: TRUE}
+\item{FY}{fiscal year or calendar year? Default: TRUE}
 
-\item{project_start_date}{specify start date of the project as \%Y/\%D/\%M string}
+\item{project_start_date}{specify start date of the project as \%Y/\%D/\%M format string}
 }
 \value{
 bullet chart with multiple bars
@@ -29,9 +29,8 @@ DETAILS
 }
 \examples{
 \dontrun{
-if(interactive()){
- #EXAMPLE1
- }
+bullet_chart2(file_name = "data/Indicators_Targets.xlsx", project_start_date = "2016/03/01")
+
 }
 }
 \seealso{
