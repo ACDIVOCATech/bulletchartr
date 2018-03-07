@@ -189,7 +189,7 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.D
 }
 
 
-# bullet plot Version 2: multiple bars -----------------------------------------------
+# bullet plot Version 2: multiple width bars -----------------------------------------------
 
 #' @title bullet_chart2
 #' @description create bullet chart with multiple bars
@@ -225,7 +225,7 @@ bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
     geom_col(aes(y = PercWeek), width = 0.5, alpha = 0.6) +
     geom_col(aes(y = PercYear), width = 0.75, alpha = 0.3) +
     geom_col(aes(y = Perc, fill = BehindBy), width = 0.15, color = "black") +
-    scale_fill_gradient("Indicator\nBehind By:", limits = c(Low_Level, 0), low = "red", high = "green") +
+    scale_fill_gradient("Indicator\nBehind By:", limits = c(Low_Level, 0), low = "red3", high = "green3") +
     geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
     geom_hline(yintercept = df$PercentTime, alpha = 0.33) +
     annotate("text", x = 0, y = df$PercentTime + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
@@ -246,3 +246,89 @@ bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
   print(g)
 
 }
+
+
+
+# bullet plot Version 3: actual Stephen FEW  -------------------------------------------------
+
+#' @title bullet_chart3
+#' @description FUNCTION_DESCRIPTION
+#' @param file_name PARAM_DESCRIPTION
+#' @param sheet_name PARAM_DESCRIPTION, Default: 'Sheet1'
+#' @param for_year PARAM_DESCRIPTION, Default: year(Sys.Date())
+#' @param FY PARAM_DESCRIPTION, Default: TRUE
+#' @param project_start_date PARAM_DESCRIPTION
+#' @return OUTPUT_DESCRIPTION
+#' @details DETAILS
+#' @examples
+#' \dontrun{
+#' if(interactive()){
+#'  #EXAMPLE1
+#'  }
+#' }
+#' @seealso
+#'  \code{\link[ggplot2]{ggplot}}
+#' @rdname bullet_chart3
+#' @export
+#' @import ggplot2
+
+bullet_chart3 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
+                          FY = TRUE, project_start_date) {
+
+  df <- extra_field_calculator(file_name, sheet_name, for_year,
+                               FY, project_start_date)
+
+  Low_Level <- df$Low_Level[1]
+
+  g <- ggplot2::ggplot(df, aes(x = IndicatorName)) +
+    scale_fill_gradient("", limits = c(Low_Level, 0), low = "darkred", high = "darkgreen") +
+    geom_col(aes(y = PercWeek, fill = BehindBy), width = 0.4, alpha = 0.7) +
+    geom_col(aes(y = PercYear, fill = BehindBy), width = 0.4, alpha = 0.4) +
+    geom_col(aes(y = Perc), fill = "black", width = 0.1, color = "black", alpha = 0.9) +
+    geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
+    geom_hline(yintercept = df$PercentTime, alpha = 0.33) +
+    annotate("text", x = 0, y = df$PercentTime + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
+    coord_flip() +
+    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
+         x = " ") +
+    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
+    theme_minimal() +
+    theme(axis.text.y = element_text(size = 15, face = "bold"),
+          axis.title.x = element_text(face = "bold", size = 10,
+                                      margin = margin(t = 25, r = 0, b = 20, l = 0)),
+          axis.text.x = element_text(face = "bold", size = 12),
+          title = element_text(face = "bold"),
+          plot.title = element_text(hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5, size = 8),
+          legend.position = "none")
+
+  print(g)
+
+}
+
+
+
+# bullet chart Version 4: last year LINE ----------------------------------
+
+ggplot(df, aes(IndicatorName)) +
+  geom_col(aes(y = Perc, width = 0.15, fill = BehindBy), color = "black") +
+  scale_fill_gradient("Indicator\nBehind By:", limits = c(LowLVL, 0), low = "red", high = "green") +
+  geom_point(aes(y = PercWeek, shape = "Last Week"), size = 4.5, stroke = 3) +
+  scale_shape_manual(" ", values = 124) +
+  geom_col(aes(y = 100, width = 0.5), alpha = 0.25) +
+  geom_text(y = 1, aes(label = text), vjust = -1.5, hjust = 0) +
+  coord_flip() +
+  labs(y = "Percent of Yearly Target\n&\n Percent of Year",
+       x = " ") +
+  ggtitle(paste("Ongoing Indicator Accomplishment (", forYear, ")", sep = "")) +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 15, face = "bold"),
+        axis.title.x = element_text(face = "bold", size = 10),
+        axis.text.x = element_text(face = "bold", size = 12),
+        title = element_text(face = "bold"),
+        plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5, size = 8),
+        legend.position = "none")
+
+
+

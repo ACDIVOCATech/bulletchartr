@@ -25,7 +25,9 @@ bullet chart with multiple bars
 create bullet chart with multiple bars
 }
 \details{
-DETAILS
+This version conforms more closely with the standard bullet chart design. This function
+uses different thicknesses for the bars as the benchmarks for previous time points to further
+accentuate the difference graphically.
 }
 \examples{
 \dontrun{

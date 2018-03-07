@@ -1,6 +1,6 @@
 ---
 title: "Vignette Title"
-author: "Vignette Author"
+author: "Ryo Nakagawara"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -16,37 +16,103 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r include=FALSE}
+library(readxl)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+
+df <- readxl::read_xlsx(system.file("data/Indicators_Targets_full.xlsx", package = "bulletchartr"), 
+                        sheet = "Sheet1")
+
+for_year <- 2018
+PercentTime <- 42.984257357974
+Low_Level <- -8.5968514715948
+
+```
+
+```{r, echo=FALSE}
+df %>% select(IndicatorName, Actual, Actual_lastWeek, Actual_lastYear, Target) %>% glimpse()
+```
+
 This package is based on visualizing M&E deliverables or "Indicators", however, it can be handy for anyone that depends on monitoring Key Performance Indicators (KPIs) or needs to track progress against different targets. 
 
+To use the functions included in this package, one needs to provide an Excel (.xlsx) file containing these exact columns (in the order of appearance): `IndicatorName`, `Actual`, `Actual_lastWeek`, `Actual_lastYear`, and `Target`. The following sections will describe these variables, as well as the extra variables calculated within the function in more detail. In later versions we hope to streamline this process to make it easier to use. 
 
+* `IndicatorName`: the name of the indicator or KPI that you are measuring
+* `Actual`: the value of the indicator at the current time of viewing ("Today")
+* `Actual_lastWeek`: Last week's value of the indicator
+* `Actual_lastYear`: Last year's value of the indicator
+* `Target`: the target value for the indicator (used to calculate the percent variables)
 
+The percentages along the horizontal axis are calculated by: 
 
+* `Perc`: Value of indicator as percent of yearly taget and percent of the year at the current time
+* `PercWeek`: Last week's value of the indicator as percent of yearly target and percent of the year
+* `PercYear`: Last year's value of the indicator as percent of yearly target and percent of the year
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+`BehindBy` is calculated by: `df$Perc - PercentTime` and shows how far behind the current value of the indicator is to the target value for the current time and shows up as the text above each bar 
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+* "OK!": Shows that the current value of the indicator meets the target value for the current time
+* "Need ___ more": Shows exactly how much more of the indicator is needed to reach the target value for the current time
 
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
 
 ## Figures
 
 The figure sizes have been customised so that you can easily put two images side-by-side. 
 
 ```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+ggplot2::ggplot(df, aes(x = IndicatorName)) +
+    geom_col(aes(y = Perc, fill = BehindBy), width = 0.1, color = "black") +
+    scale_fill_gradient("Indicator\nBehind By:", limits = c(Low_Level, 0), low = "red", high = "green",
+                        guide = FALSE) +
+    geom_point(aes(y = PercWeek, shape = "Last Week"), size = 6, stroke = 1) +
+    geom_point(aes(y = PercYear, shape = "Last Year"), size = 6, stroke = 1) +
+    scale_shape_manual(" ", values = c(23, 21)) +
+    geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
+    geom_text(y = 1, aes(label = text), vjust = -1.5, hjust = 0) +
+    geom_hline(yintercept = PercentTime, alpha = 0.33) +
+    annotate("text", x = 0, y = PercentTime + 1.5, hjust = 0, label = "Today",
+             angle = 90, alpha = 0.5, size = 5) +
+    coord_flip() +
+    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
+         x = " ") +
+    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
+    theme_minimal() +
+    theme(axis.text.y = element_text(size = 15, face = "bold"),
+          axis.title.x = element_text(face = "bold", size = 10,
+                                      margin = margin(t = 25, r = 0, b = 20, l = 0)),
+          axis.text.x = element_text(face = "bold", size = 14),
+          title = element_text(face = "bold", size = 14),
+          plot.title = element_text(hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5, size = 8),
+          legend.position = c(0.8, -0.12),
+          legend.key.size = unit(1.5, "lines")) +
+    expand_limits(x = 6.75, y = 102)
+
+
+ggplot2::ggplot(df, aes(x = IndicatorName)) +
+    geom_col(aes(y = PercWeek), width = 0.5, alpha = 0.6) +
+    geom_col(aes(y = PercYear), width = 0.75, alpha = 0.3) +
+    geom_col(aes(y = Perc, fill = BehindBy), width = 0.15, color = "black") +
+    scale_fill_gradient("Indicator\nBehind By:", limits = c(Low_Level, 0), low = "red", high = "green") +
+    geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
+    geom_hline(yintercept = PercentTime, alpha = 0.33) +
+    annotate("text", x = 0, y = PercentTime + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
+    coord_flip() +
+    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
+         x = " ") +
+    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
+    theme_minimal() +
+    theme(axis.text.y = element_text(size = 15, face = "bold"),
+          axis.title.x = element_text(face = "bold", size = 10,
+                                      margin = margin(t = 25, r = 0, b = 20, l = 0)),
+          axis.text.x = element_text(face = "bold", size = 12),
+          title = element_text(face = "bold"),
+          plot.title = element_text(hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5, size = 8),
+          legend.position = "none")
+
 ```
 
 You can enable figure captions by `fig_caption: yes` in YAML:

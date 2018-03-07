@@ -38,5 +38,5 @@ it's close, and "red" if it is far off track.
 }
 }
 \seealso{
-\code{\link[ggplot2]{geom_bar}}, \code{\link[ggplot2]{scale_shape_manual}}
+\code{\link[ggplot2]{geom_bar}}, \code{\link[ggplot2]{scale_manual}}
 }
