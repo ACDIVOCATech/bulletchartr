@@ -66,7 +66,7 @@ last week's value (darker hue) and last year's value (lighter hue). The bar for 
 `bullet_chart2()` is similar to the above but uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
 accentuate the difference graphically.
 
-```{r, fig.show='hold'}
+```{r, fig.show='hold', echo=FALSE}
 
 bullet_chart(file_name = system.file("data/Indicators_Targets_full.xlsx", package = "bulletchartr"), 
              project_start_date = "2016/03/01")
@@ -84,7 +84,7 @@ last week (diamond) and last year (circle)
 for the indicator along with a black vertical line representing the indicator value at this time
 last year.
 
-```{r, fig.show='hold'}
+```{r, fig.show='hold', echo=FALSE}
 
 bullet_chart3(file_name = system.file("data/Indicators_Targets_full.xlsx", package = "bulletchartr"), 
              project_start_date = "2016/03/01")
@@ -98,4 +98,4 @@ bullet_chart4(file_name = system.file("data/Indicators_Targets_full.xlsx", packa
 
 ## Future Direction
 
-Currently more geared specifically toward non-R using M&E people, however direction towards being able to take different inputs and more customizable for more general use cases. 
+Currently this package is geared more toward non-R using M&E people (therefore, the Excel file input), however as we develop this package further we want to go towards being able to take different file inputs and make the bullet_chart functions more customizable for general use cases. 

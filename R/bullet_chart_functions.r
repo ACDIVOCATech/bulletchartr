@@ -120,9 +120,9 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1", for_year = 
 
 # plotting functions --------------------------------------------------
 
-# bullet plot Version 1: symbols ----------------------------------------------------------
+# bullet plot Version 3: symbols ----------------------------------------------------------
 
-#' @title bullet_chart
+#' @title bullet_chart3
 #' @description creates bullet chart with symbols
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
@@ -142,11 +142,11 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1", for_year = 
 #'  bullet_chart(file_name = "data/Indicators_Targets.xlsx", project_start_date = "2016/03/01")
 #' @seealso
 #'  \code{\link[ggplot2]{geom_bar}}, \code{\link[ggplot2]{scale_manual}}
-#' @rdname bullet_chart
+#' @rdname bullet_chart3
 #' @export
 #' @import ggplot2
 
-bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
+bullet_chart3 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
                          FY = TRUE, project_start_date) {
 
   df <- extra_field_calculator(file_name, sheet_name, for_year,
@@ -245,9 +245,9 @@ bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
 
 
 
-# bullet plot Version 3: actual Stephen FEW  -------------------------------------------------
+# bullet plot Version 1: actual Stephen FEW  -------------------------------------------------
 
-#' @title bullet_chart3
+#' @title bullet_chart
 #' @description create a Stephen Few bullet chart
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
@@ -260,11 +260,11 @@ bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
 #' bullet_chart3("data/Indicators_Targets_ext.xlsx", project_start_date = "2016/03/01")
 #' @seealso
 #'  \code{\link[ggplot2]{ggplot}}
-#' @rdname bullet_chart3
+#' @rdname bullet_chart
 #' @export
 #' @import ggplot2
 
-bullet_chart3 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
+bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
                           FY = TRUE, project_start_date) {
 
   df <- extra_field_calculator(file_name, sheet_name, for_year,

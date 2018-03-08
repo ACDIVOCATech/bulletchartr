@@ -19,21 +19,15 @@ bullet_chart(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
 \item{project_start_date}{specify start date of the project as \%Y/\%D/\%M format string}
 }
 \description{
-creates bullet chart with symbols
+create a Stephen Few bullet chart
 }
 \details{
-The bar for each Indicator show the progression along the horizontal-axis presenting
-the percentage of the yearly target completed. This axis also shows the percent of the year
-gone by with the vertical line indicating what exact percentage "Today" is, along this percentage.
-
-Each bar is colored "green" if the Indicator completion is close to or past "Today", "orange" if
-it's close, and "red" if it is far off track.
-
-The symbols represent the indicator value for last week (diamond) and last year (circle).
+This version of the bullet chart most closely resembles Stephen Few's design. The single black bar represents
+the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue).
 }
 \examples{
- bullet_chart(file_name = "data/Indicators_Targets.xlsx", project_start_date = "2016/03/01")
+bullet_chart3("data/Indicators_Targets_ext.xlsx", project_start_date = "2016/03/01")
 }
 \seealso{
-\code{\link[ggplot2]{geom_bar}}, \code{\link[ggplot2]{scale_manual}}
+\code{\link[ggplot2]{ggplot}}
 }
