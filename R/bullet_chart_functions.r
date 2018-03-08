@@ -8,12 +8,13 @@
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file
 #' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
-#' @param FY fiscal year or calendar year? Default: TRUE
-#' @param project_start_date specify start date of the project as \%Y/\%D/\%M format string
+#' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
+#' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
+#' format "YYYY/MM/DD", Default: fis
 #' @return OUTPUT_DESCRIPTION
 #' @details DETAILS
 #' @examples
-#' extra_field_calculator("data/Indicators_Targets.xlsx", for_year = 2018, FY = TRUE,
+#' extra_field_calculator("data/Indicators_targets.xlsx", for_year = 2018, FY = TRUE,
 #' project_start_date = project_start_date)
 #' \dontrun{
 #' if(interactive()){
@@ -31,7 +32,7 @@
 #' @importFrom lubridate year month
 
 extra_field_calculator <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
-                                   FY = TRUE, project_start_date) {
+                                   cal_type="fis") {
 
   testthat::test_that("Does the specified file exist in the directory?", {
 
@@ -52,65 +53,73 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1", for_year = 
 
 
   # Create percentage variables
-  df <- df %>% dplyr::mutate(Perc = Actual/(Target + 0.0000000000001) * 100,
-                      PercWeek = Actual_lastWeek/(Target + 0.0000000000001) * 100,
-                      PercYear = Actual_lastYear/(Target + 0.0000000000001) * 100)
+  df <- df %>% dplyr::mutate(perc = actual/(target + 0.0000000000001) * 100,
+                      perc_week = actual_lastweek/(target + 0.0000000000001) * 100,
+                      perc_year = actual_lastyear/(target + 0.0000000000001) * 100)
 
   # Protect against values greater than 100
   df <- df %>% mutate(
-    Perc = case_when(
-      Perc > 100 ~ 100,
-      TRUE ~ Perc
+    perc = case_when(
+      perc > 100 ~ 100,
+      TRUE ~ perc
     ),
-    PercWeek = case_when(
-      PercWeek > 100 ~ 100,
-      TRUE ~ PercWeek
+    perc_week = case_when(
+      perc_week > 100 ~ 100,
+      TRUE ~ perc_week
     ),
-    PercYear = case_when(
-      PercYear > 100 ~ 100,
-      TRUE ~ PercYear
+    perc_year = case_when(
+      perc_year > 100 ~ 100,
+      TRUE ~ perc_year
     )
   )
 
-  # Calculate "Today" within specified Fiscal Year
-  if(FY == TRUE){
-
-    if(month(project_start_date) != 10) {project_start_date <- as.Date(paste("01 10", year(project_start_date)), format = "%d %m %Y")}
-
-    df <- df %>% mutate(PercentTime = as.numeric(Sys.Date() - as.Date(paste(format(as.Date(project_start_date), "%d %b"),
-                                                                            for_year - 1), format = "%d %b %Y")) / 365.25 * 100)
-
-  } else {
-
-    df <- df %>% mutate(PercentTime = as.numeric(Sys.Date() - as.Date(project_start_date)) / 365.25 * 100)
-
+  # Calculate "Today" within specified Year
+  if(cal_type=="cal"){
+    start_time <- paste0(for_year,"/01/01")
+  } else if(cal_type=="fis"){
+    ## Need to make distinction if we're still in the same calendar year or not
+    if(month(Sys.Date()) >= 10) {
+      start_time <- paste0(for_year,"/10/01")
+      } else {
+        start_time <- paste0(for_year-1,"/10/01")
+      }
+  } else{
+    start_time=cal_type
   }
 
-  # Percent
-  df <- df %>% mutate(PercentTime = case_when(
-    PercentTime > 100 ~ 100,
-    TRUE ~ PercentTime
+  ## Calculate point in year
+  PT <- as.numeric((Sys.Date() -
+                      as.Date(start_time, "%Y/%m/%d"))) / 365.25 * 100
+
+  ## Ensure that it's less than 100 and assign
+  if(PT>100) PT=100
+  df <- mutate(df,percent_time = PT)
+
+  # percent
+  df <- df %>% mutate(percent_time = case_when(
+    percent_time > 100 ~ 100,
+    TRUE ~ percent_time
   ))
 
   # Value for Indicator lateness or on time
-  df <- df %>% mutate(text = PercentTime/100 * Target - Actual)
+  df <- df %>% mutate(text = percent_time/100 * target - actual)
 
   # Calculate how far behind TODAY the percent for the indicator is
-  df <- df %>% mutate(BehindBy = Perc - PercentTime)
+  df <- df %>% mutate(behind_by = perc - percent_time)
 
   df <- df %>% mutate(text = case_when(
 
-    BehindBy > 0 ~ "OK!",
-    BehindBy <= 0 & !is.na(BehindBy) ~ paste("Need ", round(as.numeric(text)), " more", sep = "")
+    behind_by > 0 ~ "OK!",
+    behind_by <= 0 & !is.na(behind_by) ~ paste("Need ", round(as.numeric(text)), " more", sep = "")
 
   ))
 
   # Behind By to lower limit = 0
-  df <- df %>% mutate(Low_Level = -0.2 * df$PercentTime)
+  df <- df %>% mutate(low_level = -0.2 * df$percent_time)
 
-  df <- df %>% mutate(BehindBy = case_when(
-    BehindBy > 0 ~ 0,
-    BehindBy < Low_Level ~ Low_Level
+  df <- df %>% mutate(behind_by = case_when(
+    behind_by > 0 ~ 0,
+    behind_by < low_level ~ low_level
   ))
 
   ## output
@@ -126,8 +135,9 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1", for_year = 
 #' @description creates bullet chart with symbols
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
-#' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
-#' @param FY fiscal year or calendar year? Default: TRUE
+#' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
+#' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
+#' format "YYYY/MM/DD", Default: fis
 #' @param project_start_date specify start date of the project as \%Y/\%D/\%M format string
 #' @details The bar for each Indicator show the progression along the horizontal-axis presenting
 #' the percentage of the yearly target completed. This axis also shows the percent of the year
@@ -139,7 +149,7 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1", for_year = 
 #' The symbols represent the indicator value for last week (diamond) and last year (circle).
 #'
 #' @examples
-#'  bullet_chart(file_name = "data/Indicators_Targets.xlsx", project_start_date = "2016/03/01")
+#'  bullet_chart(file_name = "data/Indicators_targets.xlsx", project_start_date = "2016/03/01")
 #' @seealso
 #'  \code{\link[ggplot2]{geom_bar}}, \code{\link[ggplot2]{scale_manual}}
 #' @rdname bullet_chart3
@@ -147,27 +157,27 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1", for_year = 
 #' @import ggplot2
 
 bullet_chart3 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
-                         FY = TRUE, project_start_date) {
+                          cal_type="fis") {
 
   df <- extra_field_calculator(file_name, sheet_name, for_year,
-                               FY, project_start_date)
+                               cal_type)
 
-  Low_Level <- df$Low_Level[1]
+  low_level <- df$low_level[1]
 
-  g <- ggplot2::ggplot(df, aes(x = IndicatorName)) +
-    geom_col(aes(y = Perc, fill = BehindBy), width = 0.1, color = "black") +
-    scale_fill_gradient("Indicator\nBehind By:", limits = c(Low_Level, 0), low = "red", high = "green",
+  g <- ggplot2::ggplot(df, aes(x = indicator_name)) +
+    geom_col(aes(y = perc, fill = behind_by), width = 0.1, color = "black") +
+    scale_fill_gradient("Indicator\nBehind By:", limits = c(low_level, 0), low = "red", high = "green",
                         guide = FALSE) +
-    geom_point(aes(y = PercWeek, shape = "Last Week"), size = 6, stroke = 1) +
-    geom_point(aes(y = PercYear, shape = "Last Year"), size = 6, stroke = 1) +
+    geom_point(aes(y = perc_week, shape = "Last Week"), size = 6, stroke = 1) +
+    geom_point(aes(y = perc_year, shape = "Last Year"), size = 6, stroke = 1) +
     scale_shape_manual(" ", values = c(23, 21)) +
     geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
     geom_text(y = 1, aes(label = text), vjust = -1.5, hjust = 0) +
-    geom_hline(yintercept = df$PercentTime, alpha = 0.33) +
-    annotate("text", x = 0, y = df$PercentTime + 1.5, hjust = 0, label = "Today",
+    geom_hline(yintercept = df$percent_time, alpha = 0.33) +
+    annotate("text", x = 0, y = df$percent_time + 1.5, hjust = 0, label = "Today",
              angle = 90, alpha = 0.5, size = 5) +
     coord_flip() +
-    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
+    labs(y = "percent of Yearly target\n&\n percent of Year",
          x = " ") +
     ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
     theme_minimal() +
@@ -192,15 +202,16 @@ bullet_chart3 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
 #' @title bullet_chart2
 #' @description create bullet chart with bars of varying width
 #' @param file_name path of Excel file
-#' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
-#' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
+#' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
+#' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
+#' format "YYYY/MM/DD", Default: fis
 #' @param FY fiscal year or calendar year? Default: TRUE
 #' @param project_start_date specify start date of the project as \%Y/\%D/\%M format string
 #' @details This version conforms more closely with the standard bullet chart design. This function
 #' uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
 #' accentuate the difference graphically.
 #' @examples
-#' bullet_chart2(file_name = "data/Indicators_Targets.xlsx", project_start_date = "2016/03/01")
+#' bullet_chart2(file_name = "data/Indicators_targets.xlsx", project_start_date = "2016/03/01")
 #'
 #' @seealso
 #'  \code{\link[ggplot2]{geom_bar}}
@@ -209,23 +220,23 @@ bullet_chart3 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
 #' @import ggplot2
 
 bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
-                          FY = TRUE, project_start_date) {
+                          cal_type="fis") {
 
   df <- extra_field_calculator(file_name, sheet_name, for_year,
-                               FY, project_start_date)
+                               cal_type)
 
-  Low_Level <- df$Low_Level[1]
+  low_level <- df$low_level[1]
 
-  g <- ggplot2::ggplot(df, aes(x = IndicatorName)) +
-    geom_col(aes(y = PercWeek), width = 0.5, alpha = 0.6) +
-    geom_col(aes(y = PercYear), width = 0.75, alpha = 0.3) +
-    geom_col(aes(y = Perc, fill = BehindBy), width = 0.15, color = "black") +
-    scale_fill_gradient("Indicator\nBehind By:", limits = c(Low_Level, 0), low = "red3", high = "green3") +
+  g <- ggplot2::ggplot(df, aes(x = indicator_name)) +
+    geom_col(aes(y = perc_week), width = 0.5, alpha = 0.6) +
+    geom_col(aes(y = perc_year), width = 0.75, alpha = 0.3) +
+    geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+    scale_fill_gradient("Indicator\nBehind By:", limits = c(low_level, 0), low = "red3", high = "green3") +
     geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
-    geom_hline(yintercept = df$PercentTime, alpha = 0.33) +
-    annotate("text", x = 0, y = df$PercentTime + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
+    geom_hline(yintercept = df$percent_time, alpha = 0.33) +
+    annotate("text", x = 0, y = df$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
     coord_flip() +
-    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
+    labs(y = "percent of Yearly target\n&\n percent of Year",
          x = " ") +
     ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
     theme_minimal() +
@@ -252,12 +263,13 @@ bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
 #' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
-#' @param FY fiscal year or calendar year? Default: TRUE
-#' @param project_start_date specify start date of the project as \%Y/\%D/\%M format string
+#' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
+#' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
+#' format "YYYY/MM/DD", Default: fis
 #' @details This version of the bullet chart most closely resembles Stephen Few's design. The single black bar represents
 #' the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue).
 #' @examples
-#' bullet_chart3("data/Indicators_Targets_ext.xlsx", project_start_date = "2016/03/01")
+#' bullet_chart3("data/Indicators_targets_ext.xlsx", project_start_date = "2016/03/01")
 #' @seealso
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname bullet_chart
@@ -265,23 +277,23 @@ bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
 #' @import ggplot2
 
 bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
-                          FY = TRUE, project_start_date) {
+                         cal_type="fis") {
 
   df <- extra_field_calculator(file_name, sheet_name, for_year,
-                               FY, project_start_date)
+                               cal_type)
 
-  Low_Level <- df$Low_Level[1]
+  low_level <- df$low_level[1]
 
-  g <- ggplot2::ggplot(df, aes(x = IndicatorName)) +
-    scale_fill_gradient("", limits = c(Low_Level, 0), low = "darkred", high = "darkgreen") +
-    geom_col(aes(y = PercWeek, fill = BehindBy), width = 0.4, alpha = 0.7) +
-    geom_col(aes(y = PercYear, fill = BehindBy), width = 0.4, alpha = 0.4) +
-    geom_col(aes(y = Perc), fill = "black", width = 0.1, color = "black", alpha = 0.9) +
+  g <- ggplot2::ggplot(df, aes(x = indicator_name)) +
+    scale_fill_gradient("", limits = c(low_level, 0), low = "darkred", high = "darkgreen") +
+    geom_col(aes(y = perc_week, fill = behind_by), width = 0.4, alpha = 0.7) +
+    geom_col(aes(y = perc_year, fill = behind_by), width = 0.4, alpha = 0.4) +
+    geom_col(aes(y = perc), fill = "black", width = 0.1, color = "black", alpha = 0.9) +
     geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
-    geom_hline(yintercept = df$PercentTime, alpha = 0.33) +
-    annotate("text", x = 0, y = df$PercentTime + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
+    geom_hline(yintercept = df$percent_time, alpha = 0.33) +
+    annotate("text", x = 0, y = df$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
     coord_flip() +
-    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
+    labs(y = "percent of Yearly target\n&\n percent of Year",
          x = " ") +
     ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
     theme_minimal() +
@@ -308,15 +320,16 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.D
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
 #' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
-#' @param FY fiscal year or calendar year? Default: TRUE
-#' @param project_start_date specify start date of the project as \%Y/\%D/\%M format string
+#' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
+#' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
+#' format "YYYY/MM/DD", Default: fis
 #' @details This version of the bullet chart shows a single colored bar representing the current value
 #' for the indicator along with a black vertical line representing the indicator value at this time
 #' last year. The definition for the vertical line can be changed to your preference (such as a more
-#' general "Target" value), however at the current time you should change the values of "Actual_lastYear"
+#' general "target" value), however at the current time you should change the values of "actual_lastyear"
 #' in the Excel file but not the variable name itself.
 #' @examples
-#' bullet_chart4("data/Indicators_Targets_ext.xlsx", project_start_date = "2016/03/01")
+#' bullet_chart4("data/Indicators_targets_ext.xlsx", project_start_date = "2016/03/01")
 #' @seealso
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname bullet_chart4
@@ -324,22 +337,22 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.D
 #' @import ggplot2
 
 bullet_chart4 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
-                          FY = TRUE, project_start_date) {
+                          cal_type="fis") {
 
   df <- extra_field_calculator(file_name, sheet_name, for_year,
-                               FY, project_start_date)
+                               cal_type)
 
-  Low_Level <- df$Low_Level[1]
+  low_level <- df$low_level[1]
 
-  g <- ggplot2::ggplot(df, aes(x = IndicatorName)) +
-    geom_col(aes(y = Perc, fill = BehindBy), width = 0.15, color = "black") +
-    scale_fill_gradient("", limits = c(Low_Level, 0), low = "darkred", high = "darkgreen") +
-    geom_point(aes(y = PercYear, shape = "Last Year"), size = 4.5, stroke = 3) +
+  g <- ggplot2::ggplot(df, aes(x = indicator_name)) +
+    geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+    scale_fill_gradient("", limits = c(low_level, 0), low = "darkred", high = "darkgreen") +
+    geom_point(aes(y = perc_year, shape = "Last Year"), size = 4.5, stroke = 3) +
     scale_shape_manual(" ", values = 124) +
     geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
     geom_text(y = 1, aes(label = text), vjust = -1.5, hjust = 0) +
     coord_flip() +
-    labs(y = "Percent of Yearly Target",
+    labs(y = "percent of Yearly target",
          x = " ") +
     ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
     theme_minimal() +

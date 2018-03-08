@@ -5,7 +5,7 @@
 \title{extra_field_calculator}
 \usage{
 extra_field_calculator(file_name, sheet_name = "Sheet1",
-  for_year = year(Sys.Date()), FY = TRUE, project_start_date)
+  for_year = year(Sys.Date()), calType = "fis")
 }
 \arguments{
 \item{file_name}{path of Excel file}
@@ -14,9 +14,9 @@ extra_field_calculator(file_name, sheet_name = "Sheet1",
 
 \item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
 
-\item{FY}{fiscal year or calendar year? Default: TRUE}
-
-\item{project_start_date}{specify start date of the project as \%Y/\%D/\%M format string}
+\item{calType}{define what calendar you are using. Options are "fis" for fiscal year starting
+October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
+format "YYYY/MM/DD", Default: fis}
 }
 \value{
 OUTPUT_DESCRIPTION

@@ -1,5 +1,5 @@
 ---
-title: "Vignette Title"
+title: "Intro to bulletchartr"
 author: "Ryo Nakagawara"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -23,27 +23,26 @@ library(lubridate)
 library(ggplot2)
 library(bulletchartr)
 
-df <- readxl::read_xlsx(system.file("data/Indicators_Targets_full.xlsx", package = "bulletchartr"), 
-                        sheet = "Sheet1")
+df <- readxl::read_xlsx("../data/Indicators_Targets_full.xlsx",sheet = "Sheet1")
 
 for_year <- 2018
-PercentTime <- 42.984257357974
-Low_Level <- -8.5968514715948
+percent_time <- 42.984257357974
+low_level <- -8.5968514715948
 
 ```
 
 ```{r, echo=FALSE}
-df %>% select(IndicatorName, Actual, Actual_lastWeek, Actual_lastYear, Target) %>% glimpse()
+df %>% select(indicator_name, actual, actual_lastweek, actual_lastyear, target) %>% glimpse()
 ```
 
 This package is based on visualizing M&E deliverables or "Indicators", however, it can be handy for anyone that depends on monitoring Key Performance Indicators (KPIs) or needs to track progress against different targets. 
 
-To use the functions included in this package, one needs to provide an Excel (.xlsx) file containing these exact columns (in the order of appearance): `IndicatorName`, `Actual`, `Actual_lastWeek`, `Actual_lastYear`, and `Target`. The following sections will describe these variables, as well as the extra variables calculated within the function in more detail. In later versions we hope to streamline this process to make it easier to use. 
+To use the functions included in this package, one needs to provide an Excel (.xlsx) file containing these exact columns (in the order of appearance): `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `Target`. The following sections will describe these variables, as well as the extra variables calculated within the function in more detail. In later versions we hope to streamline this process to make it easier to use. 
 
-* `IndicatorName`: the name of the indicator or KPI that you are measuring
-* `Actual`: the value of the indicator at the current time of viewing ("Today")
-* `Actual_lastWeek`: Last week's value of the indicator
-* `Actual_lastYear`: Last year's value of the indicator
+* `indicator_name`: the name of the indicator or KPI that you are measuring
+* `actual`: the value of the indicator at the current time of viewing ("Today")
+* `actual_lastweek`: Last week's value of the indicator
+* `actual_lastyear`: Last year's value of the indicator
 * `Target`: the target value for the indicator (used to calculate the percent variables)
 
 The percentages along the horizontal axis are calculated by: 
@@ -63,38 +62,61 @@ The percentages along the horizontal axis are calculated by:
 `bullet_chart()` function most closely resembles Stephen Few's design. The single black bar represents the current value of the indicator while the different hue columns represent 
 last week's value (darker hue) and last year's value (lighter hue). The bar for each Indicator show the progression along the horizontal-axis presenting the percentage of the yearly target completed. This axis also shows the percent of the year gone by with the vertical line indicating what exact percentage "Today" is, along this percentage. Each bar is colored "green" if the Indicator completion is close to or past "Today", "orange" if it's close, and "red" if it is far off track.
 
+```{r, fig.width=6,fig.height=5, echo=TRUE}
+bullet_chart(file_name ="../data/Indicators_Targets_full.xlsx")
+```
+
 `bullet_chart2()` is similar to the above but uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
 accentuate the difference graphically.
 
-```{r, fig.show='hold', echo=FALSE}
-
-bullet_chart(file_name = system.file("data/Indicators_Targets_full.xlsx", package = "bulletchartr"), 
-             project_start_date = "2016/03/01")
-
-bullet_chart2(file_name = system.file("data/Indicators_Targets_full.xlsx", package = "bulletchartr"), 
-             project_start_date = "2016/03/01")
-
+```{r, fig.width=6, fig.height=5, echo=TRUE}
+bullet_chart2(file_name = "../data/Indicators_Targets_full.xlsx")
 ```
 
 
 `bullet_chart3()` shows the a version with different symbols representing the indicator value for 
 last week (diamond) and last year (circle)
 
+
+
+```{r,fig.width=6,fig.height=5, echo=TRUE}
+bullet_chart3(file_name = "../data/Indicators_Targets_full.xlsx")
+```
+
+
 `bullet_chart4()` provides a version with a single colored bar representing the current value
 for the indicator along with a black vertical line representing the indicator value at this time
 last year.
 
-```{r, fig.show='hold', echo=FALSE}
-
-bullet_chart3(file_name = system.file("data/Indicators_Targets_full.xlsx", package = "bulletchartr"), 
-             project_start_date = "2016/03/01")
-
-bullet_chart4(file_name = system.file("data/Indicators_Targets_full.xlsx", package = "bulletchartr"), 
-             project_start_date = "2016/03/01")
-
+```{r,fig.width=6,fig.height=5, echo=TRUE}
+bullet_chart4(file_name = "../data/Indicators_Targets_full.xlsx")
 
 ```
 
+## Different calendars
+
+Today shown on a Fiscal Year calendar (considering that today's phisical date is `r Sys.Date()`.)
+
+```{r,fig.width=6,fig.height=5, echo=TRUE}
+bullet_chart3(file_name = "../data/Indicators_Targets_full.xlsx",cal_type = "fis")
+```
+
+... or on a calendar year
+
+```{r,fig.width=6,fig.height=5, echo=TRUE}
+bullet_chart3(file_name = "../data/Indicators_Targets_full.xlsx",cal_type = "cal")
+```
+
+... or using a custom date fed directly into the plotting function.
+
+```{r,fig.width=6,fig.height=5, echo=TRUE}
+bullet_chart3(file_name = "../data/Indicators_Targets_full.xlsx",cal_type = "2018/02/15")
+```
+
+
+## small version
+
+...
 
 ## Future Direction
 
