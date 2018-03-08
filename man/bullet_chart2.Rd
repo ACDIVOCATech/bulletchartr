@@ -18,22 +18,17 @@ bullet_chart2(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
 
 \item{project_start_date}{specify start date of the project as \%Y/\%D/\%M format string}
 }
-\value{
-bullet chart with multiple bars
-}
 \description{
-create bullet chart with multiple bars
+create bullet chart with bars of varying width
 }
 \details{
 This version conforms more closely with the standard bullet chart design. This function
-uses different thicknesses for the bars as the benchmarks for previous time points to further
+uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
 accentuate the difference graphically.
 }
 \examples{
-\dontrun{
 bullet_chart2(file_name = "data/Indicators_Targets.xlsx", project_start_date = "2016/03/01")
 
-}
 }
 \seealso{
 \code{\link[ggplot2]{geom_bar}}

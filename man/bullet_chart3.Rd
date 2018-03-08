@@ -8,31 +8,25 @@ bullet_chart3(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
   FY = TRUE, project_start_date)
 }
 \arguments{
-\item{file_name}{PARAM_DESCRIPTION}
+\item{file_name}{path of Excel file}
 
-\item{sheet_name}{PARAM_DESCRIPTION, Default: 'Sheet1'}
+\item{sheet_name}{specify which sheet in Excel file, Default: "Sheet1"}
 
-\item{for_year}{PARAM_DESCRIPTION, Default: year(Sys.Date())}
+\item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
 
-\item{FY}{PARAM_DESCRIPTION, Default: TRUE}
+\item{FY}{fiscal year or calendar year? Default: TRUE}
 
-\item{project_start_date}{PARAM_DESCRIPTION}
-}
-\value{
-OUTPUT_DESCRIPTION
+\item{project_start_date}{specify start date of the project as \%Y/\%D/\%M format string}
 }
 \description{
-FUNCTION_DESCRIPTION
+create a Stephen Few bullet chart
 }
 \details{
-DETAILS
+This version of the bullet chart most closely resembles Stephen Few's design. The single black bar represents
+the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue).
 }
 \examples{
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+bullet_chart3("data/Indicators_Targets_ext.xlsx", project_start_date = "2016/03/01")
 }
 \seealso{
 \code{\link[ggplot2]{ggplot}}

@@ -3,6 +3,7 @@
 export(bullet_chart)
 export(bullet_chart2)
 export(bullet_chart3)
+export(bullet_chart4)
 import(ggplot2)
 importFrom(dplyr,"%>%")
 importFrom(dplyr,case_when)

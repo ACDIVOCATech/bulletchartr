@@ -21,6 +21,7 @@ library(readxl)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
+library(bulletchartr)
 
 df <- readxl::read_xlsx(system.file("data/Indicators_Targets_full.xlsx", package = "bulletchartr"), 
                         sheet = "Sheet1")
@@ -51,87 +52,50 @@ The percentages along the horizontal axis are calculated by:
 * `PercWeek`: Last week's value of the indicator as percent of yearly target and percent of the year
 * `PercYear`: Last year's value of the indicator as percent of yearly target and percent of the year
 
-`BehindBy` is calculated by: `df$Perc - PercentTime` and shows how far behind the current value of the indicator is to the target value for the current time and shows up as the text above each bar 
+`BehindBy` is calculated by: `Perc - PercentTime` and shows how far behind the current value of the indicator is to the target value for the current time and shows up as the text above each bar: 
 
 * "OK!": Shows that the current value of the indicator meets the target value for the current time
 * "Need ___ more": Shows exactly how much more of the indicator is needed to reach the target value for the current time
 
 
-## Figures
+## bullet_chart() functions!
 
-The figure sizes have been customised so that you can easily put two images side-by-side. 
+`bullet_chart()` function most closely resembles Stephen Few's design. The single black bar represents the current value of the indicator while the different hue columns represent 
+last week's value (darker hue) and last year's value (lighter hue). The bar for each Indicator show the progression along the horizontal-axis presenting the percentage of the yearly target completed. This axis also shows the percent of the year gone by with the vertical line indicating what exact percentage "Today" is, along this percentage. Each bar is colored "green" if the Indicator completion is close to or past "Today", "orange" if it's close, and "red" if it is far off track.
+
+`bullet_chart2()` is similar to the above but uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
+accentuate the difference graphically.
 
 ```{r, fig.show='hold'}
-ggplot2::ggplot(df, aes(x = IndicatorName)) +
-    geom_col(aes(y = Perc, fill = BehindBy), width = 0.1, color = "black") +
-    scale_fill_gradient("Indicator\nBehind By:", limits = c(Low_Level, 0), low = "red", high = "green",
-                        guide = FALSE) +
-    geom_point(aes(y = PercWeek, shape = "Last Week"), size = 6, stroke = 1) +
-    geom_point(aes(y = PercYear, shape = "Last Year"), size = 6, stroke = 1) +
-    scale_shape_manual(" ", values = c(23, 21)) +
-    geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
-    geom_text(y = 1, aes(label = text), vjust = -1.5, hjust = 0) +
-    geom_hline(yintercept = PercentTime, alpha = 0.33) +
-    annotate("text", x = 0, y = PercentTime + 1.5, hjust = 0, label = "Today",
-             angle = 90, alpha = 0.5, size = 5) +
-    coord_flip() +
-    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
-         x = " ") +
-    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
-    theme_minimal() +
-    theme(axis.text.y = element_text(size = 15, face = "bold"),
-          axis.title.x = element_text(face = "bold", size = 10,
-                                      margin = margin(t = 25, r = 0, b = 20, l = 0)),
-          axis.text.x = element_text(face = "bold", size = 14),
-          title = element_text(face = "bold", size = 14),
-          plot.title = element_text(hjust = 0.5),
-          plot.subtitle = element_text(hjust = 0.5, size = 8),
-          legend.position = c(0.8, -0.12),
-          legend.key.size = unit(1.5, "lines")) +
-    expand_limits(x = 6.75, y = 102)
 
+bullet_chart(file_name = system.file("data/Indicators_Targets_full.xlsx", package = "bulletchartr"), 
+             project_start_date = "2016/03/01")
 
-ggplot2::ggplot(df, aes(x = IndicatorName)) +
-    geom_col(aes(y = PercWeek), width = 0.5, alpha = 0.6) +
-    geom_col(aes(y = PercYear), width = 0.75, alpha = 0.3) +
-    geom_col(aes(y = Perc, fill = BehindBy), width = 0.15, color = "black") +
-    scale_fill_gradient("Indicator\nBehind By:", limits = c(Low_Level, 0), low = "red", high = "green") +
-    geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
-    geom_hline(yintercept = PercentTime, alpha = 0.33) +
-    annotate("text", x = 0, y = PercentTime + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
-    coord_flip() +
-    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
-         x = " ") +
-    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
-    theme_minimal() +
-    theme(axis.text.y = element_text(size = 15, face = "bold"),
-          axis.title.x = element_text(face = "bold", size = 10,
-                                      margin = margin(t = 25, r = 0, b = 20, l = 0)),
-          axis.text.x = element_text(face = "bold", size = 12),
-          title = element_text(face = "bold"),
-          plot.title = element_text(hjust = 0.5),
-          plot.subtitle = element_text(hjust = 0.5, size = 8),
-          legend.position = "none")
+bullet_chart2(file_name = system.file("data/Indicators_Targets_full.xlsx", package = "bulletchartr"), 
+             project_start_date = "2016/03/01")
 
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+`bullet_chart3()` shows the a version with different symbols representing the indicator value for 
+last week (diamond) and last year (circle)
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+`bullet_chart4()` provides a version with a single colored bar representing the current value
+for the indicator along with a black vertical line representing the indicator value at this time
+last year.
 
-## More Examples
+```{r, fig.show='hold'}
 
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+bullet_chart3(file_name = system.file("data/Indicators_Targets_full.xlsx", package = "bulletchartr"), 
+             project_start_date = "2016/03/01")
 
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+bullet_chart4(file_name = system.file("data/Indicators_Targets_full.xlsx", package = "bulletchartr"), 
+             project_start_date = "2016/03/01")
+
+
 ```
 
-Also a quote using `>`:
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+## Future Direction
+
+Currently more geared specifically toward non-R using M&E people, however direction towards being able to take different inputs and more customizable for more general use cases. 
