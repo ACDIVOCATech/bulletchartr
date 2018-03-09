@@ -5,7 +5,7 @@
 \title{bullet_chart}
 \usage{
 bullet_chart(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
-  FY = TRUE, project_start_date)
+  cal_type = "fis")
 }
 \arguments{
 \item{file_name}{path of Excel file}
@@ -14,9 +14,9 @@ bullet_chart(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
 
 \item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
 
-\item{FY}{fiscal year or calendar year? Default: TRUE}
-
-\item{project_start_date}{specify start date of the project as \%Y/\%D/\%M format string}
+\item{cal_type}{define what calendar you are using. Options are "fis" for fiscal year starting
+October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
+format "YYYY/MM/DD", Default: fis}
 }
 \description{
 create a Stephen Few bullet chart
@@ -26,7 +26,7 @@ This version of the bullet chart most closely resembles Stephen Few's design. Th
 the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue).
 }
 \examples{
-bullet_chart3("data/Indicators_Targets_ext.xlsx", project_start_date = "2016/03/01")
+bullet_chart3("data/Indicators_targets_ext.xlsx", project_start_date = "2016/03/01")
 }
 \seealso{
 \code{\link[ggplot2]{ggplot}}

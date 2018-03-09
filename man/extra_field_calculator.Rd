@@ -5,7 +5,7 @@
 \title{extra_field_calculator}
 \usage{
 extra_field_calculator(file_name, sheet_name = "Sheet1",
-  for_year = year(Sys.Date()), calType = "fis")
+  for_year = year(Sys.Date()), cal_type = "fis")
 }
 \arguments{
 \item{file_name}{path of Excel file}
@@ -14,7 +14,7 @@ extra_field_calculator(file_name, sheet_name = "Sheet1",
 
 \item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
 
-\item{calType}{define what calendar you are using. Options are "fis" for fiscal year starting
+\item{cal_type}{define what calendar you are using. Options are "fis" for fiscal year starting
 October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 format "YYYY/MM/DD", Default: fis}
 }
@@ -28,7 +28,7 @@ internal function for calculating the extra fields needed for bullet charts
 DETAILS
 }
 \examples{
-extra_field_calculator("data/Indicators_Targets.xlsx", for_year = 2018, FY = TRUE,
+extra_field_calculator("data/Indicators_targets.xlsx", for_year = 2018, FY = TRUE,
 project_start_date = project_start_date)
 \dontrun{
 if(interactive()){

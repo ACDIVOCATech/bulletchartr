@@ -5,16 +5,16 @@
 \title{bullet_chart3}
 \usage{
 bullet_chart3(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
-  FY = TRUE, project_start_date)
+  cal_type = "fis")
 }
 \arguments{
 \item{file_name}{path of Excel file}
 
 \item{sheet_name}{specify which sheet in Excel file, Default: "Sheet1"}
 
-\item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
-
-\item{FY}{fiscal year or calendar year? Default: TRUE}
+\item{cal_type}{define what calendar you are using. Options are "fis" for fiscal year starting
+October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
+format "YYYY/MM/DD", Default: fis}
 
 \item{project_start_date}{specify start date of the project as \%Y/\%D/\%M format string}
 }
@@ -32,7 +32,7 @@ it's close, and "red" if it is far off track.
 The symbols represent the indicator value for last week (diamond) and last year (circle).
 }
 \examples{
- bullet_chart(file_name = "data/Indicators_Targets.xlsx", project_start_date = "2016/03/01")
+ bullet_chart(file_name = "data/Indicators_targets.xlsx", project_start_date = "2016/03/01")
 }
 \seealso{
 \code{\link[ggplot2]{geom_bar}}, \code{\link[ggplot2]{scale_manual}}

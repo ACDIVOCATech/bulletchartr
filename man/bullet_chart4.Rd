@@ -5,7 +5,7 @@
 \title{bullet_chart4}
 \usage{
 bullet_chart4(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
-  FY = TRUE, project_start_date)
+  cal_type = "fis")
 }
 \arguments{
 \item{file_name}{path of Excel file}
@@ -14,9 +14,9 @@ bullet_chart4(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
 
 \item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
 
-\item{FY}{fiscal year or calendar year? Default: TRUE}
-
-\item{project_start_date}{specify start date of the project as \%Y/\%D/\%M format string}
+\item{cal_type}{define what calendar you are using. Options are "fis" for fiscal year starting
+October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
+format "YYYY/MM/DD", Default: fis}
 }
 \description{
 create bullet chart showing last year's value as the target
@@ -25,11 +25,11 @@ create bullet chart showing last year's value as the target
 This version of the bullet chart shows a single colored bar representing the current value
 for the indicator along with a black vertical line representing the indicator value at this time
 last year. The definition for the vertical line can be changed to your preference (such as a more
-general "Target" value), however at the current time you should change the values of "Actual_lastYear"
+general "target" value), however at the current time you should change the values of "actual_lastyear"
 in the Excel file but not the variable name itself.
 }
 \examples{
-bullet_chart4("data/Indicators_Targets_ext.xlsx", project_start_date = "2016/03/01")
+bullet_chart4("data/Indicators_targets_ext.xlsx", project_start_date = "2016/03/01")
 }
 \seealso{
 \code{\link[ggplot2]{ggplot}}

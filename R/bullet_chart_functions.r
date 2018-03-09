@@ -177,7 +177,7 @@ bullet_chart3 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
     annotate("text", x = 0, y = df$percent_time + 1.5, hjust = 0, label = "Today",
              angle = 90, alpha = 0.5, size = 5) +
     coord_flip() +
-    labs(y = "percent of Yearly target\n&\n percent of Year",
+    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
          x = " ") +
     ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
     theme_minimal() +
@@ -236,7 +236,7 @@ bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
     geom_hline(yintercept = df$percent_time, alpha = 0.33) +
     annotate("text", x = 0, y = df$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
     coord_flip() +
-    labs(y = "percent of Yearly target\n&\n percent of Year",
+    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
          x = " ") +
     ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
     theme_minimal() +
@@ -276,6 +276,17 @@ bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
 #' @export
 #' @import ggplot2
 
+
+## experiment with greyscale:
+
+# Which greys?
+# "#7A7A7A"
+# "#8F8F8F"
+# "#B8B8B8"
+# "lightslategrey"
+#
+
+
 bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
                          cal_type="fis") {
 
@@ -285,15 +296,16 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.D
   low_level <- df$low_level[1]
 
   g <- ggplot2::ggplot(df, aes(x = indicator_name)) +
-    scale_fill_gradient("", limits = c(low_level, 0), low = "darkred", high = "darkgreen") +
-    geom_col(aes(y = perc_week, fill = behind_by), width = 0.4, alpha = 0.7) +
-    geom_col(aes(y = perc_year, fill = behind_by), width = 0.4, alpha = 0.4) +
-    geom_col(aes(y = perc), fill = "black", width = 0.1, color = "black", alpha = 0.9) +
+    geom_col(aes(y = 100), fill = "grey85",  width = 0.4) +
+    geom_col(aes(y = perc_week), fill = "grey68",  width = 0.4) +
+    geom_col(aes(y = perc_year), fill = "#7A7A7A", width = 0.4) +
+    #scale_fill_gradient("", limits = c(low_level, 0), low = "#7A7A7A", high = "#B8B8B8") +
+    geom_col(aes(y = perc), fill = "grey10", width = 0.1, color = "grey10", alpha = 0.9) +
     geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
     geom_hline(yintercept = df$percent_time, alpha = 0.33) +
     annotate("text", x = 0, y = df$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
     coord_flip() +
-    labs(y = "percent of Yearly target\n&\n percent of Year",
+    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
          x = " ") +
     ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
     theme_minimal() +
@@ -352,7 +364,7 @@ bullet_chart4 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
     geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
     geom_text(y = 1, aes(label = text), vjust = -1.5, hjust = 0) +
     coord_flip() +
-    labs(y = "percent of Yearly target",
+    labs(y = "Percent of Yearly Target",
          x = " ") +
     ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
     theme_minimal() +

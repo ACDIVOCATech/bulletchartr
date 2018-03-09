@@ -1,14 +1,3 @@
----
-title: "Untitled"
-author: "RN7"
-date: "February 24, 2018"
-output: 
-  html_document: 
-    keep_md: yes
----
-
-
-
 ## Bullet Charts for Monitoring KPIs
 
 This is the repo for the article found [here]() on creating bullet charts for monitoring KPIs over time. The article mainly focused on `M&E` deliverables, or **"Indicators"**, but this post and repo will also come in handy for anyone that depends on Key Performance Indicators (KPI)s or those that need to track progress against a target.
