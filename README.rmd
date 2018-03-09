@@ -7,9 +7,23 @@ output:
         
 ---
 
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 
+```{r include=FALSE}
+library(readxl)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(bulletchartr)
 
+df <- readxl::read_xlsx("data/Indicators_Targets_full.xlsx", sheet = "Sheet1")
 
+```
 
 # What is a bullet chart?
 
@@ -19,12 +33,9 @@ This type of graph is a variation on a typical bar graph with a thick line prese
 
 The output of the `bullet_chart()` function most closely resembles Stephen Few's design: 
 
-
-```r
+```{r, fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart(file_name ="data/Indicators_Targets_ext.xlsx")
 ```
-
-![](README_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
 The single black bar represents the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue). The bar for each Indicator show the progression along the horizontal-axis presenting the percentage of the yearly target completed. This axis also shows the percent of the year gone by with the vertical line indicating what exact percentage "Today" is, along this percentage. 
 
@@ -36,15 +47,8 @@ As you can see, the bars show the progression along the horizontal-axis presenti
 Each bar is colored "green" if the Indicator completion is close to or past "Today", "orange" if it's close, and "red" if it is far off track.
 
 
-
-```
-#> Observations: 6
-#> Variables: 5
-#> $ indicator_name  <chr> "Ind 04", "Ind 05", "Ind 07", "Ind 11", "Ind 1...
-#> $ actual          <dbl> 3, 437, 20, 44, 1, 10000
-#> $ actual_lastweek <dbl> 3, 420, 18, 20, 1, 10000
-#> $ actual_lastyear <dbl> 3, 50, 20, 2000, 1, 10000
-#> $ target          <dbl> 14, 81, 21, 10327, 5, 20000
+```{r, echo=FALSE}
+df %>% select(indicator_name, actual, actual_lastweek, actual_lastyear, target) %>% glimpse()
 ```
 
 This package is based on visualizing M&E deliverables or "Indicators", however, it can be handy for anyone that depends on monitoring Key Performance Indicators (KPIs) or needs to track progress against different targets. 
@@ -75,64 +79,47 @@ Along with the `bullet_chart()` function that you saw above we also have `bullet
 This is similar to the standard bullet chart but uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
 accentuate the difference graphically.
 
-
-```r
+```{r, fig.width=6, fig.height=5, echo=TRUE}
 bullet_chart2(file_name = "data/Indicators_Targets_full.xlsx")
 ```
-
-![](README_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
 
 
 `bullet_chart3()` shows a version with different symbols representing the indicator value for 
 last week (diamond) and last year (circle).
 
-
-```r
+```{r,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart3(file_name = "data/Indicators_Targets_full.xlsx")
 ```
-
-![](README_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
 
 `bullet_chart4()` provides a version with a single colored bar representing the current value
 for the indicator along with a black vertical line representing the indicator value at this time
 last year.
 
-
-```r
+```{r,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart4(file_name = "data/Indicators_Targets_full.xlsx")
-```
 
-![](README_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+```
 
 ## Different calendars
 
-Today shown on a Fiscal Year calendar (considering that today's physical date is 2018-03-09.)
+Today shown on a Fiscal Year calendar (considering that today's physical date is `r Sys.Date()`.)
 
-
-```r
+```{r,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart3(file_name = "data/Indicators_Targets_full.xlsx", cal_type = "fis")
 ```
 
-![](README_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
-
 ... or on a calendar year
 
-
-```r
+```{r,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart3(file_name = "data/Indicators_Targets_full.xlsx", cal_type = "cal")
 ```
 
-![](README_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
-
 ... or using a custom date fed directly into the plotting function.
 
-
-```r
+```{r,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart3(file_name = "data/Indicators_Targets_full.xlsx", cal_type = "2018/02/15")
 ```
-
-![](README_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 
 ## small version

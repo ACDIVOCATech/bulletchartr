@@ -31,10 +31,7 @@ low_level <- -8.5968514715948
 
 ```
 
-
-INTRO
-
-What is a bullet chart?
+## What is a bullet chart?
 
 The __bullet chart__ was invented by [Stephen Few](https://www.perceptualedge.com/articles/misc/Bullet_Graph_Design_Spec.pdf), for the purpose of showing tons of info in a condensed form in KPIs.
 
@@ -121,13 +118,13 @@ bullet_chart3(file_name = "../data/Indicators_Targets_full.xlsx", cal_type = "fi
 ... or on a calendar year
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart3(file_name = "../data/Indicators_Targets_full.xlsx", cal_type = "cal")
+bullet_chart3(file_name = "../data/Indicators_Targets_ext.xlsx", cal_type = "cal")
 ```
 
 ... or using a custom date fed directly into the plotting function.
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart3(file_name = "../data/Indicators_Targets_full.xlsx", cal_type = "2018/02/15")
+bullet_chart3(file_name = "../data/Indicators_Targets_ext.xlsx", cal_type = "2018/02/15")
 ```
 
 

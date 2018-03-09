@@ -11,16 +11,8 @@
 #' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
 #' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 #' format "YYYY/MM/DD", Default: fis
-#' @return OUTPUT_DESCRIPTION
-#' @details DETAILS
+#' @details internal function for calculating the extra fields for the bullet chart
 #' @examples
-#' extra_field_calculator("data/Indicators_targets.xlsx", for_year = 2018, FY = TRUE,
-#' project_start_date = project_start_date)
-#' \dontrun{
-#' if(interactive()){
-#'  #EXAMPLE1
-#'  }
-#' }
 #' @seealso
 #'  \code{\link[dplyr]{mutate}}
 
@@ -129,6 +121,121 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1", for_year = 
 
 # plotting functions --------------------------------------------------
 
+# bullet plot Version 1: actual Stephen FEW  -------------------------------------------------
+
+#' @title bullet_chart
+#' @description create a Stephen Few bullet chart
+#' @param file_name path of Excel file
+#' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
+#' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
+#' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
+#' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
+#' format "YYYY/MM/DD", Default: fis
+#' @details This version of the bullet chart most closely resembles Stephen Few's design. The single black bar represents
+#' the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue).
+#' @examples
+#' bullet_chart3("data/Indicators_targets_ext.xlsx", project_start_date = "2016/03/01")
+#' @seealso
+#'  \code{\link[ggplot2]{ggplot}}
+#' @rdname bullet_chart
+#' @export
+#' @import ggplot2
+
+bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
+                         cal_type="fis") {
+
+  df <- extra_field_calculator(file_name, sheet_name, for_year,
+                               cal_type)
+
+  low_level <- df$low_level[1]
+
+  g <- ggplot2::ggplot(df, aes(x = indicator_name)) +
+    geom_col(aes(y = 100), fill = "grey85",  width = 0.4) +
+    geom_col(aes(y = perc_week), fill = "grey68",  width = 0.4) +
+    geom_col(aes(y = perc_year), fill = "#7A7A7A", width = 0.4) +
+    #scale_fill_gradient("", limits = c(low_level, 0), low = "#7A7A7A", high = "#B8B8B8") +
+    geom_col(aes(y = perc), fill = "grey10", width = 0.1, color = "grey10", alpha = 0.9) +
+    geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
+    geom_hline(yintercept = df$percent_time, alpha = 0.33) +
+    annotate("text", x = 0, y = df$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
+    coord_flip() +
+    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
+         x = " ") +
+    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
+    theme_minimal() +
+    theme(axis.text.y = element_text(size = 15, face = "bold"),
+          axis.title.x = element_text(face = "bold", size = 10,
+                                      margin = margin(t = 25, r = 0, b = 20, l = 0)),
+          axis.text.x = element_text(face = "bold", size = 12),
+          title = element_text(face = "bold"),
+          plot.title = element_text(hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5, size = 8),
+          legend.position = "none") +
+    expand_limits(x = 6.75, y = 102)
+
+  print(g)
+
+}
+
+# bullet plot Version 2: multiple width bars -----------------------------------------------
+
+#' @title bullet_chart2
+#' @description create bullet chart with bars of varying width
+#' @param file_name path of Excel file
+#' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
+#' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
+#' format "YYYY/MM/DD", Default: fis
+#' @param FY fiscal year or calendar year? Default: TRUE
+#' @param project_start_date specify start date of the project as \%Y/\%D/\%M format string
+#' @details This version conforms more closely with the standard bullet chart design. This function
+#' uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
+#' accentuate the difference graphically.
+#' @examples
+#' bullet_chart2(file_name = "data/Indicators_targets.xlsx", project_start_date = "2016/03/01")
+#'
+#' @seealso
+#'  \code{\link[ggplot2]{geom_bar}}
+#' @rdname bullet_chart2
+#' @export
+#' @import ggplot2
+
+bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
+                          cal_type="fis") {
+
+  df <- extra_field_calculator(file_name, sheet_name, for_year,
+                               cal_type)
+
+  low_level <- df$low_level[1]
+
+  g <- ggplot2::ggplot(df, aes(x = indicator_name)) +
+    geom_col(aes(y = perc_week), width = 0.5, alpha = 0.6) +
+    geom_col(aes(y = perc_year), width = 0.75, alpha = 0.3) +
+    geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+    scale_fill_gradient("Indicator\nBehind By:", limits = c(low_level, 0), low = "red3", high = "green3") +
+    geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
+    geom_hline(yintercept = df$percent_time, alpha = 0.33) +
+    annotate("text", x = 0, y = df$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
+    coord_flip() +
+    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
+         x = " ") +
+    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
+    theme_minimal() +
+    theme(axis.text.y = element_text(size = 15, face = "bold"),
+          axis.title.x = element_text(face = "bold", size = 10,
+                                      margin = margin(t = 25, r = 0, b = 20, l = 0)),
+          axis.text.x = element_text(face = "bold", size = 12),
+          title = element_text(face = "bold"),
+          plot.title = element_text(hjust = 0.5),
+          plot.subtitle = element_text(hjust = 0.5, size = 8),
+          legend.position = "none") +
+    expand_limits(x = 6.75, y = 102)
+
+  print(g)
+
+}
+
+
+
 # bullet plot Version 3: symbols ----------------------------------------------------------
 
 #' @title bullet_chart3
@@ -195,134 +302,6 @@ bullet_chart3 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
   print(g)
 
 }
-
-
-# bullet plot Version 2: multiple width bars -----------------------------------------------
-
-#' @title bullet_chart2
-#' @description create bullet chart with bars of varying width
-#' @param file_name path of Excel file
-#' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
-#' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
-#' format "YYYY/MM/DD", Default: fis
-#' @param FY fiscal year or calendar year? Default: TRUE
-#' @param project_start_date specify start date of the project as \%Y/\%D/\%M format string
-#' @details This version conforms more closely with the standard bullet chart design. This function
-#' uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
-#' accentuate the difference graphically.
-#' @examples
-#' bullet_chart2(file_name = "data/Indicators_targets.xlsx", project_start_date = "2016/03/01")
-#'
-#' @seealso
-#'  \code{\link[ggplot2]{geom_bar}}
-#' @rdname bullet_chart2
-#' @export
-#' @import ggplot2
-
-bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
-                          cal_type="fis") {
-
-  df <- extra_field_calculator(file_name, sheet_name, for_year,
-                               cal_type)
-
-  low_level <- df$low_level[1]
-
-  g <- ggplot2::ggplot(df, aes(x = indicator_name)) +
-    geom_col(aes(y = perc_week), width = 0.5, alpha = 0.6) +
-    geom_col(aes(y = perc_year), width = 0.75, alpha = 0.3) +
-    geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
-    scale_fill_gradient("Indicator\nBehind By:", limits = c(low_level, 0), low = "red3", high = "green3") +
-    geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
-    geom_hline(yintercept = df$percent_time, alpha = 0.33) +
-    annotate("text", x = 0, y = df$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
-    coord_flip() +
-    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
-         x = " ") +
-    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
-    theme_minimal() +
-    theme(axis.text.y = element_text(size = 15, face = "bold"),
-          axis.title.x = element_text(face = "bold", size = 10,
-                                      margin = margin(t = 25, r = 0, b = 20, l = 0)),
-          axis.text.x = element_text(face = "bold", size = 12),
-          title = element_text(face = "bold"),
-          plot.title = element_text(hjust = 0.5),
-          plot.subtitle = element_text(hjust = 0.5, size = 8),
-          legend.position = "none") +
-    expand_limits(x = 6.75, y = 102)
-
-  print(g)
-
-}
-
-
-
-# bullet plot Version 1: actual Stephen FEW  -------------------------------------------------
-
-#' @title bullet_chart
-#' @description create a Stephen Few bullet chart
-#' @param file_name path of Excel file
-#' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
-#' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
-#' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
-#' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
-#' format "YYYY/MM/DD", Default: fis
-#' @details This version of the bullet chart most closely resembles Stephen Few's design. The single black bar represents
-#' the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue).
-#' @examples
-#' bullet_chart3("data/Indicators_targets_ext.xlsx", project_start_date = "2016/03/01")
-#' @seealso
-#'  \code{\link[ggplot2]{ggplot}}
-#' @rdname bullet_chart
-#' @export
-#' @import ggplot2
-
-
-## experiment with greyscale:
-
-# Which greys?
-# "#7A7A7A"
-# "#8F8F8F"
-# "#B8B8B8"
-# "lightslategrey"
-#
-
-
-bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
-                         cal_type="fis") {
-
-  df <- extra_field_calculator(file_name, sheet_name, for_year,
-                               cal_type)
-
-  low_level <- df$low_level[1]
-
-  g <- ggplot2::ggplot(df, aes(x = indicator_name)) +
-    geom_col(aes(y = 100), fill = "grey85",  width = 0.4) +
-    geom_col(aes(y = perc_week), fill = "grey68",  width = 0.4) +
-    geom_col(aes(y = perc_year), fill = "#7A7A7A", width = 0.4) +
-    #scale_fill_gradient("", limits = c(low_level, 0), low = "#7A7A7A", high = "#B8B8B8") +
-    geom_col(aes(y = perc), fill = "grey10", width = 0.1, color = "grey10", alpha = 0.9) +
-    geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
-    geom_hline(yintercept = df$percent_time, alpha = 0.33) +
-    annotate("text", x = 0, y = df$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
-    coord_flip() +
-    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
-         x = " ") +
-    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
-    theme_minimal() +
-    theme(axis.text.y = element_text(size = 15, face = "bold"),
-          axis.title.x = element_text(face = "bold", size = 10,
-                                      margin = margin(t = 25, r = 0, b = 20, l = 0)),
-          axis.text.x = element_text(face = "bold", size = 12),
-          title = element_text(face = "bold"),
-          plot.title = element_text(hjust = 0.5),
-          plot.subtitle = element_text(hjust = 0.5, size = 8),
-          legend.position = "none") +
-    expand_limits(x = 6.75, y = 102)
-
-  print(g)
-
-}
-
 
 
 # bullet chart Version 4: last year LINE ----------------------------------
