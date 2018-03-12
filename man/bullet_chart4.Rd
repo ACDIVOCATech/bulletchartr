@@ -29,7 +29,7 @@ general "target" value), however at the current time you should change the value
 in the Excel file but not the variable name itself.
 }
 \examples{
-bullet_chart4("data/Indicators_targets_ext.xlsx", project_start_date = "2016/03/01")
+bullet_chart4("data/Indicators_targets_ext.xlsx")
 }
 \seealso{
 \code{\link[ggplot2]{ggplot}}

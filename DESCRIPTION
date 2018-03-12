@@ -2,9 +2,10 @@ Package: bulletchartr
 Type: Package
 Title: Create Bullet Charts For Visualizing KPIs
 Version: 0.0.0.9000
-Author@R: c(person("Ryo", "Nakagawara", email = "ryonakagawara@gmail.com", role = "aut",
-    person("Amit", "Kohli", email = "amit.kohli@acdivoca.org", role = "aut"))) 
-Maintainer: The package maintainer <yourself@somewhere.net>
+Authors@R: c(person("Ryo", "Nakagawara", email = "ryonakagawara@gmail.com",
+                  role = c("aut", "cre")),
+                  person("Amit", "Kohli", email= "mexindian@gmail.com",
+                  role= c("aut")))
 Description: This package attempts to provide a way to create 
     different types of bullet chart graphs to monitor "Indicators" 
     or "Key Performance Indicators (KPIs)" against a target. 

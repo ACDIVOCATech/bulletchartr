@@ -15,8 +15,6 @@ October 1st, "cal" for calendar year starting January 1st, or enter your own cus
 format "YYYY/MM/DD", Default: fis}
 
 \item{FY}{fiscal year or calendar year? Default: TRUE}
-
-\item{project_start_date}{specify start date of the project as \%Y/\%D/\%M format string}
 }
 \description{
 create bullet chart with bars of varying width
@@ -27,7 +25,7 @@ uses different thicknesses for the bars as the benchmarks for previous time poin
 accentuate the difference graphically.
 }
 \examples{
-bullet_chart2(file_name = "data/Indicators_targets.xlsx", project_start_date = "2016/03/01")
+bullet_chart2(file_name = "data/Indicators_targets.xlsx")
 
 }
 \seealso{

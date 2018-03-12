@@ -5,7 +5,9 @@
 \title{extra_field_calculator}
 \usage{
 extra_field_calculator(file_name, sheet_name = "Sheet1",
-  for_year = year(Sys.Date()), cal_type = "fis")
+  indicator_name = "indicator_name", actual = "actual",
+  actual_lastweek = "actual_lastweek", actual_lastyear = "actual_lastyear",
+  target = "target", for_year = year(Sys.Date()), cal_type = "fis")
 }
 \arguments{
 \item{file_name}{path of Excel file}
@@ -18,23 +20,11 @@ extra_field_calculator(file_name, sheet_name = "Sheet1",
 October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 format "YYYY/MM/DD", Default: fis}
 }
-\value{
-OUTPUT_DESCRIPTION
-}
 \description{
 internal function for calculating the extra fields needed for bullet charts
 }
 \details{
-DETAILS
-}
-\examples{
-extra_field_calculator("data/Indicators_targets.xlsx", for_year = 2018, FY = TRUE,
-project_start_date = project_start_date)
-\dontrun{
-if(interactive()){
- #EXAMPLE1
- }
-}
+internal function for calculating the extra fields for the bullet chart
 }
 \seealso{
 \code{\link[dplyr]{mutate}}
