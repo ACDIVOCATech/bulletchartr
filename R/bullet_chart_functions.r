@@ -22,6 +22,7 @@
 #' @importFrom testthat test_that expect_equal
 #' @importFrom readxl read_xlsx
 #' @importFrom lubridate year month
+#' @import rlang
 
 extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
                                    indicator_name = "indicator_name",
@@ -30,7 +31,7 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
                                    actual_lastyear = "actual_lastyear",
                                    target = "target",
                                    for_year = year(Sys.Date()),
-                                   cal_type="fis") {
+                                   cal_type = "fis") {
 
   testthat::test_that("Does the specified file exist in the directory?", {
 
@@ -85,26 +86,26 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
   )
 
   # Calculate "Today" within specified Year
-  if (cal_type=="cal"){
-    start_time <- paste0(for_year,"/01/01")
-  } else if (cal_type=="fis"){
+  if (cal_type == "cal"){
+    start_time <- paste0(for_year, "/01/01")
+  } else if (cal_type == "fis"){
     ## Need to make distinction if we're still in the same calendar year or not
     if (month(Sys.Date()) >= 10) {
-      start_time <- paste0(for_year,"/10/01")
+      start_time <- paste0(for_year, "/10/01")
       } else {
-        start_time <- paste0(for_year-1,"/10/01")
+        start_time <- paste0(for_year - 1, "/10/01")
       }
   } else{
-    start_time=cal_type
+    start_time <- cal_type
   }
 
   ## Calculate point in year
-  PT <- as.numeric((Sys.Date() -
+  PT <- as.numeric( (Sys.Date() -
                       as.Date(start_time, "%Y/%m/%d"))) / 365.25 * 100
 
   ## Ensure that it's less than 100 and assign
-  if (PT>100) PT=100
-  ammended_data <- mutate(ammended_data,percent_time = PT)
+  if (PT > 100) PT <- 100
+  ammended_data <- mutate(ammended_data, percent_time = PT)
 
   # percent
   ammended_data <- ammended_data %>% mutate(percent_time = case_when(
@@ -113,7 +114,7 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
   ))
 
   # Value for Indicator lateness or on time
-  ammended_data <- ammended_data %>% mutate(text = percent_time/100 * target - actual)
+  ammended_data <- ammended_data %>% mutate(text = percent_time / 100 * target - actual)
 
   # Calculate how far behind TODAY the percent for the indicator is
   ammended_data <- ammended_data %>% mutate(behind_by = perc - percent_time)
@@ -153,7 +154,7 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
 #' @details This version of the bullet chart most closely resembles Stephen Few's design. The single black bar represents
 #' the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue).
 #' @examples
-#' bullet_chart3("data/Indicators_targets_ext.xlsx")
+#' bullet_chart("data/Indicators_targets_ext.xlsx")
 #' @seealso
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname bullet_chart
@@ -161,18 +162,15 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
 #' @import ggplot2
 
 bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
-                         cal_type="fis") {
+                         cal_type = "fis") {
 
   ammended_data <- extra_field_calculator(file_name, sheet_name, for_year,
                                cal_type)
-
-  low_level <- ammended_data$low_level[1]
 
   g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
     geom_col(aes(y = 100), fill = "grey85",  width = 0.4) +
     geom_col(aes(y = perc_week), fill = "grey68",  width = 0.4) +
     geom_col(aes(y = perc_year), fill = "#7A7A7A", width = 0.4) +
-    #scale_fill_gradient("", limits = c(low_level, 0), low = "#7A7A7A", high = "#B8B8B8") +
     geom_col(aes(y = perc), fill = "grey10", width = 0.1, color = "grey10", alpha = 0.9) +
     geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
     geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
@@ -198,7 +196,7 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.D
 
 # bullet plot Version 2: multiple width bars -----------------------------------------------
 
-#' @title bullet_chart2
+#' @title bullet_chart_wide
 #' @description create bullet chart with bars of varying width
 #' @param file_name path of Excel file
 #' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
@@ -209,16 +207,16 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.D
 #' uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
 #' accentuate the difference graphically.
 #' @examples
-#' bullet_chart2(file_name = "data/Indicators_targets.xlsx")
+#' bullet_chart_wide(file_name = "data/Indicators_targets.xlsx")
 #'
 #' @seealso
 #'  \code{\link[ggplot2]{geom_bar}}
-#' @rdname bullet_chart2
+#' @rdname bullet_chart_wide
 #' @export
 #' @import ggplot2
 
-bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
-                          cal_type="fis") {
+bullet_chart_wide <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
+                          cal_type = "fis") {
 
   ammended_data <- extra_field_calculator(file_name, sheet_name, for_year,
                                cal_type)
@@ -256,7 +254,7 @@ bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
 
 # bullet plot Version 3: symbols ----------------------------------------------------------
 
-#' @title bullet_chart3
+#' @title bullet_chart_symbols
 #' @description creates bullet chart with symbols
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
@@ -274,15 +272,15 @@ bullet_chart2 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
 #' The symbols represent the indicator value for last week (diamond) and last year (circle).
 #'
 #' @examples
-#'  bullet_chart(file_name = "data/Indicators_targets.xlsx")
+#'  bullet_chart_symbols(file_name = "data/Indicators_targets.xlsx")
 #' @seealso
 #'  \code{\link[ggplot2]{geom_bar}}, \code{\link[ggplot2]{scale_manual}}
-#' @rdname bullet_chart3
+#' @rdname bullet_chart_symbols
 #' @export
 #' @import ggplot2
 
-bullet_chart3 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
-                          cal_type="fis") {
+bullet_chart_symbols <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
+                          cal_type = "fis") {
 
   ammended_data <- extra_field_calculator(file_name, sheet_name, for_year,
                                cal_type)
@@ -324,7 +322,7 @@ bullet_chart3 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
 
 # bullet chart Version 4: last year LINE ----------------------------------
 
-#' @title bullet_chart4
+#' @title bullet_chart_vline
 #' @description create bullet chart showing last year's value as the target
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
@@ -338,15 +336,15 @@ bullet_chart3 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.
 #' general "target" value), however at the current time you should change the values of "actual_lastyear"
 #' in the Excel file but not the variable name itself.
 #' @examples
-#' bullet_chart4("data/Indicators_targets_ext.xlsx")
+#' bullet_chart_vline("data/Indicators_targets_ext.xlsx")
 #' @seealso
 #'  \code{\link[ggplot2]{ggplot}}
-#' @rdname bullet_chart4
+#' @rdname bullet_chart_vline
 #' @export
 #' @import ggplot2
 
-bullet_chart4 <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
-                          cal_type="fis") {
+bullet_chart_vline <- function(file_name, sheet_name = "Sheet1", for_year = year(Sys.Date()),
+                          cal_type = "fis") {
 
   ammended_data <- extra_field_calculator(file_name, sheet_name, for_year,
                                cal_type)

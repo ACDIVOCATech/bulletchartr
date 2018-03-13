@@ -80,7 +80,7 @@ This is similar to the standard bullet chart but uses different thicknesses for 
 accentuate the difference graphically.
 
 ```{r, fig.width=6, fig.height=5, echo=TRUE}
-bullet_chart2(file_name = "data/Indicators_Targets_full.xlsx")
+bullet_chart_wide(file_name = "data/Indicators_Targets_full.xlsx")
 ```
 
 
@@ -88,7 +88,7 @@ bullet_chart2(file_name = "data/Indicators_Targets_full.xlsx")
 last week (diamond) and last year (circle).
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart3(file_name = "data/Indicators_Targets_full.xlsx")
+bullet_chart_symbols(file_name = "data/Indicators_Targets_full.xlsx")
 ```
 
 
@@ -97,7 +97,7 @@ for the indicator along with a black vertical line representing the indicator va
 last year.
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart4(file_name = "data/Indicators_Targets_full.xlsx")
+bullet_chart_vline(file_name = "data/Indicators_Targets_full.xlsx")
 
 ```
 
@@ -106,19 +106,19 @@ bullet_chart4(file_name = "data/Indicators_Targets_full.xlsx")
 Today shown on a Fiscal Year calendar (considering that today's physical date is `r Sys.Date()`.)
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart3(file_name = "data/Indicators_Targets_full.xlsx", cal_type = "fis")
+bullet_chart_symbols(file_name = "data/Indicators_Targets_full.xlsx", cal_type = "fis")
 ```
 
 ... or on a calendar year
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart3(file_name = "data/Indicators_Targets_full.xlsx", cal_type = "cal")
+bullet_chart_symbols(file_name = "data/Indicators_Targets_full.xlsx", cal_type = "cal")
 ```
 
 ... or using a custom date fed directly into the plotting function.
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart3(file_name = "data/Indicators_Targets_full.xlsx", cal_type = "2018/02/15")
+bullet_chart_symbols(file_name = "data/Indicators_Targets_full.xlsx", cal_type = "2018/02/15")
 ```
 
 
