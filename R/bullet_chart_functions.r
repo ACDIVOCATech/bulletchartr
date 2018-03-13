@@ -157,9 +157,9 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
 #' @param target specify the name of the column that has the target value for the indicator/KPI
 #' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
 #' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
-#' @param small specify whether you want the small version of the plot ("yes" or "no"), Default: "no"
 #' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 #' format "YYYY/MM/DD", Default: fis
+#' @param small specify whether you want the small version of the plot ("yes" or "no"), Default: "no"
 #' @details This version of the bullet chart most closely resembles Stephen Few's design. The single black bar represents
 #' the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue).
 #' @examples
@@ -181,25 +181,11 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1",
                          for_year = year(Sys.Date()),
                          cal_type = "fis", small = "no") {
 
-  ## Assign field names to this dataset
-  ind <- enquo(indicator_name)
-  a <- enquo(actual)
-  al <- enquo(actual_lastweek)
-  ay <- enquo(actual_lastyear)
-  t <- enquo(target)
-
-  ammended_data <- ammended_data %>%
-    select(indicator_name = !!ind,
-           actual = !!a,
-           actual_lastweek = !!al,
-           actual_lastyear = !!ay,
-           target = !!t
-    )
-
   ammended_data <- extra_field_calculator(file_name, sheet_name,
                                           indicator_name, actual,
                                           actual_lastweek, actual_lastyear,
                                           target, for_year, cal_type)
+
 
   if (small == "no"){
 
@@ -271,6 +257,8 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1",
 #' @param target specify the name of the column that has the target value for the indicator/KPI
 #' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
 #' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
+#' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
+#' format "YYYY/MM/DD", Default: fis
 #' @param small specify whether you want the small version of the plot ("yes" or "no"), Default: "no"
 #' @details This version conforms more closely with the standard bullet chart design. This function
 #' uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
@@ -293,26 +281,12 @@ bullet_chart_wide <- function(file_name, sheet_name = "Sheet1",
                               actual_lastyear = "actual_lastyear",
                               target = "target",
                               for_year = year(Sys.Date()),
-                              cal_type = "fis") {
+                              cal_type = "fis", small = "no") {
 
-  ## Assign field names to this dataset
-  ind <- enquo(indicator_name)
-  a <- enquo(actual)
-  al <- enquo(actual_lastweek)
-  ay <- enquo(actual_lastyear)
-  t <- enquo(target)
-
-  ammended_data <- ammended_data %>%
-    select(indicator_name = !!ind,
-           actual = !!a,
-           actual_lastweek = !!al,
-           actual_lastyear = !!ay,
-           target = !!t
-    )
-
-  ammended_data <- extra_field_calculator(file_name, sheet_name, for_year,
-                               cal_type)
-
+  ammended_data <- extra_field_calculator(file_name, sheet_name,
+                                          indicator_name, actual,
+                                          actual_lastweek, actual_lastyear,
+                                          target, for_year, cal_type)
   low_level <- ammended_data$low_level[1]
 
   if (small == "no"){
@@ -388,6 +362,8 @@ bullet_chart_wide <- function(file_name, sheet_name = "Sheet1",
 #' @param target specify the name of the column that has the target value for the indicator/KPI
 #' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
 #' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
+#' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
+#' format "YYYY/MM/DD", Default: fis
 #' @param small specify whether you want the small version of the plot ("yes" or "no"), Default: "no"
 #' @details The bar for each Indicator show the progression along the horizontal-axis presenting
 #' the percentage of the yearly target completed. This axis also shows the percent of the year
@@ -415,25 +391,12 @@ bullet_chart_symbols <- function(file_name, sheet_name = "Sheet1",
                                  actual_lastyear = "actual_lastyear",
                                  target = "target",
                                  for_year = year(Sys.Date()),
-                                 cal_type = "fis") {
+                                 cal_type = "fis", small = "no") {
 
-  ## Assign field names to this dataset
-  ind <- enquo(indicator_name)
-  a <- enquo(actual)
-  al <- enquo(actual_lastweek)
-  ay <- enquo(actual_lastyear)
-  t <- enquo(target)
-
-  ammended_data <- ammended_data %>%
-    select(indicator_name = !!ind,
-           actual = !!a,
-           actual_lastweek = !!al,
-           actual_lastyear = !!ay,
-           target = !!t
-    )
-
-  ammended_data <- extra_field_calculator(file_name, sheet_name, for_year,
-                               cal_type)
+  ammended_data <- extra_field_calculator(file_name, sheet_name,
+                                          indicator_name, actual,
+                                          actual_lastweek, actual_lastyear,
+                                          target, for_year, cal_type)
 
   low_level <- ammended_data$low_level[1]
 
@@ -518,6 +481,8 @@ bullet_chart_symbols <- function(file_name, sheet_name = "Sheet1",
 #' @param target specify the name of the column that has the target value for the indicator/KPI
 #' @param for_year specify the year in which the report is being made, Default: year(Sys.Date())
 #' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
+#' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
+#' format "YYYY/MM/DD", Default: fis
 #' @param small specify whether you want the small version of the plot ("yes" or "no"), Default: "no"
 #' @details This version of the bullet chart shows a single colored bar representing the current value
 #' for the indicator along with a black vertical line representing the indicator value at this time
@@ -541,25 +506,12 @@ bullet_chart_vline <- function(file_name, sheet_name = "Sheet1",
                                actual_lastyear = "actual_lastyear",
                                target = "target",
                                for_year = year(Sys.Date()),
-                               cal_type = "fis") {
+                               cal_type = "fis", small = "no") {
 
-  ## Assign field names to this dataset
-  ind <- enquo(indicator_name)
-  a <- enquo(actual)
-  al <- enquo(actual_lastweek)
-  ay <- enquo(actual_lastyear)
-  t <- enquo(target)
-
-  ammended_data <- ammended_data %>%
-    select(indicator_name = !!ind,
-           actual = !!a,
-           actual_lastweek = !!al,
-           actual_lastyear = !!ay,
-           target = !!t
-    )
-
-  ammended_data <- extra_field_calculator(file_name, sheet_name, for_year,
-                               cal_type)
+  ammended_data <- extra_field_calculator(file_name, sheet_name,
+                                          indicator_name, actual,
+                                          actual_lastweek, actual_lastyear,
+                                          target, for_year, cal_type)
 
   low_level <- ammended_data$low_level[1]
 

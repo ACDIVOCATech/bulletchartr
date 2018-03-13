@@ -27,11 +27,11 @@ bullet_chart(file_name, sheet_name = "Sheet1",
 
 \item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
 
-\item{cal_type}{define what calendar you are using. Options are "fis" for fiscal year starting}
-
-\item{small}{specify whether you want the small version of the plot ("yes" or "no"), Default: "no"
+\item{cal_type}{define what calendar you are using. Options are "fis" for fiscal year starting
 October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 format "YYYY/MM/DD", Default: fis}
+
+\item{small}{specify whether you want the small version of the plot ("yes" or "no"), Default: "no"}
 }
 \description{
 create a Stephen Few bullet chart
