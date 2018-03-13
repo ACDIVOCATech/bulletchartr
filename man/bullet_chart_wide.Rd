@@ -5,16 +5,30 @@
 \title{bullet_chart_wide}
 \usage{
 bullet_chart_wide(file_name, sheet_name = "Sheet1",
-  for_year = year(Sys.Date()), cal_type = "fis")
+  indicator_name = "indicator_name", actual = "actual",
+  actual_lastweek = "actual_lastweek", actual_lastyear = "actual_lastyear",
+  target = "target", for_year = year(Sys.Date()), cal_type = "fis")
 }
 \arguments{
 \item{file_name}{path of Excel file}
 
-\item{cal_type}{define what calendar you are using. Options are "fis" for fiscal year starting
-October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
-format "YYYY/MM/DD", Default: fis}
+\item{sheet_name}{specify which sheet in Excel file, Default: "Sheet1"}
 
-\item{FY}{fiscal year or calendar year? Default: TRUE}
+\item{indicator_name}{specify the name of the column that has your indicator/KPI names}
+
+\item{actual}{specify the name of the column that has the current value of your indicators/KPIs}
+
+\item{actual_lastweek}{specify the name of the column that has the indicator/KPI value from the previous week}
+
+\item{actual_lastyear}{specify the name of the column that has the indicator/KPI value from the previous year}
+
+\item{target}{specify the name of the column that has the target value for the indicator/KPI}
+
+\item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
+
+\item{cal_type}{define what calendar you are using. Options are "fis" for fiscal year starting}
+
+\item{small}{specify whether you want the small version of the plot ("yes" or "no"), Default: "no"}
 }
 \description{
 create bullet chart with bars of varying width

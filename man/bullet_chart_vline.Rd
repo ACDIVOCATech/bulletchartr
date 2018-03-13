@@ -5,18 +5,30 @@
 \title{bullet_chart_vline}
 \usage{
 bullet_chart_vline(file_name, sheet_name = "Sheet1",
-  for_year = year(Sys.Date()), cal_type = "fis")
+  indicator_name = "indicator_name", actual = "actual",
+  actual_lastweek = "actual_lastweek", actual_lastyear = "actual_lastyear",
+  target = "target", for_year = year(Sys.Date()), cal_type = "fis")
 }
 \arguments{
 \item{file_name}{path of Excel file}
 
 \item{sheet_name}{specify which sheet in Excel file, Default: "Sheet1"}
 
+\item{indicator_name}{specify the name of the column that has your indicator/KPI names}
+
+\item{actual}{specify the name of the column that has the current value of your indicators/KPIs}
+
+\item{actual_lastweek}{specify the name of the column that has the indicator/KPI value from the previous week}
+
+\item{actual_lastyear}{specify the name of the column that has the indicator/KPI value from the previous year}
+
+\item{target}{specify the name of the column that has the target value for the indicator/KPI}
+
 \item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
 
-\item{cal_type}{define what calendar you are using. Options are "fis" for fiscal year starting
-October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
-format "YYYY/MM/DD", Default: fis}
+\item{cal_type}{define what calendar you are using. Options are "fis" for fiscal year starting}
+
+\item{small}{specify whether you want the small version of the plot ("yes" or "no"), Default: "no"}
 }
 \description{
 create bullet chart showing last year's value as the target
@@ -29,7 +41,7 @@ general "target" value), however at the current time you should change the value
 in the Excel file but not the variable name itself.
 }
 \examples{
-bullet_chart_vline("data/Indicators_targets_ext.xlsx")
+bullet_chart_vline(file_name = "data/Indicators_targets_ext.xlsx")
 }
 \seealso{
 \code{\link[ggplot2]{ggplot}}

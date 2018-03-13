@@ -23,11 +23,7 @@ library(lubridate)
 library(ggplot2)
 library(bulletchartr)
 
-df <- readxl::read_xlsx("../data/Indicators_Targets_full.xlsx",sheet = "Sheet1")
-
-for_year <- 2018
-percent_time <- 42.984257357974
-low_level <- -8.5968514715948
+df <- readxl::read_xlsx("../data/Indicators_Targets_full.xlsx", sheet = "Sheet1")
 
 ```
 
@@ -40,33 +36,51 @@ This type of graph is a variation on a typical bar graph with a thick line prese
 The output of the `bullet_chart()` function most closely resembles Stephen Few's design: 
 
 ```{r, fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart(file_name ="../data/Indicators_Targets_ext.xlsx")
+bullet_chart(file_name = "../data/Indicators_Targets_ext.xlsx")
 ```
 
 The single black bar represents the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue). The bar for each Indicator show the progression along the horizontal-axis presenting the percentage of the yearly target completed. This axis also shows the percent of the year gone by with the vertical line indicating what exact percentage "Today" is, along this percentage. 
 
-
 As you can see, the bars show the progression along the horizontal-axis presenting the percentage of the yearly target completed. Also, along this axis is the percent of the year gone by with a vertical line indicating what exact percentage __"Today"__ is along this percentage. It is necessary to use percentages as we have multiple indicators of varying units/parameters for each project! 
 
+The different grey colored bars represent the values of the indicator at "Last Week" and "Last Year". The greyscaled bars can represent any qualitative rranges such as "bad - good - excellent" or ____ . In the near future we will look to expand the capabilities of this package to allow users to specify these qualitative ranges to fit their needs. 
 
-### GREYSCALE
-Each bar is colored "green" if the Indicator completion is close to or past "Today", "orange" if it's close, and "red" if it is far off track.
+This package, `bulletchartr` is based on visualizing M&E deliverables or "Indicators", however, it can be handy for anyone that depends on monitoring Key Performance Indicators (KPIs) or needs to track progress against different targets. 
 
+To use the functions included in this package, one needs to provide an Excel (.xlsx) file containing columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`. See below for an example of what this kind of data set might look like: 
 
 ```{r, echo=FALSE}
 df %>% select(indicator_name, actual, actual_lastweek, actual_lastyear, target) %>% glimpse()
 ```
 
-This package is based on visualizing M&E deliverables or "Indicators", however, it can be handy for anyone that depends on monitoring Key Performance Indicators (KPIs) or needs to track progress against different targets. 
 
-To use the functions included in this package, one needs to provide an Excel (.xlsx) file containing these exact columns (in the order of appearance): `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `Target`. The following sections will describe these variables, as well as the extra variables calculated within the function in more detail. In later versions we hope to streamline this process to make it easier to use. 
+The following sections will describe these variables, as well as the extra variables calculated within the function in more detail. In later versions we hope to streamline this process to make it easier to use. 
 
 * `indicator_name`: the name of the indicator or KPI that you are measuring
 * `actual`: the value of the indicator at the current time of viewing ("Today")
 * `actual_lastweek`: Last week's value of the indicator
 * `actual_lastyear`: Last year's value of the indicator
-* `Target`: the target value for the indicator (used to calculate the percent variables)
+* `target`: the target value for the indicator (used to calculate the percent variables)
 
+With some tidy eval magic you can provide a Excel file with different column names as long as you specify which corresponds to the column names listed above:
+
+<<<<IMAGE OF EXCEL FILE WITH DIFFERENT COLUMN NAMES>>>
+
+```{r}
+
+bullet_chart(file_name = "../data/test.xlsx",
+             indicator_name = "Indicators",
+             actual = "act",
+             actual_lastweek = "WEEKS",
+             actual_lastyear = "YEArz",
+             target = "MYGOUL")
+
+```
+
+As you can see instead of the proper column names we have some with names like "WEEKS" or "YEArz". By specifying that they are ... we can ensure that the function understands that those are the correct columns for 
+
+
+Moving on to the variables that are calculated internally by the function... 
 The percentages along the horizontal axis are calculated by: 
 
 * `Perc`: Value of indicator as percent of yearly taget and percent of the year at the current time
@@ -109,29 +123,39 @@ bullet_chart_vline(file_name = "../data/Indicators_Targets_full.xlsx")
 
 ## Different calendars
 
-Today shown on a Fiscal Year calendar (considering that today's physical date is `r Sys.Date()`.)
+The vertical line showing `Today` can be customized depending on whehter you are measuring by a fiscal year, a calendar year, or a custom date. `Today` shown on a Fiscal Year calendar (considering that today's physical date is `r Sys.Date()`.) is show below:
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart_symbols(file_name = "../data/Indicators_Targets_full.xlsx", cal_type = "fis")
 ```
 
-... or on a calendar year
+or for a calendar year:
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart_symbols(file_name = "../data/Indicators_Targets_ext.xlsx", cal_type = "cal")
 ```
 
-... or using a custom date fed directly into the plotting function.
+or using a custom date that you can feed directly into the plotting function:
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart_symbols(file_name = "../data/Indicators_Targets_ext.xlsx", cal_type = "2018/02/15")
 ```
 
+By doing this the function will automatically calculate your progress and targets according to the calendar type that you specified.
 
-## small version
+## `small` version
 
-...
+If you want to see a small version of your "Plot" panel just specify `small` = "yes". This will allow you to quickly check the the entire plot without having to enlarge it over and over again in the pop-up window.
+
+
+```{r}
+
+bullet_chart_wide(file_name = "../data/Indicators_Targets.xlsx", small = "yes")
+
+```
+
+
 
 ## Future Direction
 
-Currently this package is geared more toward non-R using M&E people (therefore, the Excel file input), however as we develop this package further we want to go towards being able to take different file inputs and make the bullet_chart functions more customizable for general use cases. 
+Currently this package is geared more toward non-R using M&E people (therefore, the Excel file input), however as we develop this package further we want to go towards being able to take different file inputs and make the `bullet_chart` functions more customizable for general use cases. 

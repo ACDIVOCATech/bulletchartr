@@ -14,6 +14,16 @@ extra_field_calculator(file_name, sheet_name = "Sheet1",
 
 \item{sheet_name}{specify which sheet in Excel file}
 
+\item{indicator_name}{specify the name of the column that has your indicator/KPI names}
+
+\item{actual}{specify the name of the column that has the current value of your indicators/KPIs}
+
+\item{actual_lastweek}{specify the name of the column that has the indicator/KPI value from the previous week}
+
+\item{actual_lastyear}{specify the name of the column that has the indicator/KPI value from the previous year}
+
+\item{target}{specify the name of the column that has the target value for the indicator/KPI}
+
 \item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
 
 \item{cal_type}{define what calendar you are using. Options are "fis" for fiscal year starting
