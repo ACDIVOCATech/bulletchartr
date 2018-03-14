@@ -21,19 +21,22 @@ The different grey colored bars represent the values of the indicator at "Last W
 
 This package, `bulletchartr` is based on visualizing M&E deliverables or "Indicators", however, it can be handy for anyone that depends on monitoring Key Performance Indicators (KPIs) or needs to track progress against different targets. 
 
-To use the functions included in this package, one needs to provide an Excel (.xlsx) file containing columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`. See below for an example of what this kind of data set might look like: 
+## Installation
 
+
+```r
+# Install the package from GitHub:
+# install.packages("devtools")
+
+devtools::install_github("ACDIVOCATech/bulletchartr")
 
 ```
-#> Observations: 6
-#> Variables: 5
-#> $ indicator_name  <chr> "Ind 04", "Ind 05", "Ind 07", "Ind 11", "Ind 1...
-#> $ actual          <dbl> 3, 437, 20, 44, 1, 10000
-#> $ actual_lastweek <dbl> 3, 420, 18, 20, 1, 10000
-#> $ actual_lastyear <dbl> 3, 50, 20, 2000, 1, 10000
-#> $ target          <dbl> 14, 81, 21, 10327, 5, 20000
-```
 
+## Excel column variables
+
+To use the functions included in this package, one needs to provide an Excel (.xlsx) file containing columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`. See below for an example of what this Excel sheet might look like: 
+
+![](README_files/figure-html/excel_names_correct.JPG)<!-- -->
 
 The following sections will describe these variables, as well as the extra variables calculated within the function in more detail. In later versions we hope to streamline this process to make it easier to use. 
 
@@ -158,6 +161,6 @@ bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "yes")
 
 
 
-## Future Direction
+## Future direction
 
 Currently this package is geared more toward non-R using M&E people (therefore, the Excel file input), however as we develop this package further we want to go towards being able to take different file inputs and make the `bullet_chart` functions more customizable for general use cases. 
