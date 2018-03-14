@@ -27,6 +27,6 @@ Imports: dplyr (>= 0.7.4),
     ggplot2 (>= 2.2.1),
     lubridate (>= 1.7.2), 
     testthat (>= 2.0.0),
-    rlang (>= 0.2.0.9000)
+    rlang (>= 0.2.0)
 Suggests: knitr,
     rmarkdown
