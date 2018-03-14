@@ -1,3 +1,15 @@
+---
+title: "Intro to bulletchartr"
+author: "Ryo Nakagawara & Amit Kohli"
+output: 
+  html_document:
+    keep_md: true
+        
+---
+
+
+
+
 ## What is a bullet chart?
 
 The __bullet chart__ was invented by [Stephen Few](https://www.perceptualedge.com/articles/misc/Bullet_Graph_Design_Spec.pIndicatorData), for the purpose of showing tons of info in a condensed form in KPIs.
@@ -156,8 +168,6 @@ If you want to see a small version of your "Plot" panel just specify `small` = "
 
 bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "yes")
 ```
-
-![](README_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
 
 

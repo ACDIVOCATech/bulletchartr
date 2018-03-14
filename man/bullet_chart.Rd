@@ -8,7 +8,7 @@ bullet_chart(file_name, sheet_name = "Sheet1",
   indicator_name = "indicator_name", actual = "actual",
   actual_lastweek = "actual_lastweek", actual_lastyear = "actual_lastyear",
   target = "target", for_year = year(Sys.Date()), cal_type = "fis",
-  small = "no")
+  small = FALSE)
 }
 \arguments{
 \item{file_name}{path of Excel file}
@@ -31,7 +31,7 @@ bullet_chart(file_name, sheet_name = "Sheet1",
 October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 format "YYYY/MM/DD", Default: fis}
 
-\item{small}{specify whether you want the small version of the plot ("yes" or "no"), Default: "no"}
+\item{small}{specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE}
 }
 \description{
 create a Stephen Few bullet chart

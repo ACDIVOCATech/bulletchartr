@@ -152,7 +152,7 @@ By doing this the function will automatically calculate your progress and target
 If you want to see a small version of your "Plot" panel just specify `small` = "yes". This will allow you to quickly check the entire plot without having to enlarge it over and over again in the pop-up window.
 
 
-```{r}
+```{r,fig.width=3,fig.height=3, echo=TRUE}
 
 bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "yes")
 
