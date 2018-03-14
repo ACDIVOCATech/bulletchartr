@@ -20,13 +20,13 @@ library(lubridate)
 library(ggplot2)
 library(bulletchartr)
 
-df <- readxl::read_xlsx("data/Indicators_Targets_full.xlsx", sheet = "Sheet1")
+IndicatorData <- readxl::read_xlsx("data/Indicators_Targets_full.xlsx", sheet = "Sheet1")
 
 ```
 
 ## What is a bullet chart?
 
-The __bullet chart__ was invented by [Stephen Few](https://www.perceptualedge.com/articles/misc/Bullet_Graph_Design_Spec.pdf), for the purpose of showing tons of info in a condensed form in KPIs.
+The __bullet chart__ was invented by [Stephen Few](https://www.perceptualedge.com/articles/misc/Bullet_Graph_Design_Spec.pIndicatorData), for the purpose of showing tons of info in a condensed form in KPIs.
 
 This type of graph is a variation on a typical bar graph with a thick line presenting an important point for that indicator (benchmark, performance target, etc.) and other bars in the background that can signify different levels of performance (low-high, bad-good, etc.). The bullet chart makes it very easy to compare between related measures (e.g. present status versus status at similar time in the past).
 
@@ -47,7 +47,7 @@ This package, `bulletchartr` is based on visualizing M&E deliverables or "Indica
 To use the functions included in this package, one needs to provide an Excel (.xlsx) file containing columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`. See below for an example of what this kind of data set might look like: 
 
 ```{r, echo=FALSE}
-df %>% select(indicator_name, actual, actual_lastweek, actual_lastyear, target) %>% glimpse()
+IndicatorData %>% select(indicator_name, actual, actual_lastweek, actual_lastyear, target) %>% glimpse()
 ```
 
 

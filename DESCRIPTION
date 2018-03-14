@@ -1,11 +1,13 @@
 Package: bulletchartr
 Type: Package
 Title: Create Bullet Charts For Visualizing KPIs
-Version: 0.0.0.9000
+Version: 0.0.0.900
 Authors@R: c(person("Ryo", "Nakagawara", email = "ryonakagawara@gmail.com",
                   role = c("aut", "cre")),
                   person("Amit", "Kohli", email= "mexindian@gmail.com",
                   role= c("aut")))
+BugReports:	https://github.com/ACDIVOCATech/bulletchartr/issues
+Vignette: [Intro](https://htmlpreview.github.io/?https://github.com/ACDIVOCATech/bulletchartr/blob/master/README.html)
 Description: This package attempts to provide a way to create 
     different types of bullet chart graphs to monitor "Indicators" 
     or "Key Performance Indicators (KPIs)" against a target. 
@@ -24,6 +26,7 @@ Imports: dplyr (>= 0.7.4),
     readxl (>= 1.0.0), 
     ggplot2 (>= 2.2.1),
     lubridate (>= 1.7.2), 
-    testthat (>= 2.0.0)
+    testthat (>= 2.0.0),
+    rlang (>= 0.2.0.9000)
 Suggests: knitr,
     rmarkdown

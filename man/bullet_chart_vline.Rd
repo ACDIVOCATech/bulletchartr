@@ -44,7 +44,8 @@ general "target" value), however at the current time you should change the value
 in the Excel file but not the variable name itself.
 }
 \examples{
-bullet_chart_vline(file_name = "data/Indicators_targets_ext.xlsx")
+bullet_chart_vline(file_name = system.file("data/Indicators_targets_ext.xlsx",
+package="bulletchartr"))
 }
 \seealso{
 \code{\link[ggplot2]{ggplot}}

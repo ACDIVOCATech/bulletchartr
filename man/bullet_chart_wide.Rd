@@ -42,7 +42,7 @@ uses different thicknesses for the bars as the benchmarks for previous time poin
 accentuate the difference graphically.
 }
 \examples{
-bullet_chart_wide(file_name = "data/Indicators_targets.xlsx")
+bullet_chart_wide(file_name = system.file("data/Indicators_targets.xlsx",package="bulletchartr"))
 
 }
 \seealso{

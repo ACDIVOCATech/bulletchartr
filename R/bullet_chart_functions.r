@@ -25,7 +25,7 @@
 #' @importFrom testthat test_that expect_equal
 #' @importFrom readxl read_xlsx
 #' @importFrom lubridate year month
-#' @import rlang
+#' @importFrom rlang enquo !!
 
 extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
                                    indicator_name = "indicator_name",
@@ -54,11 +54,11 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
   }
 
   ## Assign field names to this dataset
-  ind <- enquo(indicator_name)
-  a <- enquo(actual)
-  al <- enquo(actual_lastweek)
-  ay <- enquo(actual_lastyear)
-  t <- enquo(target)
+  ind <- rlang::enquo(indicator_name)
+  a <- rlang::enquo(actual)
+  al <- rlang::enquo(actual_lastweek)
+  ay <- rlang::enquo(actual_lastyear)
+  t <- rlang::enquo(target)
 
   ammended_data <- ammended_data %>%
     select(indicator_name = !!ind,
@@ -163,13 +163,12 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
 #' @details This version of the bullet chart most closely resembles Stephen Few's design. The single black bar represents
 #' the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue).
 #' @examples
-#' bullet_chart("data/Indicators_targets_ext.xlsx")
+#' bullet_chart(system.file("data/Indicators_targets_ext.xlsx",package="bulletchartr"))
 #' @seealso
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname bullet_chart
 #' @export
 #' @import ggplot2
-#' @import rlang
 #' @importFrom dplyr mutate %>% select
 
 bullet_chart <- function(file_name, sheet_name = "Sheet1",
@@ -264,14 +263,13 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1",
 #' uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
 #' accentuate the difference graphically.
 #' @examples
-#' bullet_chart_wide(file_name = "data/Indicators_targets.xlsx")
+#' bullet_chart_wide(file_name = system.file("data/Indicators_targets.xlsx",package="bulletchartr"))
 #'
 #' @seealso
 #'  \code{\link[ggplot2]{geom_bar}}
 #' @rdname bullet_chart_wide
 #' @export
 #' @import ggplot2
-#' @import rlang
 #' @importFrom dplyr mutate %>% select
 
 bullet_chart_wide <- function(file_name, sheet_name = "Sheet1",
@@ -375,13 +373,13 @@ bullet_chart_wide <- function(file_name, sheet_name = "Sheet1",
 #' The symbols represent the indicator value for last week (diamond) and last year (circle).
 #'
 #' @examples
-#'  bullet_chart_symbols(file_name = "data/Indicators_targets.xlsx")
+#'  bullet_chart_symbols(file_name = system.file("data/Indicators_targets.xlsx",
+#'  package="bulletchartr"))
 #' @seealso
 #'  \code{\link[ggplot2]{geom_bar}}, \code{\link[ggplot2]{scale_manual}}
 #' @rdname bullet_chart_symbols
 #' @export
 #' @import ggplot2
-#' @import rlang
 #' @importFrom dplyr mutate %>% select
 
 bullet_chart_symbols <- function(file_name, sheet_name = "Sheet1",
@@ -490,13 +488,13 @@ bullet_chart_symbols <- function(file_name, sheet_name = "Sheet1",
 #' general "target" value), however at the current time you should change the values of "actual_lastyear"
 #' in the Excel file but not the variable name itself.
 #' @examples
-#' bullet_chart_vline(file_name = "data/Indicators_targets_ext.xlsx")
+#' bullet_chart_vline(file_name = system.file("data/Indicators_targets_ext.xlsx",
+#' package="bulletchartr"))
 #' @seealso
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname bullet_chart_vline
 #' @export
 #' @import ggplot2
-#' @import rlang
 #' @importFrom dplyr mutate %>% select
 
 bullet_chart_vline <- function(file_name, sheet_name = "Sheet1",

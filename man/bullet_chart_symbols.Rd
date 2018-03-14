@@ -47,7 +47,8 @@ it's close, and "red" if it is far off track.
 The symbols represent the indicator value for last week (diamond) and last year (circle).
 }
 \examples{
- bullet_chart_symbols(file_name = "data/Indicators_targets.xlsx")
+ bullet_chart_symbols(file_name = system.file("data/Indicators_targets.xlsx",
+ package="bulletchartr"))
 }
 \seealso{
 \code{\link[ggplot2]{geom_bar}}, \code{\link[ggplot2]{scale_manual}}
