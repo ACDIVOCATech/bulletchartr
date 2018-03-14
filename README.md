@@ -1,18 +1,6 @@
----
-title: "Intro to bulletchartr"
-author: "Ryo Nakagawara & Amit Kohli"
-output: 
-  html_document:
-    keep_md: true
-        
----
-
-
-
-
 ## What is a bullet chart?
 
-The __bullet chart__ was invented by [Stephen Few](https://www.perceptualedge.com/articles/misc/Bullet_Graph_Design_Spec.pdf), for the purpose of showing tons of info in a condensed form in KPIs.
+The __bullet chart__ was invented by [Stephen Few](https://www.perceptualedge.com/articles/misc/Bullet_Graph_Design_Spec.pIndicatorData), for the purpose of showing tons of info in a condensed form in KPIs.
 
 This type of graph is a variation on a typical bar graph with a thick line presenting an important point for that indicator (benchmark, performance target, etc.) and other bars in the background that can signify different levels of performance (low-high, bad-good, etc.). The bullet chart makes it very easy to compare between related measures (e.g. present status versus status at similar time in the past).
 
@@ -29,7 +17,7 @@ The single black bar represents the current value of the indicator while the dif
 
 As you can see, the bars show the progression along the horizontal-axis presenting the percentage of the yearly target completed. Also, along this axis is the percent of the year gone by with a vertical line indicating what exact percentage __"Today"__ is along this percentage. It is necessary to use percentages as we have multiple indicators of varying units/parameters for each project! 
 
-The different grey colored bars represent the values of the indicator at "Last Week" and "Last Year". The greyscaled bars can represent any qualitative rranges such as "bad - good - excellent" or ____ . In the near future we will look to expand the capabilities of this package to allow users to specify these qualitative ranges to fit their needs. 
+The different grey colored bars represent the values of the indicator at "Last Week" and "Last Year". The grey scaled bars can represent any qualitative ranges such as "bad - good - excellent" or ____ . In the near future we will look to expand the capabilities of this package to allow users to specify these qualitative ranges to fit their needs. 
 
 This package, `bulletchartr` is based on visualizing M&E deliverables or "Indicators", however, it can be handy for anyone that depends on monitoring Key Performance Indicators (KPIs) or needs to track progress against different targets. 
 
@@ -55,9 +43,11 @@ The following sections will describe these variables, as well as the extra varia
 * `actual_lastyear`: Last year's value of the indicator
 * `target`: the target value for the indicator (used to calculate the percent variables)
 
-With some tidy eval magic you can provide a Excel file with different column names as long as you specify which corresponds to the column names listed above:
+With some tidy eval magic you can provide a Excel file with different column names as long as you specify which corresponds to the column names listed above. For example, with an Excel sheet with these column names:
 
-<<<<IMAGE OF EXCEL FILE WITH DIFFERENT COLUMN NAMES>>>
+![](https://imgur.com/6KQfopj)
+
+As you can see we have some names like "WEEKS" or "YEArz". We can specify what each of these names correspond to inside the function call and we can still get a proper chart!
 
 
 ```r
@@ -72,13 +62,11 @@ bullet_chart(file_name = "data/test.xlsx",
 
 ![](README_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
 
-As you can see instead of the proper column names we have some with names like "WEEKS" or "YEArz". By specifying that they are ... we can ensure that the function understands that those are the correct columns for 
+Now let's move on to the variables that are calculated internally by the function!
 
-
-Moving on to the variables that are calculated internally by the function... 
 The percentages along the horizontal axis are calculated by: 
 
-* `Perc`: Value of indicator as percent of yearly taget and percent of the year at the current time
+* `Perc`: Value of indicator as percent of yearly target and percent of the year at the current time
 * `PercWeek`: Last week's value of the indicator as percent of yearly target and percent of the year
 * `PercYear`: Last year's value of the indicator as percent of yearly target and percent of the year
 
@@ -126,7 +114,7 @@ bullet_chart_vline(file_name = "data/Indicators_Targets_full.xlsx")
 
 ## Different calendars
 
-The vertical line showing `Today` can be customized depending on whehter you are measuring by a fiscal year, a calendar year, or a custom date. `Today` shown on a Fiscal Year calendar (considering that today's physical date is 2018-03-14.) is show below:
+The vertical line showing `Today` can be customized depending on whether you are measuring by a fiscal year, a calendar year, or a custom date. `Today` shown on a Fiscal Year calendar (considering that today's physical date is 2018-03-14.) is show below:
 
 
 ```r
@@ -157,7 +145,7 @@ By doing this the function will automatically calculate your progress and target
 
 ## `small` version
 
-If you want to see a small version of your "Plot" panel just specify `small` = "yes". This will allow you to quickly check the the entire plot without having to enlarge it over and over again in the pop-up window.
+If you want to see a small version of your "Plot" panel just specify `small` = "yes". This will allow you to quickly check the entire plot without having to enlarge it over and over again in the pop-up window.
 
 
 
