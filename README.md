@@ -45,7 +45,7 @@ The following sections will describe these variables, as well as the extra varia
 
 With some tidy eval magic you can provide a Excel file with different column names as long as you specify which corresponds to the column names listed above. For example, with an Excel sheet with these column names:
 
-![](https://imgur.com/6KQfopj)
+![](README_files/figure-html/excel_names.JPG)<!-- -->
 
 As you can see we have some names like "WEEKS" or "YEArz". We can specify what each of these names correspond to inside the function call and we can still get a proper chart!
 
