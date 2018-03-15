@@ -63,7 +63,7 @@ To use the functions included in this package, one can provide either a datafram
 
 bullet_chart(dataframe = df)
 
-bullet_chart(file_name = "data/Indicators_Targets_ext.xlsx")
+bullet_chart(file_name = "data/Indicators_Targets.xlsx")
 
 ```
 
@@ -112,7 +112,7 @@ The percentages along the horizontal axis are calculated by:
 
 ## bullet_chart() functions!
 
-Along with the `bullet_chart()` function that you saw above we also have `bullet_chart2()`.
+Along with the `bullet_chart()` function that you saw above we also have `bullet_chart_wide()`.
 This is similar to the standard bullet chart but uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
 accentuate the difference graphically.
 
@@ -175,4 +175,4 @@ bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "TRUE")
 
 ## Future direction
 
-Currently this package is geared more toward non-R using M&E people (therefore, the Excel file input), however as we develop this package further we want to go towards being able to take different file inputs and make the `bullet_chart` functions more customizable for general use cases. 
+Currently this package is geared more toward non-R using M&E people (therefore, the Excel file input alongside a dataframe input), however as we develop this package further we want to go towards being able to make the `bullet_chart` functions more customizable for general use cases. 

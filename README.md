@@ -10,6 +10,7 @@ output:
 
 
 
+
 ## What is a bullet chart?
 
 The __bullet chart__ was invented by [Stephen Few](https://www.perceptualedge.com/articles/misc/Bullet_Graph_Design_Spec.pIndicatorData), for the purpose of showing tons of info in a condensed form in KPIs.
@@ -44,9 +45,20 @@ devtools::install_github("ACDIVOCATech/bulletchartr")
 
 ```
 
-## Excel column variables
+## Dataframe or Excel input
 
-To use the functions included in this package, one needs to provide an Excel (.xlsx) file containing columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`. See below for an example of what this Excel sheet might look like: 
+To use the functions included in this package, one can provide either a dataframe or Excel (.xlsx) file as the input. Either file input needs to contain columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`.
+
+
+```r
+
+bullet_chart(dataframe = df)
+
+bullet_chart(file_name = "data/Indicators_Targets.xlsx")
+
+```
+
+See below for an example of what this might look like (in an Excel sheet): 
 
 ![](README_files/figure-html/excel_names_correct.JPG)<!-- -->
 
@@ -58,7 +70,7 @@ The following sections will describe these variables, as well as the extra varia
 * `actual_lastyear`: Last year's value of the indicator
 * `target`: the target value for the indicator (used to calculate the percent variables)
 
-With some tidy eval magic you can provide a Excel file with different column names as long as you specify which corresponds to the column names listed above. For example, with an Excel sheet with these column names:
+With some tidy eval magic you can provide an input (Excel or dataframe) with different column names as long as you specify which corresponds to the column names listed above. For example, with an Excel sheet with these column names:
 
 ![](README_files/figure-html/excel_names.JPG)<!-- -->
 
@@ -75,7 +87,7 @@ bullet_chart(file_name = "data/test.xlsx",
              target = "MYGOUL")
 ```
 
-![](README_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
 Now let's move on to the variables that are calculated internally by the function!
 
@@ -93,7 +105,7 @@ The percentages along the horizontal axis are calculated by:
 
 ## bullet_chart() functions!
 
-Along with the `bullet_chart()` function that you saw above we also have `bullet_chart2()`.
+Along with the `bullet_chart()` function that you saw above we also have `bullet_chart_wide()`.
 This is similar to the standard bullet chart but uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
 accentuate the difference graphically.
 
@@ -102,7 +114,7 @@ accentuate the difference graphically.
 bullet_chart_wide(file_name = "data/Indicators_Targets_full.xlsx")
 ```
 
-![](README_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 
 `bullet_chart_symbols()` shows a version with different symbols representing the indicator value for 
@@ -113,7 +125,7 @@ last week (diamond) and last year (circle).
 bullet_chart_symbols(file_name = "data/Indicators_Targets_full.xlsx")
 ```
 
-![](README_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 
 `bullet_chart_vline()` provides a version with a single colored bar representing the current value
@@ -125,18 +137,18 @@ last year.
 bullet_chart_vline(file_name = "data/Indicators_Targets_full.xlsx")
 ```
 
-![](README_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 ## Different calendars
 
-The vertical line showing `Today` can be customized depending on whether you are measuring by a fiscal year, a calendar year, or a custom date. `Today` shown on a Fiscal Year calendar (considering that today's physical date is 2018-03-14.) is show below:
+The vertical line showing `Today` can be customized depending on whether you are measuring by a fiscal year, a calendar year, or a custom date. `Today` shown on a Fiscal Year calendar (considering that today's physical date is 2018-03-15.) is show below:
 
 
 ```r
 bullet_chart_symbols(file_name = "data/Indicators_Targets_full.xlsx", cal_type = "fis")
 ```
 
-![](README_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 or for a calendar year:
 
@@ -145,7 +157,7 @@ or for a calendar year:
 bullet_chart_symbols(file_name = "data/Indicators_Targets_ext.xlsx", cal_type = "cal")
 ```
 
-![](README_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 or using a custom date that you can feed directly into the plotting function:
 
@@ -154,23 +166,25 @@ or using a custom date that you can feed directly into the plotting function:
 bullet_chart_symbols(file_name = "data/Indicators_Targets_ext.xlsx", cal_type = "2018/02/15")
 ```
 
-![](README_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
 By doing this the function will automatically calculate your progress and targets according to the calendar type that you specified.
 
 ## `small` version
 
-If you want to see a small version of your "Plot" panel just specify `small` = "yes". This will allow you to quickly check the entire plot without having to enlarge it over and over again in the pop-up window.
+If you want to see a small version of your "Plot" panel just specify `small` = "TRUE". This will allow you to quickly check the entire plot without having to enlarge it over and over again in the pop-up window. The small version also hides the text so as to not clutter up the limited space.
 
 
 
 ```r
 
-bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "yes")
+bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "TRUE")
 ```
+
+![](README_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
 
 
 
 ## Future direction
 
-Currently this package is geared more toward non-R using M&E people (therefore, the Excel file input), however as we develop this package further we want to go towards being able to take different file inputs and make the `bullet_chart` functions more customizable for general use cases. 
+Currently this package is geared more toward non-R using M&E people (therefore, the Excel file input alongside a dataframe input), however as we develop this package further we want to go towards being able to make the `bullet_chart` functions more customizable for general use cases. 
