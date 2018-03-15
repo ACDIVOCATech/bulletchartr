@@ -23,7 +23,7 @@
 #'  \code{\link[readxl]{read_excel}}
 #' @rdname extra_field_calculator
 #' @importFrom dplyr mutate %>% case_when
-#' @importFrom testthat test_that expect_equal
+#' @importFrom testthat test_that expect_equal expect_true
 #' @importFrom readxl read_xlsx
 #' @importFrom lubridate year month
 #' @importFrom rlang enquo !!
@@ -38,28 +38,30 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
                                    for_year = year(Sys.Date()),
                                    cal_type = "fis") {
 
-  if (missing(dataframe)) {
 
-  testthat::test_that("Does the specified file exist in the directory?", {
+  ## Ensure both dataframe and file not provided
+  testthat::test_that("Only one dataset inputted (dataframe OR file_name",
+                      code = testthat::expect_true(is.null(file_name) | is.null(dataframe)))
 
-    testthat::expect_equal(TRUE, file.exists(file_name)
-    )
+  ## Read in excel file or dataframe
+  if (!is.null(file_name)) {
+    ## File provided
+    testthat::test_that("Does the specified file exist in the directory?",
+      testthat::expect_equal(TRUE, file.exists(file_name)))
 
-  })
-
-  ## Read in Excel file:
-  ammended_data <- readxl::read_xlsx(path = file_name, sheet = sheet_name)
-  } else if(missing(file_name)) {
-
+    ## Read in Excel file:
+    ammended_data <- readxl::read_xlsx(path = file_name, sheet = sheet_name)
+  } else if(!is.null(dataframe)) {
+    ## dataframe provided
     ammended_data <- dataframe
-
   }
 
   # If ammended_data is empty, break function and output empty chart
   if (nrow(ammended_data) == 0){
-    ammended_data <- "No data available"
+    return("No data available")
 
   }
+
 
   ## Assign field names to this dataset
   ind <- rlang::enquo(indicator_name)
@@ -180,8 +182,8 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
 #' @import ggplot2
 #' @importFrom dplyr mutate %>% select
 
-bullet_chart <- function(file_name, sheet_name = "Sheet1",
-                         dataframe,
+bullet_chart <- function(file_name=NULL, sheet_name = "Sheet1",
+                         dataframe=NULL,
                          indicator_name = "indicator_name",
                          actual = "actual",
                          actual_lastweek = "actual_lastweek",
@@ -283,8 +285,8 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1",
 #' @import ggplot2
 #' @importFrom dplyr mutate %>% select
 
-bullet_chart_wide <- function(file_name, sheet_name = "Sheet1",
-                              dataframe,
+bullet_chart_wide <- function(file_name=NULL, sheet_name = "Sheet1",
+                              dataframe=NULL,
                               indicator_name = "indicator_name",
                               actual = "actual",
                               actual_lastweek = "actual_lastweek",
@@ -395,8 +397,8 @@ bullet_chart_wide <- function(file_name, sheet_name = "Sheet1",
 #' @import ggplot2
 #' @importFrom dplyr mutate %>% select
 
-bullet_chart_symbols <- function(file_name, sheet_name = "Sheet1",
-                                 dataframe,
+bullet_chart_symbols <- function(file_name=NULL, sheet_name = "Sheet1",
+                                 dataframe=NULL,
                                  indicator_name = "indicator_name",
                                  actual = "actual",
                                  actual_lastweek = "actual_lastweek",
@@ -512,8 +514,8 @@ bullet_chart_symbols <- function(file_name, sheet_name = "Sheet1",
 #' @import ggplot2
 #' @importFrom dplyr mutate %>% select
 
-bullet_chart_vline <- function(file_name, sheet_name = "Sheet1",
-                               dataframe,
+bullet_chart_vline <- function(file_name=NULL, sheet_name = "Sheet1",
+                               dataframe=NULL,
                                indicator_name = "indicator_name",
                                actual = "actual",
                                actual_lastweek = "actual_lastweek",
