@@ -4,7 +4,7 @@
 \alias{bullet_chart_vline}
 \title{bullet_chart_vline}
 \usage{
-bullet_chart_vline(file_name, sheet_name = "Sheet1",
+bullet_chart_vline(file_name, sheet_name = "Sheet1", dataframe,
   indicator_name = "indicator_name", actual = "actual",
   actual_lastweek = "actual_lastweek", actual_lastyear = "actual_lastyear",
   target = "target", for_year = year(Sys.Date()), cal_type = "fis",
@@ -14,6 +14,8 @@ bullet_chart_vline(file_name, sheet_name = "Sheet1",
 \item{file_name}{path of Excel file}
 
 \item{sheet_name}{specify which sheet in Excel file, Default: "Sheet1"}
+
+\item{dataframe}{specify R dataframe input}
 
 \item{indicator_name}{specify the name of the column that has your indicator/KPI names}
 

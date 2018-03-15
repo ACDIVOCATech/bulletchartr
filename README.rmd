@@ -13,12 +13,15 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+
 ```{r include=FALSE}
 library(readxl)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
 library(bulletchartr)
+
+load("data/df.Rda")
 
 ```
 
@@ -52,9 +55,19 @@ devtools::install_github("ACDIVOCATech/bulletchartr")
 
 ```
 
-## Excel column variables
+## Dataframe or Excel input
 
-To use the functions included in this package, one needs to provide an Excel (.xlsx) file containing columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`. See below for an example of what this Excel sheet might look like: 
+To use the functions included in this package, one can provide either a dataframe or Excel (.xlsx) file as the input. Either file input needs to contain columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`.
+
+```{r, fig.width=6,fig.height=5, eval=FALSE}
+
+bullet_chart(dataframe = df)
+
+bullet_chart(file_name = "data/Indicators_Targets_ext.xlsx")
+
+```
+
+See below for an example of what this might look like (in an Excel sheet): 
 
 ![](README_files/figure-html/excel_names_correct.JPG)<!-- -->
 
@@ -66,7 +79,7 @@ The following sections will describe these variables, as well as the extra varia
 * `actual_lastyear`: Last year's value of the indicator
 * `target`: the target value for the indicator (used to calculate the percent variables)
 
-With some tidy eval magic you can provide a Excel file with different column names as long as you specify which corresponds to the column names listed above. For example, with an Excel sheet with these column names:
+With some tidy eval magic you can provide an input (Excel or dataframe) with different column names as long as you specify which corresponds to the column names listed above. For example, with an Excel sheet with these column names:
 
 ![](README_files/figure-html/excel_names.JPG)<!-- -->
 
@@ -149,12 +162,12 @@ By doing this the function will automatically calculate your progress and target
 
 ## `small` version
 
-If you want to see a small version of your "Plot" panel just specify `small` = "yes". This will allow you to quickly check the entire plot without having to enlarge it over and over again in the pop-up window.
+If you want to see a small version of your "Plot" panel just specify `small` = "TRUE". This will allow you to quickly check the entire plot without having to enlarge it over and over again in the pop-up window. The small version also hides the text so as to not clutter up the limited space.
 
 
 ```{r,fig.width=3,fig.height=3, echo=TRUE}
 
-bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "yes")
+bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "TRUE")
 
 ```
 

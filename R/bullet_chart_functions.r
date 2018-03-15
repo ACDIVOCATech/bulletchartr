@@ -7,6 +7,7 @@
 #' @description internal function for calculating the extra fields needed for bullet charts
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file
+#' @param dataframe specify R dataframe input
 #' @param indicator_name specify the name of the column that has your indicator/KPI names
 #' @param actual specify the name of the column that has the current value of your indicators/KPIs
 #' @param actual_lastweek specify the name of the column that has the indicator/KPI value from the previous week
@@ -28,6 +29,7 @@
 #' @importFrom rlang enquo !!
 
 extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
+                                   dataframe,
                                    indicator_name = "indicator_name",
                                    actual = "actual",
                                    actual_lastweek = "actual_lastweek",
@@ -35,6 +37,8 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
                                    target = "target",
                                    for_year = year(Sys.Date()),
                                    cal_type = "fis") {
+
+  if (missing(dataframe)) {
 
   testthat::test_that("Does the specified file exist in the directory?", {
 
@@ -45,7 +49,11 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
 
   ## Read in Excel file:
   ammended_data <- readxl::read_xlsx(path = file_name, sheet = sheet_name)
+  } else if(missing(file_name)) {
 
+    ammended_data <- dataframe
+
+  }
 
   # If ammended_data is empty, break function and output empty chart
   if (nrow(ammended_data) == 0){
@@ -150,6 +158,7 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
 #' @description create a Stephen Few bullet chart
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
+#' @param dataframe specify R dataframe input
 #' @param indicator_name specify the name of the column that has your indicator/KPI names
 #' @param actual specify the name of the column that has the current value of your indicators/KPIs
 #' @param actual_lastweek specify the name of the column that has the indicator/KPI value from the previous week
@@ -172,6 +181,7 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
 #' @importFrom dplyr mutate %>% select
 
 bullet_chart <- function(file_name, sheet_name = "Sheet1",
+                         dataframe,
                          indicator_name = "indicator_name",
                          actual = "actual",
                          actual_lastweek = "actual_lastweek",
@@ -181,6 +191,7 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1",
                          cal_type = "fis", small = FALSE) {
 
   ammended_data <- extra_field_calculator(file_name, sheet_name,
+                                          dataframe,
                                           indicator_name, actual,
                                           actual_lastweek, actual_lastyear,
                                           target, for_year, cal_type)
@@ -248,6 +259,7 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1",
 #' @description create bullet chart with bars of varying width
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
+#' @param dataframe specify R dataframe input
 #' @param indicator_name specify the name of the column that has your indicator/KPI names
 #' @param actual specify the name of the column that has the current value of your indicators/KPIs
 #' @param actual_lastweek specify the name of the column that has the indicator/KPI value from the previous week
@@ -272,6 +284,7 @@ bullet_chart <- function(file_name, sheet_name = "Sheet1",
 #' @importFrom dplyr mutate %>% select
 
 bullet_chart_wide <- function(file_name, sheet_name = "Sheet1",
+                              dataframe,
                               indicator_name = "indicator_name",
                               actual = "actual",
                               actual_lastweek = "actual_lastweek",
@@ -281,6 +294,7 @@ bullet_chart_wide <- function(file_name, sheet_name = "Sheet1",
                               cal_type = "fis", small = FALSE) {
 
   ammended_data <- extra_field_calculator(file_name, sheet_name,
+                                          dataframe,
                                           indicator_name, actual,
                                           actual_lastweek, actual_lastyear,
                                           target, for_year, cal_type)
@@ -351,6 +365,7 @@ bullet_chart_wide <- function(file_name, sheet_name = "Sheet1",
 #' @description creates bullet chart with symbols
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
+#' @param dataframe specify R dataframe input
 #' @param indicator_name specify the name of the column that has your indicator/KPI names
 #' @param actual specify the name of the column that has the current value of your indicators/KPIs
 #' @param actual_lastweek specify the name of the column that has the indicator/KPI value from the previous week
@@ -381,6 +396,7 @@ bullet_chart_wide <- function(file_name, sheet_name = "Sheet1",
 #' @importFrom dplyr mutate %>% select
 
 bullet_chart_symbols <- function(file_name, sheet_name = "Sheet1",
+                                 dataframe,
                                  indicator_name = "indicator_name",
                                  actual = "actual",
                                  actual_lastweek = "actual_lastweek",
@@ -390,6 +406,7 @@ bullet_chart_symbols <- function(file_name, sheet_name = "Sheet1",
                                  cal_type = "fis", small = FALSE) {
 
   ammended_data <- extra_field_calculator(file_name, sheet_name,
+                                          dataframe,
                                           indicator_name, actual,
                                           actual_lastweek, actual_lastyear,
                                           target, for_year, cal_type)
@@ -469,6 +486,7 @@ bullet_chart_symbols <- function(file_name, sheet_name = "Sheet1",
 #' @description create bullet chart showing last year's value as the target
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
+#' @param dataframe specify R dataframe input
 #' @param indicator_name specify the name of the column that has your indicator/KPI names
 #' @param actual specify the name of the column that has the current value of your indicators/KPIs
 #' @param actual_lastweek specify the name of the column that has the indicator/KPI value from the previous week
@@ -495,6 +513,7 @@ bullet_chart_symbols <- function(file_name, sheet_name = "Sheet1",
 #' @importFrom dplyr mutate %>% select
 
 bullet_chart_vline <- function(file_name, sheet_name = "Sheet1",
+                               dataframe,
                                indicator_name = "indicator_name",
                                actual = "actual",
                                actual_lastweek = "actual_lastweek",
@@ -504,6 +523,7 @@ bullet_chart_vline <- function(file_name, sheet_name = "Sheet1",
                                cal_type = "fis", small = FALSE) {
 
   ammended_data <- extra_field_calculator(file_name, sheet_name,
+                                          dataframe,
                                           indicator_name, actual,
                                           actual_lastweek, actual_lastyear,
                                           target, for_year, cal_type)
