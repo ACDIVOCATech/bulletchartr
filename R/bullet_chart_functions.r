@@ -198,22 +198,23 @@ bullet_chart <- function(file_name=NULL, sheet_name = "Sheet1",
                                           actual_lastweek, actual_lastyear,
                                           target, for_year, cal_type)
 
+  g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
+    geom_col(aes(y = 100), fill = "grey85",  width = 0.4) +
+    geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
+    coord_flip() +
+    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
+         x = " ") +
+    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
+    theme_minimal() +
+    expand_limits(x = 6.75, y = 102)
 
   if (small == FALSE){
 
-    g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
-      geom_col(aes(y = 100), fill = "grey85",  width = 0.4) +
-      geom_col(aes(y = perc_week), fill = "grey68",  width = 0.4) +
+    g <- g + geom_col(aes(y = perc_week), fill = "grey68",  width = 0.4) +
       geom_col(aes(y = perc_year), fill = "#7A7A7A", width = 0.4) +
       geom_col(aes(y = perc), fill = "grey10", width = 0.1, color = "grey10", alpha = 0.9) +
       geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
-      geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
-      coord_flip() +
-      labs(y = "Percent of Yearly Target\n&\n Percent of Year",
-           x = " ") +
-      ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
-      theme_minimal() +
       theme(axis.text.y = element_text(size = 15, face = "bold"),
             axis.title.x = element_text(face = "bold", size = 10,
                                         margin = margin(t = 25, r = 0, b = 20, l = 0)),
@@ -221,25 +222,16 @@ bullet_chart <- function(file_name=NULL, sheet_name = "Sheet1",
             title = element_text(face = "bold"),
             plot.title = element_text(hjust = 0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 8),
-            legend.position = "none") +
-      expand_limits(x = 6.75, y = 102)
+            legend.position = "none")
 
     print(g)
 
   }else if (small == TRUE){
 
-    g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
-      geom_col(aes(y = 100), fill = "grey85",  width = 0.4) +
-      geom_col(aes(y = perc_week), fill = "grey68",  width = 0.4) +
+    g <- g + geom_col(aes(y = perc_week), fill = "grey68",  width = 0.4) +
       geom_col(aes(y = perc_year), fill = "#7A7A7A", width = 0.4) +
       geom_col(aes(y = perc), fill = "grey10", width = 0.15, color = "grey10", alpha = 0.9) +
-      geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
-      coord_flip() +
-      labs(y = "Percent of Yearly Target\n&\n Percent of Year",
-           x = " ") +
-      ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
-      theme_minimal() +
       theme(axis.text.y = element_text(size = 8, face = "bold"),
             axis.title.x = element_text(face = "bold", size = 7,
                                         margin = margin(t = 25, r = 0, b = 20, l = 0)),
@@ -247,8 +239,7 @@ bullet_chart <- function(file_name=NULL, sheet_name = "Sheet1",
             title = element_text(face = "bold", size = 8),
             plot.title = element_text(hjust = 0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 6),
-            legend.position = "none") +
-      expand_limits(x = 6.75, y = 102)
+            legend.position = "none")
 
     print(g)
 
@@ -302,21 +293,24 @@ bullet_chart_wide <- function(file_name=NULL, sheet_name = "Sheet1",
                                           target, for_year, cal_type)
   low_level <- ammended_data$low_level[1]
 
+
+  g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
+    geom_col(aes(y = perc_week), width = 0.5, alpha = 0.6) +
+    geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
+    coord_flip() +
+    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
+         x = " ") +
+    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
+    theme_minimal() +
+    expand_limits(x = 6.75, y = 102)
+
   if (small == FALSE){
 
-    g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
-      geom_col(aes(y = perc_week), width = 0.5, alpha = 0.6) +
-      geom_col(aes(y = perc_year), width = 0.75, alpha = 0.3) +
+    g <- g + geom_col(aes(y = perc_year), width = 0.75, alpha = 0.3) +
       geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
       scale_fill_gradient("Indicator\nBehind By:", limits = c(low_level, 0), low = "red3", high = "green3") +
       geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
-      geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
-      coord_flip() +
-      labs(y = "Percent of Yearly Target\n&\n Percent of Year",
-           x = " ") +
-      ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
-      theme_minimal() +
       theme(axis.text.y = element_text(size = 15, face = "bold"),
             axis.title.x = element_text(face = "bold", size = 10,
                                         margin = margin(t = 25, r = 0, b = 20, l = 0)),
@@ -324,26 +318,17 @@ bullet_chart_wide <- function(file_name=NULL, sheet_name = "Sheet1",
             title = element_text(face = "bold"),
             plot.title = element_text(hjust = 0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 8),
-            legend.position = "none") +
-      expand_limits(x = 6.75, y = 102)
+            legend.position = "none")
 
     print(g)
 
   }else if (small == TRUE){
 
-    g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
-      geom_col(aes(y = perc_week), width = 0.4, alpha = 0.6) +
-      geom_col(aes(y = perc_year), width = 0.65, alpha = 0.3) +
+    g <- g + geom_col(aes(y = perc_year), width = 0.65, alpha = 0.3) +
       geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
       scale_fill_gradient("Indicator\nBehind By:", limits = c(low_level, 0), low = "red3", high = "green3") +
-      geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
                angle = 90, alpha = 0.5, size = 2.5) +
-      coord_flip() +
-      labs(y = "Percent of Yearly Target\n&\n Percent of Year",
-           x = " ") +
-      ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
-      theme_minimal() +
       theme(axis.text.y = element_text(size = 8, face = "bold"),
             axis.title.x = element_text(face = "bold", size = 7,
                                         margin = margin(t = 25, r = 0, b = 20, l = 0)),
@@ -351,8 +336,7 @@ bullet_chart_wide <- function(file_name=NULL, sheet_name = "Sheet1",
             title = element_text(face = "bold", size = 8),
             plot.title = element_text(hjust = 0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 6),
-            legend.position = "none") +
-      expand_limits(x = 6.75, y = 102)
+            legend.position = "none")
 
     print(g)
 
@@ -415,25 +399,27 @@ bullet_chart_symbols <- function(file_name=NULL, sheet_name = "Sheet1",
 
   low_level <- ammended_data$low_level[1]
 
+  g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
+    geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+    geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
+    geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
+    coord_flip() +
+    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
+         x = " ") +
+    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
+    theme_minimal() +
+    expand_limits(x = 6.75, y = 102)
+
   if (small == FALSE){
 
-    g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
-      geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
-      scale_fill_gradient("Indicator\nBehind By:", limits = c(low_level, 0), low = "red", high = "green",
+    g <- g + scale_fill_gradient("Indicator\nBehind By:", limits = c(low_level, 0), low = "red", high = "green",
                           guide = FALSE) +
       geom_point(aes(y = perc_week, shape = "Last Week"), size = 6, stroke = 1) +
       geom_point(aes(y = perc_year, shape = "Last Year"), size = 6, stroke = 1) +
       scale_shape_manual(" ", values = c(23, 21)) +
-      geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
       geom_text(y = 1, aes(label = text), vjust = -1.5, hjust = 0, size = 4) +
-      geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
                angle = 90, alpha = 0.5, size = 5) +
-      coord_flip() +
-      labs(y = "Percent of Yearly Target\n&\n Percent of Year",
-           x = " ") +
-      ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
-      theme_minimal() +
       theme(axis.text.y = element_text(size = 15, face = "bold"),
             axis.title.x = element_text(face = "bold", size = 10,
                                         margin = margin(t = 25, r = 0, b = 20, l = 0)),
@@ -442,29 +428,19 @@ bullet_chart_symbols <- function(file_name=NULL, sheet_name = "Sheet1",
             plot.title = element_text(hjust = 0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 8),
             legend.position = c(0.8, -0.12),
-            legend.key.size = unit(1.5, "lines")) +
-      expand_limits(x = 6.75, y = 102)
+            legend.key.size = unit(1.5, "lines"))
 
     print(g)
 
   }else if (small == TRUE){
 
-    g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
-      geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
-      scale_fill_gradient("Indicator\nBehind By:", limits = c(low_level, 0), low = "red", high = "green",
+    g <- g + scale_fill_gradient("Indicator\nBehind By:", limits = c(low_level, 0), low = "red", high = "green",
                           guide = FALSE) +
       geom_point(aes(y = perc_week, shape = "Last Week"), size = 3, stroke = 1) +
       geom_point(aes(y = perc_year, shape = "Last Year"), size = 3, stroke = 1) +
       scale_shape_manual(" ", values = c(23, 21)) +
-      geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
-      geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
                angle = 90, alpha = 0.5, size = 2.5) +
-      coord_flip() +
-      labs(y = "Percent of Yearly Target\n&\n Percent of Year",
-           x = " ") +
-      ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
-      theme_minimal() +
       theme(axis.text.y = element_text(size = 8, face = "bold"),
             axis.title.x = element_text(face = "bold", size = 7,
                                         margin = margin(t = 25, r = 0, b = 20, l = 0)),
@@ -473,8 +449,7 @@ bullet_chart_symbols <- function(file_name=NULL, sheet_name = "Sheet1",
             plot.title = element_text(hjust = 0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 6),
             legend.position = c(0.8, -0.12),
-            legend.key.size = unit(1, "lines")) +
-      expand_limits(x = 6.75, y = 102)
+            legend.key.size = unit(1, "lines"))
 
     print(g)
 
@@ -532,20 +507,22 @@ bullet_chart_vline <- function(file_name=NULL, sheet_name = "Sheet1",
 
   low_level <- ammended_data$low_level[1]
 
+  g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
+    geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+    scale_fill_gradient("", limits = c(low_level, 0), low = "darkred", high = "darkgreen") +
+    geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
+    coord_flip() +
+    labs(y = "Percent of Yearly Target",
+         x = " ") +
+    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
+    theme_minimal() +
+    expand_limits(x = 6.75, y = 102)
+
   if (small == FALSE){
 
-    g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
-      geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
-      scale_fill_gradient("", limits = c(low_level, 0), low = "darkred", high = "darkgreen") +
-      geom_point(aes(y = perc_year, shape = "Last Year"), size = 4.5, stroke = 3) +
+    g <- g + geom_point(aes(y = perc_year, shape = "Last Year"), size = 4.5, stroke = 3) +
       scale_shape_manual(" ", values = 124) +
-      geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
       geom_text(y = 1, aes(label = text), vjust = -1.5, hjust = 0) +
-      coord_flip() +
-      labs(y = "Percent of Yearly Target",
-           x = " ") +
-      ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
-      theme_minimal() +
       theme(axis.text.y = element_text(size = 15, face = "bold"),
             axis.title.x = element_text(face = "bold", size = 10,
                                         margin = margin(t = 25, r = 0, b = 20, l = 0)),
@@ -553,24 +530,14 @@ bullet_chart_vline <- function(file_name=NULL, sheet_name = "Sheet1",
             title = element_text(face = "bold"),
             plot.title = element_text(hjust = 0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 8),
-            legend.position = "none") +
-      expand_limits(x = 6.75, y = 102)
+            legend.position = "none")
 
     print(g)
 
   } else if (small == TRUE){
 
-    g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
-      geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
-      scale_fill_gradient("", limits = c(low_level, 0), low = "darkred", high = "darkgreen") +
-      geom_point(aes(y = perc_year, shape = "Last Year"), size = 3, stroke = 3) +
+    g <- g + geom_point(aes(y = perc_year, shape = "Last Year"), size = 3, stroke = 3) +
       scale_shape_manual(" ", values = 124) +
-      geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
-      coord_flip() +
-      labs(y = "Percent of Yearly Target",
-           x = " ") +
-      ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
-      theme_minimal() +
       theme(axis.text.y = element_text(size = 8, face = "bold"),
             axis.title.x = element_text(face = "bold", size = 7,
                                         margin = margin(t = 25, r = 0, b = 20, l = 0)),
@@ -578,8 +545,7 @@ bullet_chart_vline <- function(file_name=NULL, sheet_name = "Sheet1",
             title = element_text(face = "bold", size = 8),
             plot.title = element_text(hjust = 0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 6),
-            legend.position = "none") +
-      expand_limits(x = 6.75, y = 102)
+            legend.position = "none")
 
     print(g)
 
