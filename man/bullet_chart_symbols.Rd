@@ -8,7 +8,7 @@ bullet_chart_symbols(file_name = NULL, sheet_name = "Sheet1",
   dataframe = NULL, indicator_name = "indicator_name", actual = "actual",
   actual_lastweek = "actual_lastweek", actual_lastyear = "actual_lastyear",
   target = "target", for_year = year(Sys.Date()), cal_type = "fis",
-  small = FALSE)
+  small = FALSE, legend = FALSE)
 }
 \arguments{
 \item{file_name}{path of Excel file}
@@ -34,6 +34,8 @@ October 1st, "cal" for calendar year starting January 1st, or enter your own cus
 format "YYYY/MM/DD", Default: fis}
 
 \item{small}{specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE}
+
+\item{legend}{specify whether you want to show the legend, Default: FALSE}
 }
 \description{
 creates bullet chart with symbols

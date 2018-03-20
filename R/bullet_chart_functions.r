@@ -171,6 +171,7 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
 #' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 #' format "YYYY/MM/DD", Default: fis
 #' @param small specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE
+#' @param legend specify whether you want to show the legend, Default: FALSE
 #' @details This version of the bullet chart most closely resembles Stephen Few's design. The single black bar represents
 #' the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue).
 #' @examples
@@ -182,15 +183,16 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
 #' @import ggplot2
 #' @importFrom dplyr mutate %>% select
 
-bullet_chart <- function(file_name=NULL, sheet_name = "Sheet1",
-                         dataframe=NULL,
+bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
+                         dataframe = NULL,
                          indicator_name = "indicator_name",
                          actual = "actual",
                          actual_lastweek = "actual_lastweek",
                          actual_lastyear = "actual_lastyear",
                          target = "target",
                          for_year = year(Sys.Date()),
-                         cal_type = "fis", small = FALSE) {
+                         cal_type = "fis",
+                         small = FALSE, legend = FALSE) {
 
   ammended_data <- extra_field_calculator(file_name, sheet_name,
                                           dataframe,
@@ -199,7 +201,7 @@ bullet_chart <- function(file_name=NULL, sheet_name = "Sheet1",
                                           target, for_year, cal_type)
 
   g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
-    geom_col(aes(y = 100), fill = "grey85",  width = 0.4) +
+    geom_col(aes(y = 100), fill = "grey85", width = 0.4) +
     geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
     coord_flip() +
     labs(y = "Percent of Yearly Target\n&\n Percent of Year",
@@ -210,8 +212,11 @@ bullet_chart <- function(file_name=NULL, sheet_name = "Sheet1",
 
   if (small == FALSE){
 
-    g <- g + geom_col(aes(y = perc_week), fill = "grey68",  width = 0.4) +
-      geom_col(aes(y = perc_year), fill = "#7A7A7A", width = 0.4) +
+    g <- g + geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
+      geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
+      scale_alpha_manual(name = "",
+                         values = c(0.6, 0.3),
+                         labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
       geom_col(aes(y = perc), fill = "grey10", width = 0.1, color = "grey10", alpha = 0.9) +
       geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
@@ -221,28 +226,49 @@ bullet_chart <- function(file_name=NULL, sheet_name = "Sheet1",
             axis.text.x = element_text(face = "bold", size = 12),
             title = element_text(face = "bold"),
             plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 8),
-            legend.position = "none")
+            plot.subtitle = element_text(hjust = 0.5, size = 8))
 
-    print(g)
+    if (legend == FALSE){
+
+      g <- g + theme(legend.position = "none")
+
+      print(g)
+
+    }else if (legend == TRUE){
+
+      print(g)
+
+    }
 
   }else if (small == TRUE){
 
-    g <- g + geom_col(aes(y = perc_week), fill = "grey68",  width = 0.4) +
-      geom_col(aes(y = perc_year), fill = "#7A7A7A", width = 0.4) +
+    g <- g + geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
+      geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
+      scale_alpha_manual(name = "",
+                         values = c(0.6, 0.3),
+                         labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
       geom_col(aes(y = perc), fill = "grey10", width = 0.15, color = "grey10", alpha = 0.9) +
-      annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
+      annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
+               angle = 90, alpha = 0.5, size = 2.5) +
       theme(axis.text.y = element_text(size = 8, face = "bold"),
             axis.title.x = element_text(face = "bold", size = 7,
                                         margin = margin(t = 25, r = 0, b = 20, l = 0)),
             axis.text.x = element_text(face = "bold", size = 10),
             title = element_text(face = "bold", size = 8),
             plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 6),
-            legend.position = "none")
+            plot.subtitle = element_text(hjust = 0.5, size = 6))
 
-    print(g)
+    if (legend == FALSE){
 
+      g <- g + theme(legend.position = "none")
+
+      print(g)
+
+    }else if (legend == TRUE){
+
+      print(g)
+
+    }
   }
 }
 
@@ -263,6 +289,7 @@ bullet_chart <- function(file_name=NULL, sheet_name = "Sheet1",
 #' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 #' format "YYYY/MM/DD", Default: fis
 #' @param small specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE
+#' @param legend specify whether you want to show the legend, Default: FALSE
 #' @details This version conforms more closely with the standard bullet chart design. This function
 #' uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
 #' accentuate the difference graphically.
@@ -276,15 +303,16 @@ bullet_chart <- function(file_name=NULL, sheet_name = "Sheet1",
 #' @import ggplot2
 #' @importFrom dplyr mutate %>% select
 
-bullet_chart_wide <- function(file_name=NULL, sheet_name = "Sheet1",
-                              dataframe=NULL,
+bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
+                              dataframe = NULL,
                               indicator_name = "indicator_name",
                               actual = "actual",
                               actual_lastweek = "actual_lastweek",
                               actual_lastyear = "actual_lastyear",
                               target = "target",
                               for_year = year(Sys.Date()),
-                              cal_type = "fis", small = FALSE) {
+                              cal_type = "fis",
+                              small = FALSE, legend = FALSE) {
 
   ammended_data <- extra_field_calculator(file_name, sheet_name,
                                           dataframe,
@@ -295,7 +323,7 @@ bullet_chart_wide <- function(file_name=NULL, sheet_name = "Sheet1",
 
 
   g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
-    geom_col(aes(y = perc_week), width = 0.5, alpha = 0.6) +
+    geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.5) +
     geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
     coord_flip() +
     labs(y = "Percent of Yearly Target\n&\n Percent of Year",
@@ -306,9 +334,15 @@ bullet_chart_wide <- function(file_name=NULL, sheet_name = "Sheet1",
 
   if (small == FALSE){
 
-    g <- g + geom_col(aes(y = perc_year), width = 0.75, alpha = 0.3) +
+    g <- g + geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.75) +
+      scale_alpha_manual(name = "",
+                         values = c(0.6, 0.3),
+                         labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
       geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
-      scale_fill_gradient("Indicator\nBehind By:", limits = c(low_level, 0), low = "red3", high = "green3") +
+      scale_fill_gradient("", limits = c(low_level, 0),
+                          low = "red3", high = "green3",
+                          labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                          breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
       geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
       theme(axis.text.y = element_text(size = 15, face = "bold"),
@@ -317,16 +351,31 @@ bullet_chart_wide <- function(file_name=NULL, sheet_name = "Sheet1",
             axis.text.x = element_text(face = "bold", size = 12),
             title = element_text(face = "bold"),
             plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 8),
-            legend.position = "none")
+            plot.subtitle = element_text(hjust = 0.5, size = 8))
 
-    print(g)
+    if (legend == FALSE){
+
+      g <- g + theme(legend.position = "none")
+
+      print(g)
+
+    }else if (legend == TRUE){
+
+      print(g)
+
+    }
 
   }else if (small == TRUE){
 
-    g <- g + geom_col(aes(y = perc_year), width = 0.65, alpha = 0.3) +
+    g <- g + geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.65) +
+      scale_alpha_manual(name = "",
+                         values = c(0.6, 0.3),
+                         labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
       geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
-      scale_fill_gradient("Indicator\nBehind By:", limits = c(low_level, 0), low = "red3", high = "green3") +
+      scale_fill_gradient(" ", limits = c(low_level, 0),
+                          low = "red3", high = "green3",
+                          labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                          breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
                angle = 90, alpha = 0.5, size = 2.5) +
       theme(axis.text.y = element_text(size = 8, face = "bold"),
@@ -335,11 +384,19 @@ bullet_chart_wide <- function(file_name=NULL, sheet_name = "Sheet1",
             axis.text.x = element_text(face = "bold", size = 10),
             title = element_text(face = "bold", size = 8),
             plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 6),
-            legend.position = "none")
+            plot.subtitle = element_text(hjust = 0.5, size = 6))
 
-    print(g)
+    if (legend == FALSE){
 
+      g <- g + theme(legend.position = "none")
+
+      print(g)
+
+    }else if (legend == TRUE){
+
+      print(g)
+
+    }
   }
 }
 
@@ -362,6 +419,7 @@ bullet_chart_wide <- function(file_name=NULL, sheet_name = "Sheet1",
 #' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 #' format "YYYY/MM/DD", Default: fis
 #' @param small specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE
+#' @param legend specify whether you want to show the legend, Default: FALSE
 #' @details The bar for each Indicator show the progression along the horizontal-axis presenting
 #' the percentage of the yearly target completed. This axis also shows the percent of the year
 #' gone by with the vertical line indicating what exact percentage "Today" is, along this percentage.
@@ -381,15 +439,16 @@ bullet_chart_wide <- function(file_name=NULL, sheet_name = "Sheet1",
 #' @import ggplot2
 #' @importFrom dplyr mutate %>% select
 
-bullet_chart_symbols <- function(file_name=NULL, sheet_name = "Sheet1",
-                                 dataframe=NULL,
+bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
+                                 dataframe = NULL,
                                  indicator_name = "indicator_name",
                                  actual = "actual",
                                  actual_lastweek = "actual_lastweek",
                                  actual_lastyear = "actual_lastyear",
                                  target = "target",
                                  for_year = year(Sys.Date()),
-                                 cal_type = "fis", small = FALSE) {
+                                 cal_type = "fis",
+                                 small = FALSE, legend = FALSE) {
 
   ammended_data <- extra_field_calculator(file_name, sheet_name,
                                           dataframe,
@@ -412,8 +471,10 @@ bullet_chart_symbols <- function(file_name=NULL, sheet_name = "Sheet1",
 
   if (small == FALSE){
 
-    g <- g + scale_fill_gradient("Indicator\nBehind By:", limits = c(low_level, 0), low = "red", high = "green",
-                          guide = FALSE) +
+    g <- g + scale_fill_gradient("", limits = c(low_level, 0),
+                                 low = "red", high = "green",
+                                 labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                                 breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
       geom_point(aes(y = perc_week, shape = "Last Week"), size = 6, stroke = 1) +
       geom_point(aes(y = perc_year, shape = "Last Year"), size = 6, stroke = 1) +
       scale_shape_manual(" ", values = c(23, 21)) +
@@ -427,15 +488,26 @@ bullet_chart_symbols <- function(file_name=NULL, sheet_name = "Sheet1",
             title = element_text(face = "bold", size = 14),
             plot.title = element_text(hjust = 0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 8),
-            legend.position = c(0.8, -0.12),
             legend.key.size = unit(1.5, "lines"))
 
-    print(g)
+    if (legend == FALSE){
+
+      g <- g + theme(legend.position = "none")
+
+      print(g)
+
+    }else if (legend == TRUE){
+
+      print(g)
+
+    }
 
   }else if (small == TRUE){
 
-    g <- g + scale_fill_gradient("Indicator\nBehind By:", limits = c(low_level, 0), low = "red", high = "green",
-                          guide = FALSE) +
+    g <- g + scale_fill_gradient(" ", limits = c(low_level, 0),
+                                 low = "red", high = "green",
+                                 labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                                 breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
       geom_point(aes(y = perc_week, shape = "Last Week"), size = 3, stroke = 1) +
       geom_point(aes(y = perc_year, shape = "Last Year"), size = 3, stroke = 1) +
       scale_shape_manual(" ", values = c(23, 21)) +
@@ -448,11 +520,19 @@ bullet_chart_symbols <- function(file_name=NULL, sheet_name = "Sheet1",
             title = element_text(face = "bold", size = 8),
             plot.title = element_text(hjust = 0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 6),
-            legend.position = c(0.8, -0.12),
             legend.key.size = unit(1, "lines"))
 
-    print(g)
+    if (legend == FALSE){
 
+      g <- g + theme(legend.position = "none")
+
+      print(g)
+
+    }else if (legend == TRUE){
+
+      print(g)
+
+    }
   }
 }
 
@@ -474,6 +554,7 @@ bullet_chart_symbols <- function(file_name=NULL, sheet_name = "Sheet1",
 #' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 #' format "YYYY/MM/DD", Default: fis
 #' @param small specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE
+#' @param legend specify whether you want to show the legend, Default: FALSE
 #' @details This version of the bullet chart shows a single colored bar representing the current value
 #' for the indicator along with a black vertical line representing the indicator value at this time
 #' last year. The definition for the vertical line can be changed to your preference (such as a more
@@ -489,15 +570,16 @@ bullet_chart_symbols <- function(file_name=NULL, sheet_name = "Sheet1",
 #' @import ggplot2
 #' @importFrom dplyr mutate %>% select
 
-bullet_chart_vline <- function(file_name=NULL, sheet_name = "Sheet1",
-                               dataframe=NULL,
+bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
+                               dataframe = NULL,
                                indicator_name = "indicator_name",
                                actual = "actual",
                                actual_lastweek = "actual_lastweek",
                                actual_lastyear = "actual_lastyear",
                                target = "target",
                                for_year = year(Sys.Date()),
-                               cal_type = "fis", small = FALSE) {
+                               cal_type = "fis",
+                               small = FALSE, legend = FALSE) {
 
   ammended_data <- extra_field_calculator(file_name, sheet_name,
                                           dataframe,
@@ -509,7 +591,10 @@ bullet_chart_vline <- function(file_name=NULL, sheet_name = "Sheet1",
 
   g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
     geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
-    scale_fill_gradient("", limits = c(low_level, 0), low = "darkred", high = "darkgreen") +
+    scale_fill_gradient("", limits = c(low_level, 0),
+                        low = "red", high = "green",
+                        labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                        breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
     geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
     coord_flip() +
     labs(y = "Percent of Yearly Target",
@@ -529,10 +614,19 @@ bullet_chart_vline <- function(file_name=NULL, sheet_name = "Sheet1",
             axis.text.x = element_text(face = "bold", size = 12),
             title = element_text(face = "bold"),
             plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 8),
-            legend.position = "none")
+            plot.subtitle = element_text(hjust = 0.5, size = 8))
 
-    print(g)
+    if (legend == FALSE){
+
+      g <- g + theme(legend.position = "none")
+
+      print(g)
+
+    }else if (legend == TRUE){
+
+      print(g)
+
+    }
 
   } else if (small == TRUE){
 
@@ -544,10 +638,18 @@ bullet_chart_vline <- function(file_name=NULL, sheet_name = "Sheet1",
             axis.text.x = element_text(face = "bold", size = 10),
             title = element_text(face = "bold", size = 8),
             plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 6),
-            legend.position = "none")
+            plot.subtitle = element_text(hjust = 0.5, size = 6))
 
-    print(g)
+    if (legend == FALSE){
 
+      g <- g + theme(legend.position = "none")
+
+      print(g)
+
+    }else if (legend == TRUE){
+
+      print(g)
+
+    }
   }
 }

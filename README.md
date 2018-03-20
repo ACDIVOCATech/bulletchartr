@@ -30,7 +30,7 @@ The single black bar represents the current value of the indicator while the dif
 
 As you can see, the bars show the progression along the horizontal-axis presenting the percentage of the yearly target completed. Also, along this axis is the percent of the year gone by with a vertical line indicating what exact percentage __"Today"__ is along this percentage. It is necessary to use percentages as we have multiple indicators of varying units/parameters for each project! 
 
-The different grey colored bars represent the values of the indicator at "Last Week" and "Last Year". The grey scaled bars can represent any qualitative ranges such as "bad - good - excellent" or ____ . In the near future we will look to expand the capabilities of this package to allow users to specify these qualitative ranges to fit their needs. 
+The different grey colored bars represent the values of the indicator at "Last Week" and "Last Year". The grey scaled bars can represent any qualitative ranges such as "bad - good - excellent" or "disabled - repairing - fixed", etc. In the near future we will look to expand the capabilities of this package to allow users to specify these qualitative ranges to fit their needs. 
 
 This package, `bulletchartr` is based on visualizing M&E deliverables or "Indicators", however, it can be handy for anyone that depends on monitoring Key Performance Indicators (KPIs) or needs to track progress against different targets. 
 
@@ -141,7 +141,7 @@ bullet_chart_vline(file_name = "data/Indicators_Targets_full.xlsx")
 
 ## Different calendars
 
-The vertical line showing `Today` can be customized depending on whether you are measuring by a fiscal year, a calendar year, or a custom date. `Today` shown on a Fiscal Year calendar (considering that today's physical date is 2018-03-15.) is show below:
+The vertical line showing `Today` can be customized depending on whether you are measuring by a fiscal year, a calendar year, or a custom date. `Today` shown on a Fiscal Year calendar (considering that today's physical date is 2018-03-20.) is show below:
 
 
 ```r
@@ -172,7 +172,7 @@ By doing this the function will automatically calculate your progress and target
 
 ## `small` version
 
-If you want to see a small version of your "Plot" panel just specify `small` = "TRUE". This will allow you to quickly check the entire plot without having to enlarge it over and over again in the pop-up window. The small version also hides the text so as to not clutter up the limited space.
+If you want to see a small version of your "Plot" panel just specify `small` = __TRUE__. This will allow you to quickly check the entire plot without having to enlarge it over and over again in the pop-up window. The small version also hides the text so as to not clutter up the limited space.
 
 
 
@@ -183,6 +183,17 @@ bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "TRUE")
 
 ![](README_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
 
+## Show legends
+
+You have the option to show legends for both the indicator schedule and the symbols by specifying `legend` = **TRUE**. Default is **FALSE**.
+
+
+```r
+
+bullet_chart_symbols(file_name = "data/Indicators_Targets.xlsx", legend = TRUE)
+```
+
+![](README_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
 
 
 ## Future direction
