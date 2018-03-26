@@ -256,7 +256,9 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
             axis.text.x = element_text(face = "bold", size = 10),
             title = element_text(face = "bold", size = 8),
             plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 6))
+            plot.subtitle = element_text(hjust = 0.5, size = 6),
+            legend.text = element_text(size = 8),
+            legend.key.size = unit(0.8, "lines"))
 
     if (legend == FALSE){
 
@@ -384,7 +386,9 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
             axis.text.x = element_text(face = "bold", size = 10),
             title = element_text(face = "bold", size = 8),
             plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 6))
+            plot.subtitle = element_text(hjust = 0.5, size = 6),
+            legend.text = element_text(size = 8),
+            legend.key.size = unit(0.8, "lines"))
 
     if (legend == FALSE){
 
@@ -520,7 +524,8 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
             title = element_text(face = "bold", size = 8),
             plot.title = element_text(hjust = 0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 6),
-            legend.key.size = unit(1, "lines"))
+            legend.text = element_text(size = 8),
+            legend.key.size = unit(0.8, "lines"))
 
     if (legend == FALSE){
 
@@ -638,7 +643,9 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
             axis.text.x = element_text(face = "bold", size = 10),
             title = element_text(face = "bold", size = 8),
             plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 6))
+            plot.subtitle = element_text(hjust = 0.5, size = 6),
+            legend.text = element_text(size = 8),
+            legend.key.size = unit(0.8, "lines"))
 
     if (legend == FALSE){
 
