@@ -1,13 +1,4 @@
----
-title: "Intro to bulletchartr"
-author: "Ryo Nakagawara & Amit Kohli"
-output: 
-  html_document:
-    keep_md: true
-        
----
-
-
+[![Travis-CI Build Status](https://travis-ci.org/ACDIVOCATech/bulletchartr.svg?branch=master)](https://travis-ci.org/ACDIVOCATech/bulletchartr)
 
 
 
