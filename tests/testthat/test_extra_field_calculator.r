@@ -1,5 +1,10 @@
 context("extra_field_calculator")
 
+#testthat::test_that("only one file type inputted",
+#                    expect_equal(extra_field_calculator(file_name = "data/Indicators_Targets.xlsx"),
+#                                 extra_field_calculator(file_name = "data/Indiacotrs_Targets.xlsx", dataframe = NULL)))
+
+
 
 
 ################################################# TESTING

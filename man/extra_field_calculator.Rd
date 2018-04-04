@@ -4,8 +4,8 @@
 \alias{extra_field_calculator}
 \title{extra_field_calculator}
 \usage{
-extra_field_calculator(file_name, sheet_name = "Sheet1", dataframe,
-  indicator_name = "indicator_name", actual = "actual",
+extra_field_calculator(file_name = NULL, sheet_name = "Sheet1",
+  dataframe = NULL, indicator_name = "indicator_name", actual = "actual",
   actual_lastweek = "actual_lastweek", actual_lastyear = "actual_lastyear",
   target = "target", for_year = year(Sys.Date()), cal_type = "fis")
 }

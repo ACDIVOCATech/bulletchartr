@@ -28,8 +28,8 @@
 #' @importFrom lubridate year month
 #' @importFrom rlang enquo !!
 
-extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
-                                   dataframe,
+extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
+                                   dataframe = NULL,
                                    indicator_name = "indicator_name",
                                    actual = "actual",
                                    actual_lastweek = "actual_lastweek",
@@ -41,16 +41,14 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
 
   ## Ensure both dataframe and file not provided
   testthat::test_that("Only one dataset inputted (dataframe OR file_name",
-                      code = testthat::expect_true(is.null(file_name) | is.null(dataframe)))
+                      testthat::expect_true(is.null(file_name) | is.null(dataframe)))
 
   ## Read in excel file or dataframe
   if (!is.null(file_name)) {
-    ## File provided
-    testthat::test_that("Does the specified file exist in the directory?",
-      testthat::expect_equal(TRUE, file.exists(file_name)))
 
     ## Read in Excel file:
     ammended_data <- readxl::read_xlsx(path = file_name, sheet = sheet_name)
+
   } else if(!is.null(dataframe)) {
     ## dataframe provided
     ammended_data <- dataframe
@@ -138,6 +136,13 @@ extra_field_calculator <- function(file_name, sheet_name = "Sheet1",
     behind_by <= 0 & !is.na(behind_by) ~ paste("Need ", round(as.numeric(text)), " more", sep = "")
 
   ))
+
+  # if no target specified (as zero or NA) then "NO TARGET":
+  #ammended_data <- ammended_data %>% mutate(text = case_when(
+
+    #target == 0 | is.na(target) ~ "NO TARGET"
+
+  #))
 
   # Behind By to lower limit = 0
   ammended_data <- ammended_data %>% mutate(low_level = -0.2 * ammended_data$percent_time)
