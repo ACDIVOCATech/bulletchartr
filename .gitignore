@@ -2,5 +2,4 @@
 .Rhistory
 .RData
 .Ruserdata
-inst/doc
-to_do's.rmd
+.travis.yml

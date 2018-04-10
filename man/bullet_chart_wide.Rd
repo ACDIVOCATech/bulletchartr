@@ -46,8 +46,8 @@ uses different thicknesses for the bars as the benchmarks for previous time poin
 accentuate the difference graphically.
 }
 \examples{
-bullet_chart_wide(file_name = system.file("data/Indicators_targets.xlsx",package="bulletchartr"))
-
+data(df)
+bullet_chart_wide(dataframe = df)
 }
 \seealso{
 \code{\link[ggplot2]{geom_bar}}

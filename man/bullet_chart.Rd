@@ -45,7 +45,8 @@ This version of the bullet chart most closely resembles Stephen Few's design. Th
 the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue).
 }
 \examples{
-bullet_chart(system.file("data/Indicators_targets_ext.xlsx",package="bulletchartr"))
+data(df)
+bullet_chart(dataframe = df)
 }
 \seealso{
 \code{\link[ggplot2]{ggplot}}
