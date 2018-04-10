@@ -40,7 +40,7 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
 
 
   ## Ensure both dataframe and file not provided
-  testthat::test_that("Only one dataset inputted (dataframe OR file_name",
+  testthat::test_that("Only one dataset inputted: dataframe OR file_name - not both",
                       testthat::expect_true(is.null(file_name) | is.null(dataframe)))
 
   ## Read in excel file or dataframe
@@ -180,7 +180,8 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
 #' @details This version of the bullet chart most closely resembles Stephen Few's design. The single black bar represents
 #' the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue).
 #' @examples
-#' bullet_chart(system.file("data/Indicators_targets_ext.xlsx",package="bulletchartr"))
+#' data(df)
+#' bullet_chart(dataframe = df)
 #' @seealso
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname bullet_chart
@@ -301,8 +302,8 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
 #' uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
 #' accentuate the difference graphically.
 #' @examples
-#' bullet_chart_wide(file_name = system.file("data/Indicators_targets.xlsx",package="bulletchartr"))
-#'
+#' data(df)
+#' bullet_chart_wide(dataframe = df)
 #' @seealso
 #'  \code{\link[ggplot2]{geom_bar}}
 #' @rdname bullet_chart_wide
@@ -439,8 +440,8 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
 #' The symbols represent the indicator value for last week (diamond) and last year (circle).
 #'
 #' @examples
-#'  bullet_chart_symbols(file_name = system.file("data/Indicators_targets.xlsx",
-#'  package="bulletchartr"))
+#' data(df)
+#' bullet_chart_symbols(dataframe = df)
 #' @seealso
 #'  \code{\link[ggplot2]{geom_bar}}, \code{\link[ggplot2]{scale_manual}}
 #' @rdname bullet_chart_symbols
@@ -571,8 +572,8 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 #' general "target" value), however at the current time you should change the values of "actual_lastyear"
 #' in the Excel file but not the variable name itself.
 #' @examples
-#' bullet_chart_vline(file_name = system.file("data/Indicators_targets_ext.xlsx",
-#' package="bulletchartr"))
+#' data(df)
+#' bullet_chart_vline(dataframe = df)
 #' @seealso
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname bullet_chart_vline
