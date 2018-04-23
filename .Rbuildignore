@@ -1,2 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.travis\.yml$
+^data/Indicators_Targets\.xlsx$
+^data/Indicators_Targets_ext\.xlsx$
+^data/Indicators_Targets_full\.xlsx$
+^data/test\.xlsx$
