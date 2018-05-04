@@ -5,3 +5,6 @@
 ^data/Indicators_Targets_ext\.xlsx$
 ^data/Indicators_Targets_full\.xlsx$
 ^data/test\.xlsx$
+^README\.html$
+^README\.md$
+^README\.rmd$

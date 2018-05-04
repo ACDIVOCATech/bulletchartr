@@ -216,6 +216,8 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
     theme_minimal() +
     expand_limits(x = 6.75, y = 102)
 
+  #if (small != is.logical(small)) warning("small must be TRUE or FALSE")
+
   if (small == FALSE){
 
     g <- g + geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
