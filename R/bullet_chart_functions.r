@@ -40,14 +40,14 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
 
 
   ## Ensure both dataframe and file not provided
-  testthat::test_that("Only one dataset inputted: dataframe OR file_name - not both",
-                      testthat::expect_true(is.null(file_name) | is.null(dataframe)))
+  test_that("Only one dataset inputted: dataframe OR file_name - not both",
+                      expect_true(is.null(file_name) | is.null(dataframe)))
 
   ## Read in excel file or dataframe
   if (!is.null(file_name)) {
 
     ## Read in Excel file:
-    ammended_data <- readxl::read_xlsx(path = file_name, sheet = sheet_name)
+    ammended_data <- read_xlsx(path = file_name, sheet = sheet_name)
 
   } else if(!is.null(dataframe)) {
     ## dataframe provided
@@ -62,11 +62,11 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
 
 
   ## Assign field names to this dataset
-  ind <- rlang::enquo(indicator_name)
-  a <- rlang::enquo(actual)
-  al <- rlang::enquo(actual_lastweek)
-  ay <- rlang::enquo(actual_lastyear)
-  t <- rlang::enquo(target)
+  ind <- enquo(indicator_name)
+  a <- enquo(actual)
+  al <- enquo(actual_lastweek)
+  ay <- enquo(actual_lastyear)
+  t <- enquo(target)
 
   ammended_data <- ammended_data %>%
     select(indicator_name = !!ind,
@@ -76,7 +76,7 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
            target = !!t
     )
   # Create percentage variables
-  ammended_data <- ammended_data %>% dplyr::mutate(perc = actual / (target + 0.0000000000001) * 100,
+  ammended_data <- ammended_data %>% mutate(perc = actual / (target + 0.0000000000001) * 100,
                       perc_week = actual_lastweek / (target + 0.0000000000001) * 100,
                       perc_year = actual_lastyear / (target + 0.0000000000001) * 100)
 
@@ -186,7 +186,8 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname bullet_chart
 #' @export
-#' @import ggplot2
+#' @importFrom ggplot2 aes geom_col geom_hline coord_flip labs ggtitle theme_minimal
+#' expand_limits scale_alpha_manual geom_text annotate theme element_text margin unit
 #' @importFrom dplyr mutate %>% select
 
 bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
@@ -206,7 +207,7 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
                                           actual_lastweek, actual_lastyear,
                                           target, for_year, cal_type)
 
-  g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
+  g <- ggplot(ammended_data, aes(x = indicator_name)) +
     geom_col(aes(y = 100), fill = "grey85", width = 0.4) +
     geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
     coord_flip() +
@@ -227,7 +228,8 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
                          labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
       geom_col(aes(y = perc), fill = "grey10", width = 0.1, color = "grey10", alpha = 0.9) +
       geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
-      annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
+      annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
+               hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
       theme(axis.text.y = element_text(size = 15, face = "bold"),
             axis.title.x = element_text(face = "bold", size = 10,
                                         margin = margin(t = 25, r = 0, b = 20, l = 0)),
@@ -310,7 +312,9 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
 #'  \code{\link[ggplot2]{geom_bar}}
 #' @rdname bullet_chart_wide
 #' @export
-#' @import ggplot2
+#' @importFrom ggplot2 aes geom_col geom_hline coord_flip labs ggtitle theme_minimal
+#' expand_limits scale_alpha_manual scale_fill_gradient geom_text annotate theme
+#' element_text margin unit
 #' @importFrom dplyr mutate %>% select
 
 bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
@@ -332,7 +336,7 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
   low_level <- ammended_data$low_level[1]
 
 
-  g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
+  g <- ggplot(ammended_data, aes(x = indicator_name)) +
     geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.5) +
     geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
     coord_flip() +
@@ -354,7 +358,8 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
                           labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                           breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
       geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
-      annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
+      annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
+               hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
       theme(axis.text.y = element_text(size = 15, face = "bold"),
             axis.title.x = element_text(face = "bold", size = 10,
                                         margin = margin(t = 25, r = 0, b = 20, l = 0)),
@@ -448,7 +453,9 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
 #'  \code{\link[ggplot2]{geom_bar}}, \code{\link[ggplot2]{scale_manual}}
 #' @rdname bullet_chart_symbols
 #' @export
-#' @import ggplot2
+#' @importFrom ggplot2 aes geom_col geom_hline coord_flip labs ggtitle theme_minimal
+#' expand_limits scale_fill_gradient scale_shape_manual geom_text annotate theme
+#' element_text margin unit geom_point
 #' @importFrom dplyr mutate %>% select
 
 bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
@@ -470,7 +477,7 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 
   low_level <- ammended_data$low_level[1]
 
-  g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
+  g <- ggplot(ammended_data, aes(x = indicator_name)) +
     geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
     geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
     geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
@@ -580,7 +587,9 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname bullet_chart_vline
 #' @export
-#' @import ggplot2
+#' @importFrom ggplot2 aes geom_col geom_hline coord_flip labs ggtitle theme_minimal
+#' expand_limits scale_alpha_manual scale_fill_gradient geom_text annotate theme
+#' element_text margin unit geom_point
 #' @importFrom dplyr mutate %>% select
 
 bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
@@ -602,7 +611,7 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
 
   low_level <- ammended_data$low_level[1]
 
-  g <- ggplot2::ggplot(ammended_data, aes(x = indicator_name)) +
+  g <- ggplot(ammended_data, aes(x = indicator_name)) +
     geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
     scale_fill_gradient("", limits = c(low_level, 0),
                         low = "red", high = "green",

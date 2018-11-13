@@ -6,7 +6,7 @@ Authors@R: c(person("Ryo", "Nakagawara", email = "ryonakagawara@gmail.com",
                   role = c("aut", "cre")),
                   person("Amit", "Kohli", email= "mexindian@gmail.com",
                   role= c("aut")))
-BugReports:	https://github.com/ACDIVOCATech/bulletchartr/issues
+BugReports: https://github.com/ACDIVOCATech/bulletchartr/issues
 Vignette: [Intro](https://htmlpreview.github.io/?https://github.com/ACDIVOCATech/bulletchartr/blob/master/README.html)
 Description: This package attempts to provide a way to create 
     different types of bullet chart graphs to monitor "Indicators" 
@@ -21,7 +21,7 @@ Description: This package attempts to provide a way to create
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1.9000
+RoxygenNote: 6.1.0
 Imports: dplyr (>= 0.7.4), 
     readxl (>= 1.0.0), 
     ggplot2 (>= 2.2.1),

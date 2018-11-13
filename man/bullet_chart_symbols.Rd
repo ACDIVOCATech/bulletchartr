@@ -5,10 +5,11 @@
 \title{bullet_chart_symbols}
 \usage{
 bullet_chart_symbols(file_name = NULL, sheet_name = "Sheet1",
-  dataframe = NULL, indicator_name = "indicator_name", actual = "actual",
-  actual_lastweek = "actual_lastweek", actual_lastyear = "actual_lastyear",
-  target = "target", for_year = year(Sys.Date()), cal_type = "fis",
-  small = FALSE, legend = FALSE)
+  dataframe = NULL, indicator_name = "indicator_name",
+  actual = "actual", actual_lastweek = "actual_lastweek",
+  actual_lastyear = "actual_lastyear", target = "target",
+  for_year = year(Sys.Date()), cal_type = "fis", small = FALSE,
+  legend = FALSE)
 }
 \arguments{
 \item{file_name}{path of Excel file}
