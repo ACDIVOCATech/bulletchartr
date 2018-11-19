@@ -130,12 +130,18 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
   # Calculate how far behind TODAY the percent for the indicator is
   ammended_data <- ammended_data %>% mutate(behind_by = perc - percent_time)
 
-  ammended_data <- ammended_data %>% mutate(text = case_when(
+  ammended_data <- ammended_data %>%
+    mutate(text = case_when(
 
-    behind_by > 0 ~ "OK!",
-    behind_by <= 0 & !is.na(behind_by) ~ paste("Need ", round(as.numeric(text)), " more", sep = "")
+      behind_by > 0 ~ "OK!",
+      behind_by <= 0 & !is.na(behind_by) ~ paste("Need ", round(as.numeric(text)), " more", sep = "")
 
-  ))
+    )) %>%
+    mutate(text = case_when(
+      target == 0 | is.na(target) ~ "No Target!",
+      TRUE ~ text
+    ))
+
 
   # if no target specified (as zero or NA) then "NO TARGET":
   #ammended_data <- ammended_data %>% mutate(text = case_when(
@@ -186,7 +192,7 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname bullet_chart
 #' @export
-#' @importFrom ggplot2 aes geom_col geom_hline coord_flip labs ggtitle theme_minimal
+#' @importFrom ggplot2 ggplot aes geom_col geom_hline coord_flip labs ggtitle theme_minimal
 #' expand_limits scale_alpha_manual geom_text annotate theme element_text margin unit
 #' @importFrom dplyr mutate %>% select
 
@@ -312,7 +318,7 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
 #'  \code{\link[ggplot2]{geom_bar}}
 #' @rdname bullet_chart_wide
 #' @export
-#' @importFrom ggplot2 aes geom_col geom_hline coord_flip labs ggtitle theme_minimal
+#' @importFrom ggplot2 ggplot aes geom_col geom_hline coord_flip labs ggtitle theme_minimal
 #' expand_limits scale_alpha_manual scale_fill_gradient geom_text annotate theme
 #' element_text margin unit
 #' @importFrom dplyr mutate %>% select
@@ -453,7 +459,7 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
 #'  \code{\link[ggplot2]{geom_bar}}, \code{\link[ggplot2]{scale_manual}}
 #' @rdname bullet_chart_symbols
 #' @export
-#' @importFrom ggplot2 aes geom_col geom_hline coord_flip labs ggtitle theme_minimal
+#' @importFrom ggplot2 ggplot aes geom_col geom_hline coord_flip labs ggtitle theme_minimal
 #' expand_limits scale_fill_gradient scale_shape_manual geom_text annotate theme
 #' element_text margin unit geom_point
 #' @importFrom dplyr mutate %>% select
@@ -587,7 +593,7 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 #'  \code{\link[ggplot2]{ggplot}}
 #' @rdname bullet_chart_vline
 #' @export
-#' @importFrom ggplot2 aes geom_col geom_hline coord_flip labs ggtitle theme_minimal
+#' @importFrom ggplot2 ggplot aes geom_col geom_hline coord_flip labs ggtitle theme_minimal
 #' expand_limits scale_alpha_manual scale_fill_gradient geom_text annotate theme
 #' element_text margin unit geom_point
 #' @importFrom dplyr mutate %>% select
