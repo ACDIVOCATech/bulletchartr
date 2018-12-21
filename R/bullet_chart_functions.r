@@ -27,6 +27,8 @@
 #' @importFrom readxl read_xlsx
 #' @importFrom lubridate year month
 #' @importFrom rlang enquo !!
+#' @importFrom glue glue
+#' @importFrom stringr str_replace_all
 
 extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
                                    dataframe = NULL,
@@ -76,9 +78,10 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
            target = !!t
     )
   # Create percentage variables
-  ammended_data <- ammended_data %>% mutate(perc = actual / (target + 0.0000000000001) * 100,
-                      perc_week = actual_lastweek / (target + 0.0000000000001) * 100,
-                      perc_year = actual_lastyear / (target + 0.0000000000001) * 100)
+  ammended_data <- ammended_data %>%
+    mutate(perc = actual / (target + 0.0000000000001) * 100,
+           perc_week = actual_lastweek / (target + 0.0000000000001) * 100,
+           perc_year = actual_lastyear / (target + 0.0000000000001) * 100)
 
   # Protect against values greater than 100
   ammended_data <- ammended_data %>% mutate(
@@ -99,20 +102,26 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
   # Calculate "Today" within specified Year
   if (cal_type == "cal"){
     start_time <- paste0(for_year, "/01/01")
+    PT <- as.numeric((Sys.Date() - as.Date(start_time, "%Y/%m/%d"))) / 365.25 * 100
   } else if (cal_type == "fis"){
     ## Need to make distinction if we're still in the same calendar year or not
     if (month(Sys.Date()) >= 10) {
-      start_time <- paste0(for_year, "/10/01")
+      # start_time <- paste0(for_year, "/10/01")
+      PT <- as.numeric(Sys.Date() - as.Date(paste0(for_year - 1, "/10/01"))) / 365.25 * 100
+
+      # Sys.Date() - as.Date(paste0(for_year - 1, "/10/01"))
+      # (Sys.Date() - as.Date(paste(format(as.Date(forThisDB$FROM), "%d %b"), forYear - 1), format = "%d %b %Y"))
       } else {
         start_time <- paste0(for_year - 1, "/10/01")
+        PT <- as.numeric((Sys.Date() - as.Date(start_time, "%Y/%m/%d"))) / 365.25 * 100
       }
   } else{
     start_time <- cal_type
+    PT <- as.numeric((Sys.Date() - as.Date(start_time, "%Y/%m/%d"))) / 365.25 * 100
   }
 
   ## Calculate point in year
-  PT <- as.numeric( (Sys.Date() -
-                      as.Date(start_time, "%Y/%m/%d"))) / 365.25 * 100
+  #PT <- as.numeric((Sys.Date() - as.Date(start_time, "%Y/%m/%d"))) / 365.25 * 100
 
   ## Ensure that it's less than 100 and assign
   if (PT > 100) PT <- 100
@@ -124,39 +133,124 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
     TRUE ~ percent_time
   ))
 
-  # Value for Indicator lateness or on time
-  ammended_data <- ammended_data %>% mutate(text = percent_time / 100 * target - actual)
+  # LW and LY text
 
-  # Calculate how far behind TODAY the percent for the indicator is
-  ammended_data <- ammended_data %>% mutate(behind_by = perc - percent_time)
-
+  # 12/20/18     first do Last Week
+  ## and convert any NAs to 0
   ammended_data <- ammended_data %>%
-    mutate(text = case_when(
-
-      behind_by > 0 ~ "OK!",
-      behind_by <= 0 & !is.na(behind_by) ~ paste("Need ", round(as.numeric(text)), " more", sep = "")
-
-    )) %>%
-    mutate(text = case_when(
-      target == 0 | is.na(target) ~ "No Target!",
-      TRUE ~ text
+    mutate(actual_lastweek = case_when(
+      is.na(actual_lastweek) ~ 0,
+      TRUE ~ actual_lastweek
     ))
 
+  ## Calculate behind from LAST
+  ammended_data <- ammended_data %>%
+    mutate(BehindFromLastWeek = actual - actual_lastweek)
 
-  # if no target specified (as zero or NA) then "NO TARGET":
-  #ammended_data <- ammended_data %>% mutate(text = case_when(
+  ## Calculate LAST's percent
+  ammended_data <- ammended_data %>%
+    mutate(OldPer = actual_lastweek * 100 / target,
+           OldPer = case_when(
+             OldPer > 100 ~ 100,
+             TRUE ~ OldPer
+           ))
 
-    #target == 0 | is.na(target) ~ "NO TARGET"
+  ## Calculate how far behind LAST for text
+  ammended_data$LWeek_tex[
+    ammended_data$BehindFromLastWeek > 0 & !is.na(ammended_data$BehindFromLastWeek)] <- paste("(+",
+                                                                                      round(as.numeric(ammended_data$BehindFromLastWeek[ammended_data$BehindFromLastWeek > 0 &
+                                                                                                                                      !is.na(ammended_data$BehindFromLastWeek)])),
+                                                                                      " from Last Week)", sep = "")
+  ammended_data$LWeek_tex[
+    ammended_data$BehindFromLastWeek < 0 & !is.na(ammended_data$BehindFromLastWeek)] <- paste("(",
+                                                                                      round(as.numeric(ammended_data$BehindFromLastWeek[ammended_data$BehindFromLastWeek < 0 &
+                                                                                                                                      !is.na(ammended_data$BehindFromLastWeek)])),
+                                                                                      " from Last Week)", sep = "")
+  # IF BehindFromLastWeek == 0
+  ammended_data <- ammended_data %>%
+    mutate(LWeek_tex = case_when(
+      BehindFromLastWeek == 0 ~ "(No change from Last Week)",
+      TRUE ~ LWeek_tex
+    ))
 
-  #))
+  # LY
+  ammended_data <- ammended_data %>%
+    mutate(actual_lastyear = case_when(
+      is.na(actual_lastyear) ~ 0,
+      TRUE ~ actual_lastyear
+    ))
+
+  ## Calculate behind from LAST
+
+  ammended_data <- ammended_data %>%
+    mutate(BehindFromLastYear = actual - actual_lastyear)
+
+  ## Calculate LAST's percent
+  ammended_data <- ammended_data %>%
+    mutate(LYPer = (actual_lastyear * 100) / target) %>%
+    mutate(LYPer = case_when(
+      LYPer > 100 ~ 100,
+      TRUE ~ LYPer
+    ))
+
+  # 12/3/18    works with base R way...
+  ammended_data$LY_tex[
+    ammended_data$BehindFromLastYear > 0 &
+      !is.na(ammended_data$BehindFromLastYear)] <- paste("(+",
+                                                        round(as.numeric(ammended_data$BehindFromLastYear[ammended_data$BehindFromLastYear > 0 &
+                                                                                                           !is.na(ammended_data$BehindFromLastYear)])),
+                                                        " from Last Year)", sep = "")
+  ammended_data$LY_tex[
+    ammended_data$BehindFromLastYear < 0 &
+      !is.na(ammended_data$BehindFromLastYear)] <- paste("(",
+                                                        round(as.numeric(ammended_data$BehindFromLastYear[ammended_data$BehindFromLastYear < 0 &
+                                                                                                           !is.na(ammended_data$BehindFromLastYear)])),
+                                                        " from Last Year)", sep = "")
+
+  # >>>>>>>>>>>>>>>>>>
+
+  # Value for Indicator lateness or on time
+  ammended_data <- ammended_data %>%
+    mutate(text = percent_time / 100 * target - actual)
+
+  # Calculate how far behind TODAY the percent for the indicator is
+  ammended_data <- ammended_data %>%
+    mutate(behind_by = perc - percent_time)
+
+  # 12.21.2018 delete text
+  # ammended_data <- ammended_data %>%
+  #   mutate(text = case_when(
+  #
+  #     behind_by > 0 ~ "OK!",
+  #     behind_by <= 0 & !is.na(behind_by) ~ paste("Need ", round(as.numeric(text)), " more", sep = "")
+  #
+  #   )) %>%
+  #   mutate(text = case_when(
+  #     target == 0 | is.na(target) ~ "No Target!",
+  #     TRUE ~ text
+  #   ))
+
+  # Tooltip: hover-over text
+
+  ammended_data <- ammended_data %>%
+    mutate(tooltip = glue("
+                          {LWeek_tex}
+                          {LY_tex}")) %>%
+    mutate(tooltip = tooltip %>% str_replace_all("'", "&#39"))
+
 
   # Behind By to lower limit = 0
-  ammended_data <- ammended_data %>% mutate(low_level = -0.2 * ammended_data$percent_time)
+  ammended_data <- ammended_data %>%
+    mutate(low_level = -0.2 * percent_time[1])
 
-  ammended_data <- ammended_data %>% mutate(behind_by = case_when(
-    behind_by > 0 ~ 0,
-    behind_by < low_level ~ low_level
-  ))
+  low_level <- -0.2 * ammended_data$percent_time[1]
+  ammended_data$behind_by[ammended_data$behind_by > 0] <- 0
+  ammended_data$behind_by[ammended_data$behind_by < low_level] <- low_level
+  # ammended_data <- ammended_data %>%
+  #   mutate(behind_by = case_when(
+  #     behind_by > 0 ~ 0,
+  #     behind_by < low_level ~ low_level
+  #   ))
 
   ## output
   return(ammended_data)
@@ -463,6 +557,7 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
 #' expand_limits scale_fill_gradient scale_shape_manual geom_text annotate theme
 #' element_text margin unit geom_point
 #' @importFrom dplyr mutate %>% select
+#' @importFrom ggiraph geom_bar_interactive ggiraph
 
 bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
                                  dataframe = NULL,
@@ -483,9 +578,18 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 
   low_level <- ammended_data$low_level[1]
 
-  g <- ggplot(ammended_data, aes(x = indicator_name)) +
-    geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
-    geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
+  g <- ggplot(ammended_data) +
+    # 100% bar   NOTE: order is important, have interactive after or won't be able to hover-over
+    geom_col(aes(x = indicator_name, y = 100),
+             width = 0.5, alpha = 0.25) +
+    # interactive
+    geom_bar_interactive(aes(x = indicator_name, y = perc,
+                             tooltip = tooltip,
+                             data_id = indicator_name,
+                             fill = behind_by),
+                         stat = "identity",
+                         width = 0.15, color = "black") +
+    # Today
     geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
     coord_flip() +
     labs(y = "Percent of Yearly Target\n&\n Percent of Year",
@@ -500,10 +604,13 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
                                  low = "red", high = "green",
                                  labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                                  breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
-      geom_point(aes(y = perc_week, shape = "Last Week"), size = 6, stroke = 1) +
-      geom_point(aes(y = perc_year, shape = "Last Year"), size = 6, stroke = 1) +
+      geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
+                 size = 6, stroke = 1) +
+      geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
+                 size = 6, stroke = 1) +
       scale_shape_manual(" ", values = c(23, 21)) +
-      geom_text(y = 1, aes(label = text), vjust = -1.5, hjust = 0, size = 4) +
+      # Erase text
+      # geom_text(y = 1, aes(label = text), vjust = -1.5, hjust = 0, size = 4) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
                angle = 90, alpha = 0.5, size = 5) +
       theme(axis.text.y = element_text(size = 15, face = "bold"),
@@ -519,22 +626,31 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 
       g <- g + theme(legend.position = "none")
 
-      print(g)
+      output <- ggiraph(code = {print(g)},
+                        zoom_max = 5, width = 0.8,
+                        width_svg = 15, height = 10, xml_reader_options = list(options = "HUGE"))
+      output
 
     }else if (legend == TRUE){
 
-      print(g)
+      output <- ggiraph(code = {print(g)},
+                        zoom_max = 5, width = 0.8,
+                        width_svg = 15, height = 10, xml_reader_options = list(options = "HUGE"))
+      output
 
     }
 
   }else if (small == TRUE){
 
-    g <- g + scale_fill_gradient(" ", limits = c(low_level, 0),
-                                 low = "red", high = "green",
-                                 labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
-                                 breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
-      geom_point(aes(y = perc_week, shape = "Last Week"), size = 3, stroke = 1) +
-      geom_point(aes(y = perc_year, shape = "Last Year"), size = 3, stroke = 1) +
+    g <- g +
+      scale_fill_gradient(" ", limits = c(low_level, 0),
+                          low = "red", high = "green",
+                          labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                          breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+      geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
+                 size = 3, stroke = 1) +
+      geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
+                 size = 3, stroke = 1) +
       scale_shape_manual(" ", values = c(23, 21)) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
                angle = 90, alpha = 0.5, size = 2.5) +
@@ -552,11 +668,17 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 
       g <- g + theme(legend.position = "none")
 
-      print(g)
+      output <- ggiraph(code = {print(g)},
+                        zoom_max = 5, width = 0.8,
+                        width_svg = 15, height_svg = 10)
+      output
 
     }else if (legend == TRUE){
 
-      print(g)
+      output <- ggiraph(code = {print(g)},
+                        zoom_max = 5, width = 0.8,
+                        width_svg = 15, height_svg = 10)
+      output
 
     }
   }
