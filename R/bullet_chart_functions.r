@@ -206,6 +206,12 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
                                                         round(as.numeric(ammended_data$BehindFromLastYear[ammended_data$BehindFromLastYear < 0 &
                                                                                                            !is.na(ammended_data$BehindFromLastYear)])),
                                                         " from Last Year)", sep = "")
+  # IF BehindFromLastYear == 0
+  ammended_data <- ammended_data %>%
+    mutate(LY_tex = case_when(
+      BehindFromLastYear == 0 ~ "(No change from Last Year)",
+      TRUE ~ LY_tex
+    ))
 
   # >>>>>>>>>>>>>>>>>>
 
@@ -215,7 +221,11 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
 
   # Calculate how far behind TODAY the percent for the indicator is
   ammended_data <- ammended_data %>%
-    mutate(behind_by = perc - percent_time)
+    mutate(behind_by = perc - percent_time) %>%
+    mutate(text = case_when(
+      target == 0 | is.na(target) ~ "No Target!",
+      TRUE ~ ""
+    ))
 
   # 12.21.2018 delete text
   # ammended_data <- ammended_data %>%
@@ -225,10 +235,10 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
   #     behind_by <= 0 & !is.na(behind_by) ~ paste("Need ", round(as.numeric(text)), " more", sep = "")
   #
   #   )) %>%
-  #   mutate(text = case_when(
-  #     target == 0 | is.na(target) ~ "No Target!",
-  #     TRUE ~ text
-  #   ))
+    # mutate(text = case_when(
+    #   target == 0 | is.na(target) ~ "No Target!",
+    #   TRUE ~ text
+    # ))
 
   # Tooltip: hover-over text
 
@@ -555,9 +565,9 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
 #' @export
 #' @importFrom ggplot2 ggplot aes geom_col geom_hline coord_flip labs ggtitle theme_minimal
 #' expand_limits scale_fill_gradient scale_shape_manual geom_text annotate theme
-#' element_text margin unit geom_point
+#' element_text margin unit geom_point guides guide_legend
 #' @importFrom dplyr mutate %>% select
-#' @importFrom ggiraph geom_bar_interactive ggiraph
+#' @importFrom ggiraph geom_bar_interactive ggiraph girafe
 
 bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
                                  dataframe = NULL,
@@ -590,7 +600,7 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
                          stat = "identity",
                          width = 0.15, color = "black") +
     # Today
-    geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
+    geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33, size = 1.25) +
     coord_flip() +
     labs(y = "Percent of Yearly Target\n&\n Percent of Year",
          x = " ") +
@@ -602,15 +612,15 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 
     g <- g + scale_fill_gradient("", limits = c(low_level, 0),
                                  low = "red", high = "green",
+                                 guide = FALSE,
                                  labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                                  breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
       geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
-                 size = 6, stroke = 1) +
+                 size = 5, stroke = 1) +
       geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
-                 size = 6, stroke = 1) +
+                 size = 5, stroke = 1) +
       scale_shape_manual(" ", values = c(23, 21)) +
-      # Erase text
-      # geom_text(y = 1, aes(label = text), vjust = -1.5, hjust = 0, size = 4) +
+      geom_text(y = 1, aes(x = indicator_name, label = text), vjust = -1, hjust = 0, size = 4) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
                angle = 90, alpha = 0.5, size = 5) +
       theme(axis.text.y = element_text(size = 15, face = "bold"),
@@ -626,16 +636,17 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 
       g <- g + theme(legend.position = "none")
 
-      output <- ggiraph(code = {print(g)},
-                        zoom_max = 5, width = 0.8,
-                        width_svg = 15, height = 10, xml_reader_options = list(options = "HUGE"))
+      output <- girafe(code = {print(g)},
+                       width = 0.5
+      )
       output
 
     }else if (legend == TRUE){
 
-      output <- ggiraph(code = {print(g)},
-                        zoom_max = 5, width = 0.8,
-                        width_svg = 15, height = 10, xml_reader_options = list(options = "HUGE"))
+      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+      output <- girafe(code = {print(g)},
+                       width = 0.5
+      )
       output
 
     }
@@ -645,6 +656,7 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
     g <- g +
       scale_fill_gradient(" ", limits = c(low_level, 0),
                           low = "red", high = "green",
+                          guide = FALSE,
                           labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                           breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
       geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
@@ -652,6 +664,7 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
       geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
                  size = 3, stroke = 1) +
       scale_shape_manual(" ", values = c(23, 21)) +
+      geom_text(y = 1, aes(x = indicator_name, label = text), vjust = -1, hjust = 0, size = 2) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
                angle = 90, alpha = 0.5, size = 2.5) +
       theme(axis.text.y = element_text(size = 8, face = "bold"),
@@ -668,16 +681,17 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 
       g <- g + theme(legend.position = "none")
 
-      output <- ggiraph(code = {print(g)},
-                        zoom_max = 5, width = 0.8,
-                        width_svg = 15, height_svg = 10)
+      output <- girafe(code = {print(g)},
+                       width = 0.4
+      )
       output
 
     }else if (legend == TRUE){
 
-      output <- ggiraph(code = {print(g)},
-                        zoom_max = 5, width = 0.8,
-                        width_svg = 15, height_svg = 10)
+      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+      output <- girafe(code = {print(g)},
+                       width = 0.4
+      )
       output
 
     }
