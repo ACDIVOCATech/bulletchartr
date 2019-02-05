@@ -299,6 +299,7 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
 #' @importFrom ggplot2 ggplot aes geom_col geom_hline coord_flip labs ggtitle theme_minimal
 #' expand_limits scale_alpha_manual geom_text annotate theme element_text margin unit
 #' @importFrom dplyr mutate %>% select
+#' @importFrom ggiraph geom_bar_interactive ggiraph girafe
 
 bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
                          dataframe = NULL,
@@ -325,7 +326,7 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
          x = " ") +
     ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
     theme_minimal() +
-    expand_limits(x = 6.75, y = 102)
+    expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
 
   #if (small != is.logical(small)) warning("small must be TRUE or FALSE")
 
@@ -336,7 +337,14 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
       scale_alpha_manual(name = "",
                          values = c(0.6, 0.3),
                          labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
-      geom_col(aes(y = perc), fill = "grey10", width = 0.1, color = "grey10", alpha = 0.9) +
+      #geom_col(aes(y = perc), fill = "grey10", width = 0.1, color = "grey10", alpha = 0.9) +
+      geom_bar_interactive(aes(x = indicator_name, y = perc,
+                               tooltip = tooltip,
+                               data_id = indicator_name),
+                           stat = "identity", alpha = 0.9,
+                           fill = "grey10",
+                           width = 0.1, color = "grey10") +
+
       geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
                hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
@@ -352,11 +360,18 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
 
       g <- g + theme(legend.position = "none")
 
-      print(g)
+      output <- girafe(code = {print(g)},
+                       width = 0.5
+      )
+      output
 
     }else if (legend == TRUE){
 
-      print(g)
+      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+      output <- girafe(code = {print(g)},
+                       width = 0.5
+      )
+      output
 
     }
 
@@ -367,7 +382,13 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
       scale_alpha_manual(name = "",
                          values = c(0.6, 0.3),
                          labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
-      geom_col(aes(y = perc), fill = "grey10", width = 0.15, color = "grey10", alpha = 0.9) +
+      #geom_col(aes(y = perc), fill = "grey10", width = 0.15, color = "grey10", alpha = 0.9) +
+      geom_bar_interactive(aes(x = indicator_name, y = perc,
+                               tooltip = tooltip,
+                               data_id = indicator_name),
+                           stat = "identity", alpha = 0.9,
+                           fill = "grey10",
+                           width = 0.1, color = "grey10") +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
                angle = 90, alpha = 0.5, size = 2.5) +
       theme(axis.text.y = element_text(size = 8, face = "bold"),
@@ -384,11 +405,18 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
 
       g <- g + theme(legend.position = "none")
 
-      print(g)
+      output <- girafe(code = {print(g)},
+                       width = 0.5
+      )
+      output
 
     }else if (legend == TRUE){
 
-      print(g)
+      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+      output <- girafe(code = {print(g)},
+                       width = 0.5
+      )
+      output
 
     }
   }
@@ -426,6 +454,7 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
 #' expand_limits scale_alpha_manual scale_fill_gradient geom_text annotate theme
 #' element_text margin unit
 #' @importFrom dplyr mutate %>% select
+#' @importFrom ggiraph geom_bar_interactive ggiraph girafe
 
 bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
                               dataframe = NULL,
@@ -454,7 +483,7 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
          x = " ") +
     ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
     theme_minimal() +
-    expand_limits(x = 6.75, y = 102)
+    expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
 
   if (small == FALSE){
 
@@ -462,11 +491,20 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
       scale_alpha_manual(name = "",
                          values = c(0.6, 0.3),
                          labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
-      geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+      #geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+      geom_bar_interactive(aes(x = indicator_name, y = perc,
+                               tooltip = tooltip, alpha = "lastweek",
+                               data_id = indicator_name,
+                               fill = behind_by),
+                           stat = "identity",
+                           width = 0.15, color = "black") +
       scale_fill_gradient("", limits = c(low_level, 0),
                           low = "red3", high = "green3",
+                          guide = FALSE,
                           labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                           breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+      # guides(fill = guide_colorbar(frame.colour = "black", frame.linetype = "solid",
+      #                              direction = "vertical")) +
       geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
                hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
@@ -482,11 +520,18 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
 
       g <- g + theme(legend.position = "none")
 
-      print(g)
+      output <- girafe(code = {print(g)},
+                       width = 0.5
+      )
+      output
 
     }else if (legend == TRUE){
 
-      print(g)
+      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+      output <- girafe(code = {print(g)},
+                       width = 0.5
+      )
+      output
 
     }
 
@@ -496,11 +541,20 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
       scale_alpha_manual(name = "",
                          values = c(0.6, 0.3),
                          labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
-      geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+      #geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+      geom_bar_interactive(aes(x = indicator_name, y = perc,
+                               tooltip = tooltip, alpha = "lastweek",
+                               data_id = indicator_name,
+                               fill = behind_by),
+                           stat = "identity",
+                           width = 0.15, color = "black") +
       scale_fill_gradient(" ", limits = c(low_level, 0),
                           low = "red3", high = "green3",
+                          guide = FALSE,
                           labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                           breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+      # guides(fill = guide_colorbar(frame.colour = "black", frame.linetype = "solid",
+      #                              direction = "vertical")) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
                angle = 90, alpha = 0.5, size = 2.5) +
       theme(axis.text.y = element_text(size = 8, face = "bold"),
@@ -517,11 +571,18 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
 
       g <- g + theme(legend.position = "none")
 
-      print(g)
+      output <- girafe(code = {print(g)},
+                       width = 0.5
+      )
+      output
 
     }else if (legend == TRUE){
 
-      print(g)
+      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+      output <- girafe(code = {print(g)},
+                       width = 0.5
+      )
+      output
 
     }
   }
@@ -606,7 +667,7 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
          x = " ") +
     ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
     theme_minimal() +
-    expand_limits(x = 6.75, y = 102)
+    expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
 
   if (small == FALSE){
 
@@ -615,6 +676,8 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
                                  guide = FALSE,
                                  labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                                  breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+      # guides(fill = guide_colorbar(frame.colour = "black", frame.linetype = "solid",
+      #                              direction = "vertical")) +
       geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
                  size = 5, stroke = 1) +
       geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
@@ -659,6 +722,8 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
                           guide = FALSE,
                           labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                           breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+      # guides(fill = guide_colorbar(frame.colour = "black", frame.linetype = "solid",
+      #                              direction = "vertical")) +
       geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
                  size = 3, stroke = 1) +
       geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
@@ -733,6 +798,7 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 #' expand_limits scale_alpha_manual scale_fill_gradient geom_text annotate theme
 #' element_text margin unit geom_point
 #' @importFrom dplyr mutate %>% select
+#' @importFrom ggiraph geom_bar_interactive ggiraph girafe
 
 bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
                                dataframe = NULL,
@@ -754,18 +820,27 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
   low_level <- ammended_data$low_level[1]
 
   g <- ggplot(ammended_data, aes(x = indicator_name)) +
-    geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+    geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
+    #geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+    geom_bar_interactive(aes(x = indicator_name, y = perc,
+                             tooltip = tooltip,
+                             data_id = indicator_name,
+                             fill = behind_by),
+                         stat = "identity",
+                         width = 0.15, color = "black") +
     scale_fill_gradient("", limits = c(low_level, 0),
                         low = "red", high = "green",
+                        guide = FALSE,
                         labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                         breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
-    geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
+    # guides(fill = guide_colorbar(frame.colour = "black", frame.linetype = "solid",
+    #                              direction = "vertical")) +
     coord_flip() +
     labs(y = "Percent of Yearly Target",
          x = " ") +
     ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
     theme_minimal() +
-    expand_limits(x = 6.75, y = 102)
+    expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
 
   if (small == FALSE){
 
@@ -784,11 +859,18 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
 
       g <- g + theme(legend.position = "none")
 
-      print(g)
+      output <- girafe(code = {print(g)},
+                       width = 0.4
+      )
+      output
 
     }else if (legend == TRUE){
 
-      print(g)
+      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+      output <- girafe(code = {print(g)},
+                       width = 0.4
+      )
+      output
 
     }
 
@@ -810,11 +892,18 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
 
       g <- g + theme(legend.position = "none")
 
-      print(g)
+      output <- girafe(code = {print(g)},
+                       width = 0.4
+      )
+      output
 
     }else if (legend == TRUE){
 
-      print(g)
+      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+      output <- girafe(code = {print(g)},
+                       width = 0.4
+      )
+      output
 
     }
   }
