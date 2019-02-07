@@ -106,11 +106,8 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
   } else if (cal_type == "fis"){
     ## Need to make distinction if we're still in the same calendar year or not
     if (month(Sys.Date()) >= 10) {
-      # start_time <- paste0(for_year, "/10/01")
       PT <- as.numeric(Sys.Date() - as.Date(paste0(for_year - 1, "/10/01"))) / 365.25 * 100
 
-      # Sys.Date() - as.Date(paste0(for_year - 1, "/10/01"))
-      # (Sys.Date() - as.Date(paste(format(as.Date(forThisDB$FROM), "%d %b"), forYear - 1), format = "%d %b %Y"))
       } else {
         start_time <- paste0(for_year - 1, "/10/01")
         PT <- as.numeric((Sys.Date() - as.Date(start_time, "%Y/%m/%d"))) / 365.25 * 100
@@ -119,9 +116,6 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
     start_time <- cal_type
     PT <- as.numeric((Sys.Date() - as.Date(start_time, "%Y/%m/%d"))) / 365.25 * 100
   }
-
-  ## Calculate point in year
-  #PT <- as.numeric((Sys.Date() - as.Date(start_time, "%Y/%m/%d"))) / 365.25 * 100
 
   ## Ensure that it's less than 100 and assign
   if (PT > 100) PT <- 100
@@ -213,8 +207,6 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
       TRUE ~ LY_tex
     ))
 
-  # >>>>>>>>>>>>>>>>>>
-
   # Value for Indicator lateness or on time
   ammended_data <- ammended_data %>%
     mutate(text = percent_time / 100 * target - actual)
@@ -226,19 +218,6 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
       target == 0 | is.na(target) ~ "No Target!",
       TRUE ~ ""
     ))
-
-  # 12.21.2018 delete text
-  # ammended_data <- ammended_data %>%
-  #   mutate(text = case_when(
-  #
-  #     behind_by > 0 ~ "OK!",
-  #     behind_by <= 0 & !is.na(behind_by) ~ paste("Need ", round(as.numeric(text)), " more", sep = "")
-  #
-  #   )) %>%
-    # mutate(text = case_when(
-    #   target == 0 | is.na(target) ~ "No Target!",
-    #   TRUE ~ text
-    # ))
 
   # Tooltip: hover-over text
 
@@ -256,13 +235,7 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
   low_level <- -0.2 * ammended_data$percent_time[1]
   ammended_data$behind_by[ammended_data$behind_by > 0] <- 0
   ammended_data$behind_by[ammended_data$behind_by < low_level] <- low_level
-  # ammended_data <- ammended_data %>%
-  #   mutate(behind_by = case_when(
-  #     behind_by > 0 ~ 0,
-  #     behind_by < low_level ~ low_level
-  #   ))
 
-  ## output
   return(ammended_data)
 
 }
@@ -328,8 +301,6 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
     theme_minimal() +
     expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
 
-  #if (small != is.logical(small)) warning("small must be TRUE or FALSE")
-
   if (small == FALSE){
 
     g <- g + geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
@@ -337,7 +308,6 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
       scale_alpha_manual(name = "",
                          values = c(0.6, 0.3),
                          labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
-      #geom_col(aes(y = perc), fill = "grey10", width = 0.1, color = "grey10", alpha = 0.9) +
       geom_bar_interactive(aes(x = indicator_name, y = perc,
                                tooltip = tooltip,
                                data_id = indicator_name),
@@ -382,7 +352,6 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
       scale_alpha_manual(name = "",
                          values = c(0.6, 0.3),
                          labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
-      #geom_col(aes(y = perc), fill = "grey10", width = 0.15, color = "grey10", alpha = 0.9) +
       geom_bar_interactive(aes(x = indicator_name, y = perc,
                                tooltip = tooltip,
                                data_id = indicator_name),
@@ -491,7 +460,6 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
       scale_alpha_manual(name = "",
                          values = c(0.6, 0.3),
                          labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
-      #geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
       geom_bar_interactive(aes(x = indicator_name, y = perc,
                                tooltip = tooltip, alpha = "lastweek",
                                data_id = indicator_name,
@@ -503,8 +471,6 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
                           guide = FALSE,
                           labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                           breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
-      # guides(fill = guide_colorbar(frame.colour = "black", frame.linetype = "solid",
-      #                              direction = "vertical")) +
       geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
                hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
@@ -541,7 +507,6 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
       scale_alpha_manual(name = "",
                          values = c(0.6, 0.3),
                          labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
-      #geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
       geom_bar_interactive(aes(x = indicator_name, y = perc,
                                tooltip = tooltip, alpha = "lastweek",
                                data_id = indicator_name,
@@ -553,8 +518,6 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
                           guide = FALSE,
                           labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                           breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
-      # guides(fill = guide_colorbar(frame.colour = "black", frame.linetype = "solid",
-      #                              direction = "vertical")) +
       annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
                angle = 90, alpha = 0.5, size = 2.5) +
       theme(axis.text.y = element_text(size = 8, face = "bold"),
@@ -676,8 +639,6 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
                                  guide = FALSE,
                                  labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                                  breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
-      # guides(fill = guide_colorbar(frame.colour = "black", frame.linetype = "solid",
-      #                              direction = "vertical")) +
       geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
                  size = 5, stroke = 1) +
       geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
@@ -722,8 +683,6 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
                           guide = FALSE,
                           labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                           breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
-      # guides(fill = guide_colorbar(frame.colour = "black", frame.linetype = "solid",
-      #                              direction = "vertical")) +
       geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
                  size = 3, stroke = 1) +
       geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
@@ -821,7 +780,6 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
 
   g <- ggplot(ammended_data, aes(x = indicator_name)) +
     geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
-    #geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
     geom_bar_interactive(aes(x = indicator_name, y = perc,
                              tooltip = tooltip,
                              data_id = indicator_name,
@@ -833,8 +791,6 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
                         guide = FALSE,
                         labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                         breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
-    # guides(fill = guide_colorbar(frame.colour = "black", frame.linetype = "solid",
-    #                              direction = "vertical")) +
     coord_flip() +
     labs(y = "Percent of Yearly Target",
          x = " ") +
