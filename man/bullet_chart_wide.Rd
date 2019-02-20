@@ -9,7 +9,7 @@ bullet_chart_wide(file_name = NULL, sheet_name = "Sheet1",
   actual = "actual", actual_lastweek = "actual_lastweek",
   actual_lastyear = "actual_lastyear", target = "target",
   for_year = year(Sys.Date()), cal_type = "fis", small = FALSE,
-  legend = FALSE)
+  legend = FALSE, remove_no_targets = FALSE)
 }
 \arguments{
 \item{file_name}{path of Excel file}
@@ -37,6 +37,8 @@ format "YYYY/MM/DD", Default: fis}
 \item{small}{specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE}
 
 \item{legend}{specify whether you want to show the legend, Default: FALSE}
+
+\item{remove_no_targets}{remove indicators with Targets == NA or 0, Default: FALSE}
 }
 \description{
 create bullet chart with bars of varying width

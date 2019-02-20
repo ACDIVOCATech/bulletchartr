@@ -8,7 +8,8 @@ extra_field_calculator(file_name = NULL, sheet_name = "Sheet1",
   dataframe = NULL, indicator_name = "indicator_name",
   actual = "actual", actual_lastweek = "actual_lastweek",
   actual_lastyear = "actual_lastyear", target = "target",
-  for_year = year(Sys.Date()), cal_type = "fis")
+  for_year = year(Sys.Date()), cal_type = "fis",
+  remove_no_targets = FALSE)
 }
 \arguments{
 \item{file_name}{path of Excel file}
@@ -29,7 +30,9 @@ extra_field_calculator(file_name = NULL, sheet_name = "Sheet1",
 
 \item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
 
-\item{cal_type}{define what calendar you are using. Options are "fis" for fiscal year starting
+\item{cal_type}{define what calendar you are using. Options are "fis" for fiscal year starting}
+
+\item{remove_no_targets}{remove indicators with Targets == NA or 0, Default: FALSE
 October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 format "YYYY/MM/DD", Default: fis}
 }
