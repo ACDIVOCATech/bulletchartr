@@ -304,6 +304,13 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
                                           target, for_year, cal_type,
                                           remove_no_targets)
 
+  ## check for Target == 0 in all Targets
+  if(all(ammended_data$target == 0)) {
+    return(
+      g <- ggplot() + annotate(geom = "text", x = 1, y = 2, label = "No Non-Zero Targets!")
+    )
+  }
+
   g <- ggplot(ammended_data, aes(x = indicator_name)) +
     geom_col(aes(y = 100), fill = "grey85", width = 0.4) +
     geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
@@ -459,6 +466,12 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
                                           remove_no_targets)
   low_level <- ammended_data$low_level[1]
 
+  ## check for Target == 0 in all Targets
+  if(all(ammended_data$target == 0)) {
+    return(
+      g <- ggplot() + annotate(geom = "text", x = 1, y = 2, label = "No Non-Zero Targets!")
+    )
+  }
 
   g <- ggplot(ammended_data, aes(x = indicator_name)) +
     geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.5) +
@@ -631,6 +644,13 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 
   low_level <- ammended_data$low_level[1]
 
+  ## check for Target == 0 in all Targets
+  if(all(ammended_data$target == 0)) {
+    return(
+      g <- ggplot() + annotate(geom = "text", x = 1, y = 2, label = "No Non-Zero Targets!")
+    )
+  }
+
   g <- ggplot(ammended_data) +
     # 100% bar   NOTE: order is important, have interactive after or won't be able to hover-over
     geom_col(aes(x = indicator_name, y = 100),
@@ -799,6 +819,13 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
                                           remove_no_targets)
 
   low_level <- ammended_data$low_level[1]
+
+  ## check for Target == 0 in all Targets
+  if(all(ammended_data$target == 0)) {
+    return(
+      g <- ggplot() + annotate(geom = "text", x = 1, y = 2, label = "No Non-Zero Targets!")
+    )
+  }
 
   g <- ggplot(ammended_data, aes(x = indicator_name)) +
     geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
