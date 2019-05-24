@@ -21,9 +21,18 @@ library(lubridate)
 library(ggplot2)
 library(bulletchartr)
 
-load("data/df.Rda")
+load("inst/data/df.Rda")
 
 ```
+
+[![Travis-CI Build Status](https://travis-ci.org/ACDIVOCATech/bulletchartr.svg?branch=master)](https://travis-ci.org/ACDIVOCATech/bulletchartr)
+
+## Announcements
+
+(Feb. 5, 2019)
+- All bulletcharts now use `ggiraph`, hover mouse on the bar to see how behind/ahead you currently are compared to "Last Week" and "Last Year".
+- Legend for colorbar hidden.
+- "No Target" text appears above bar if "Target" column is empty/NA.
 
 ## What is a bullet chart?
 

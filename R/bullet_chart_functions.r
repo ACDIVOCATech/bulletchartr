@@ -307,7 +307,7 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
   ## check for Target == 0 in all Targets
   if(all(ammended_data$target == 0)) {
     return(
-      g <- ggplot() + annotate(geom = "text", x = 1, y = 2, label = "No Non-Zero Targets!")
+      "No Non-Zero Targets!"
     )
   }
 
@@ -469,7 +469,7 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
   ## check for Target == 0 in all Targets
   if(all(ammended_data$target == 0)) {
     return(
-      g <- ggplot() + annotate(geom = "text", x = 1, y = 2, label = "No Non-Zero Targets!")
+      "No Non-Zero Targets!"
     )
   }
 
@@ -823,7 +823,7 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
   ## check for Target == 0 in all Targets
   if(all(ammended_data$target == 0)) {
     return(
-      g <- ggplot() + annotate(geom = "text", x = 1, y = 2, label = "No Non-Zero Targets!")
+      "No Non-Zero Targets!"
     )
   }
 
