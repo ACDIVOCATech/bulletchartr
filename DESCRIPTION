@@ -1,7 +1,7 @@
 Package: bulletchartr
 Type: Package
 Title: Create Bullet Charts For Visualizing KPIs
-Version: 0.0.0.990
+Version: 0.1.0
 Authors@R: c(person("Ryo", "Nakagawara", email = "ryonakagawara@gmail.com",
                   role = c("aut", "cre")),
                   person("Amit", "Kohli", email= "mexindian@gmail.com",
