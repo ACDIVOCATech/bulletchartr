@@ -1,6 +1,8 @@
 [![Travis-CI Build Status](https://travis-ci.org/ACDIVOCATech/bulletchartr.svg?branch=master)](https://travis-ci.org/ACDIVOCATech/bulletchartr)
 
 ## Announcements
+(June 2019)
+- bulletchartr will be going through an overhaul soon.
 
 (Feb. 5, 2019)
 - All bulletcharts now use `ggiraph`, hover mouse on the bar to see how behind/ahead you currently are compared to "Last Week" and "Last Year".
