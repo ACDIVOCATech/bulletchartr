@@ -8,8 +8,9 @@ bullet_chart_symbols(file_name = NULL, sheet_name = "Sheet1",
   dataframe = NULL, indicator_name = "indicator_name",
   actual = "actual", actual_lastweek = "actual_lastweek",
   actual_lastyear = "actual_lastyear", target = "target",
-  for_year = year(Sys.Date()), cal_type = "fis", small = FALSE,
-  legend = FALSE, remove_no_targets = FALSE)
+  for_year = year(Sys.Date()), chart_type = "static",
+  cal_type = "fis", small = FALSE, legend = FALSE,
+  remove_no_targets = FALSE)
 }
 \arguments{
 \item{file_name}{path of Excel file}
@@ -29,6 +30,8 @@ bullet_chart_symbols(file_name = NULL, sheet_name = "Sheet1",
 \item{target}{specify the name of the column that has the target value for the indicator/KPI}
 
 \item{for_year}{specify the year in which the report is being made, Default: year(Sys.Date())}
+
+\item{chart_type}{static of interactive (ggiraph) version}
 
 \item{cal_type}{define what calendar you are using. Options are "fis" for fiscal year starting
 October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the

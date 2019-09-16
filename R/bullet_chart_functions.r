@@ -1,6 +1,4 @@
 ### These functions allow one to input an excel file and output a nice bulletchart
-# plotting functions --------------------------------------------------
-
 # bullet plot Version 1: actual Stephen FEW  -------------------------------------------------
 
 #' @title bullet_chart
@@ -17,6 +15,7 @@
 #' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
 #' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 #' format "YYYY/MM/DD", Default: fis
+#' @param chart_type static of interactive (ggiraph) version
 #' @param small specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE
 #' @param legend specify whether you want to show the legend, Default: FALSE
 #' @param remove_no_targets remove indicators with Targets == NA or 0, Default: FALSE
@@ -43,6 +42,7 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
                          target = "target",
                          for_year = year(Sys.Date()),
                          cal_type = "fis",
+                         chart_type = "static",
                          small = FALSE, legend = FALSE,
                          remove_no_targets = FALSE) {
 
@@ -70,92 +70,166 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
     theme_minimal() +
     expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
 
-  if (small == FALSE){
+  # static vs. interactive ----
 
-    g <- g + geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
-      geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
-      scale_alpha_manual(name = "",
-                         values = c(0.6, 0.3),
-                         labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
-      geom_bar_interactive(aes(x = indicator_name, y = perc,
-                               tooltip = tooltip,
-                               data_id = indicator_name),
-                           stat = "identity", alpha = 0.9,
-                           fill = "grey10",
-                           width = 0.1, color = "grey10") +
+  if (chart_type == "static") {
+    ### static ----
+    if (small == FALSE) {
 
-      geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
-      annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
-               hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
-      theme(axis.text.y = element_text(size = 15, face = "bold"),
-            axis.title.x = element_text(face = "bold", size = 10,
-                                        margin = margin(t = 25, r = 0, b = 20, l = 0)),
-            axis.text.x = element_text(face = "bold", size = 12),
-            title = element_text(face = "bold"),
-            plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 8))
+      g <- g +
+        geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
+        geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
+        scale_alpha_manual(name = "",
+                           values = c(0.6, 0.3),
+                           labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
+        geom_col(aes(y = perc), fill = "grey10", width = 0.1, color = "grey10", alpha = 0.9) +
+        geom_text(y = 1, aes(label = tooltip), vjust = -2, hjust = 0, size = 4) +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
+                 hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
+        theme(axis.text.y = element_text(size = 15, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 10,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 12),
+              title = element_text(face = "bold"),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 8))
 
-    if (legend == FALSE){
+      if (legend == FALSE) {
 
-      g <- g + theme(legend.position = "none")
+        g <- g + theme(legend.position = "none")
 
-      output <- girafe(code = {print(g)},
-                       width = 0.5
-      )
-      output
+        print(g)
 
-    }else if (legend == TRUE){
+      } else if (legend == TRUE) {
 
-      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
-      output <- girafe(code = {print(g)},
-                       width = 0.5
-      )
-      output
+        print(g)
 
+      }
+
+    } else if (small == TRUE) {
+
+      g <- g +
+        geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
+        geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
+        scale_alpha_manual(name = "",
+                           values = c(0.6, 0.3),
+                           labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
+        geom_col(aes(y = perc), fill = "grey10", width = 0.1, color = "grey10", alpha = 0.9) +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
+                 angle = 90, alpha = 0.5, size = 2.5) +
+        theme(axis.text.y = element_text(size = 8, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 7,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 10),
+              title = element_text(face = "bold", size = 8),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 6),
+              legend.text = element_text(size = 8),
+              legend.key.size = unit(0.8, "lines"))
+
+      if (legend == FALSE) {
+
+        g <- g + theme(legend.position = "none")
+
+        print(g)
+
+      } else if (legend == TRUE){
+
+        print(g)
+
+      }
     }
+  } else if (chart_type == "interactive") {
+    ### interactive ----
+    if (small == FALSE) {
 
-  }else if (small == TRUE){
+      g <- g +
+        geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
+        geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
+        scale_alpha_manual(name = "",
+                           values = c(0.6, 0.3),
+                           labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
+        geom_bar_interactive(aes(x = indicator_name, y = perc,
+                                 tooltip = tooltip2,
+                                 data_id = indicator_name),
+                             stat = "identity", alpha = 0.9,
+                             fill = "grey10",
+                             width = 0.1, color = "grey10") +
 
-    g <- g + geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
-      geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
-      scale_alpha_manual(name = "",
-                         values = c(0.6, 0.3),
-                         labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
-      geom_bar_interactive(aes(x = indicator_name, y = perc,
-                               tooltip = tooltip,
-                               data_id = indicator_name),
-                           stat = "identity", alpha = 0.9,
-                           fill = "grey10",
-                           width = 0.1, color = "grey10") +
-      annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
-               angle = 90, alpha = 0.5, size = 2.5) +
-      theme(axis.text.y = element_text(size = 8, face = "bold"),
-            axis.title.x = element_text(face = "bold", size = 7,
-                                        margin = margin(t = 25, r = 0, b = 20, l = 0)),
-            axis.text.x = element_text(face = "bold", size = 10),
-            title = element_text(face = "bold", size = 8),
-            plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 6),
-            legend.text = element_text(size = 8),
-            legend.key.size = unit(0.8, "lines"))
+        geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
+                 hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
+        theme(axis.text.y = element_text(size = 15, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 10,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 12),
+              title = element_text(face = "bold"),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 8))
 
-    if (legend == FALSE){
+      if (legend == FALSE) {
 
-      g <- g + theme(legend.position = "none")
+        g <- g + theme(legend.position = "none")
 
-      output <- girafe(code = {print(g)},
-                       width = 0.5
-      )
-      output
+        output <- girafe(code = {print(g)},
+                         width = 0.5
+        )
+        output
 
-    }else if (legend == TRUE){
+      } else if (legend == TRUE) {
 
-      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
-      output <- girafe(code = {print(g)},
-                       width = 0.5
-      )
-      output
+        g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+        output <- girafe(code = {print(g)},
+                         width = 0.5
+        )
+        output
 
+      }
+
+    } else if (small == TRUE) {
+
+      g <- g +
+        geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
+        geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
+        scale_alpha_manual(name = "",
+                           values = c(0.6, 0.3),
+                           labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
+        geom_bar_interactive(aes(x = indicator_name, y = perc,
+                                 tooltip = tooltip2,
+                                 data_id = indicator_name),
+                             stat = "identity", alpha = 0.9,
+                             fill = "grey10",
+                             width = 0.1, color = "grey10") +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
+                 angle = 90, alpha = 0.5, size = 2.5) +
+        theme(axis.text.y = element_text(size = 8, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 7,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 10),
+              title = element_text(face = "bold", size = 8),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 6),
+              legend.text = element_text(size = 8),
+              legend.key.size = unit(0.8, "lines"))
+
+      if (legend == FALSE) {
+
+        g <- g + theme(legend.position = "none")
+
+        output <- girafe(code = {print(g)},
+                         width = 0.5
+        )
+        output
+
+      } else if (legend == TRUE){
+
+        g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+        output <- girafe(code = {print(g)},
+                         width = 0.5
+        )
+        output
+
+      }
     }
   }
 }
@@ -176,6 +250,7 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
 #' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
 #' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 #' format "YYYY/MM/DD", Default: fis
+#' @param chart_type static of interactive (ggiraph) version
 #' @param small specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE
 #' @param legend specify whether you want to show the legend, Default: FALSE
 #' @param remove_no_targets remove indicators with Targets == NA or 0, Default: FALSE
@@ -204,6 +279,7 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
                               target = "target",
                               for_year = year(Sys.Date()),
                               cal_type = "fis",
+                              chart_type = "static",
                               small = FALSE, legend = FALSE,
                               remove_no_targets = FALSE) {
 
@@ -232,103 +308,184 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
     theme_minimal() +
     expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
 
-  if (small == FALSE){
+  # static vs. interactive ----
 
-    g <- g + geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.75) +
-      scale_alpha_manual(name = "",
-                         values = c(0.6, 0.3),
-                         labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
-      geom_bar_interactive(aes(x = indicator_name, y = perc,
-                               tooltip = tooltip, alpha = "lastweek",
-                               data_id = indicator_name,
-                               fill = behind_by),
-                           stat = "identity",
-                           width = 0.15, color = "black") +
-      scale_fill_gradient("", limits = c(low_level, 0),
-                          low = "red3", high = "green3",
-                          guide = FALSE,
-                          labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
-                          breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
-      geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
-      annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
-               hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
-      theme(axis.text.y = element_text(size = 15, face = "bold"),
-            axis.title.x = element_text(face = "bold", size = 10,
-                                        margin = margin(t = 25, r = 0, b = 20, l = 0)),
-            axis.text.x = element_text(face = "bold", size = 12),
-            title = element_text(face = "bold"),
-            plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 8))
+  if (chart_type == "static") {
+    ## static ----
+    if (small == FALSE){
 
-    if (legend == FALSE){
+      g <- g +
+        geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.75) +
+        scale_alpha_manual(name = "",
+                           values = c(0.6, 0.3),
+                           labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
+        geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+        scale_fill_gradient("", limits = c(low_level, 0),
+                            low = "red3", high = "green3",
+                            guide = FALSE,
+                            labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                            breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+        geom_text(y = 1, aes(label = tooltip), vjust = -2, hjust = 0, size = 2.5) +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
+                 hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
+        theme(axis.text.y = element_text(size = 15, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 10,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 12),
+              title = element_text(face = "bold"),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 8))
 
-      g <- g + theme(legend.position = "none")
+      if (legend == FALSE) {
 
-      output <- girafe(code = {print(g)},
-                       width = 0.5
-      )
-      output
+        g <- g + theme(legend.position = "none")
 
-    }else if (legend == TRUE){
+        print(g)
 
-      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
-      output <- girafe(code = {print(g)},
-                       width = 0.5
-      )
-      output
+      } else if (legend == TRUE) {
 
+        print(g)
+
+      }
+
+    } else if (small == TRUE) {
+
+      g <- g +
+        geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.65) +
+        scale_alpha_manual(name = "",
+                           values = c(0.6, 0.3),
+                           labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
+        geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+        scale_fill_gradient(" ", limits = c(low_level, 0),
+                            low = "red3", high = "green3",
+                            guide = FALSE,
+                            labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                            breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
+                 angle = 90, alpha = 0.5, size = 2.5) +
+        theme(axis.text.y = element_text(size = 8, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 7,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 10),
+              title = element_text(face = "bold", size = 8),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 6),
+              legend.text = element_text(size = 8),
+              legend.key.size = unit(0.8, "lines"))
+
+      if (legend == FALSE) {
+
+        g <- g + theme(legend.position = "none")
+
+        print(g)
+
+      } else if (legend == TRUE) {
+
+        print(g)
+
+      }
     }
+  } else if (chart_type == "interactive") {
+    ## interactive ----
+    if (small == FALSE) {
 
-  }else if (small == TRUE){
+      g <- g +
+        geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.75) +
+        scale_alpha_manual(name = "",
+                           values = c(0.6, 0.3),
+                           labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
+        geom_bar_interactive(aes(x = indicator_name, y = perc,
+                                 tooltip = tooltip2, alpha = "lastweek",
+                                 data_id = indicator_name,
+                                 fill = behind_by),
+                             stat = "identity",
+                             width = 0.15, color = "black") +
+        scale_fill_gradient("", limits = c(low_level, 0),
+                            low = "red3", high = "green3",
+                            guide = FALSE,
+                            labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                            breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+        geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
+                 hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
+        theme(axis.text.y = element_text(size = 15, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 10,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 12),
+              title = element_text(face = "bold"),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 8))
 
-    g <- g + geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.65) +
-      scale_alpha_manual(name = "",
-                         values = c(0.6, 0.3),
-                         labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
-      geom_bar_interactive(aes(x = indicator_name, y = perc,
-                               tooltip = tooltip, alpha = "lastweek",
-                               data_id = indicator_name,
-                               fill = behind_by),
-                           stat = "identity",
-                           width = 0.15, color = "black") +
-      scale_fill_gradient(" ", limits = c(low_level, 0),
-                          low = "red3", high = "green3",
-                          guide = FALSE,
-                          labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
-                          breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
-      annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
-               angle = 90, alpha = 0.5, size = 2.5) +
-      theme(axis.text.y = element_text(size = 8, face = "bold"),
-            axis.title.x = element_text(face = "bold", size = 7,
-                                        margin = margin(t = 25, r = 0, b = 20, l = 0)),
-            axis.text.x = element_text(face = "bold", size = 10),
-            title = element_text(face = "bold", size = 8),
-            plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 6),
-            legend.text = element_text(size = 8),
-            legend.key.size = unit(0.8, "lines"))
+      if (legend == FALSE){
 
-    if (legend == FALSE){
+        g <- g + theme(legend.position = "none")
 
-      g <- g + theme(legend.position = "none")
+        output <- girafe(code = {print(g)},
+                         width = 0.5
+        )
+        output
 
-      output <- girafe(code = {print(g)},
-                       width = 0.5
-      )
-      output
+      } else if (legend == TRUE) {
 
-    }else if (legend == TRUE){
+        g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+        output <- girafe(code = {print(g)},
+                         width = 0.5
+        )
+        output
 
-      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
-      output <- girafe(code = {print(g)},
-                       width = 0.5
-      )
-      output
+      }
 
+    } else if (small == TRUE) {
+
+      g <- g +
+        geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.65) +
+        scale_alpha_manual(name = "",
+                           values = c(0.6, 0.3),
+                           labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
+        geom_bar_interactive(aes(x = indicator_name, y = perc,
+                                 tooltip = tooltip2, alpha = "lastweek",
+                                 data_id = indicator_name,
+                                 fill = behind_by),
+                             stat = "identity",
+                             width = 0.15, color = "black") +
+        scale_fill_gradient(" ", limits = c(low_level, 0),
+                            low = "red3", high = "green3",
+                            guide = FALSE,
+                            labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                            breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
+                 angle = 90, alpha = 0.5, size = 2.5) +
+        theme(axis.text.y = element_text(size = 8, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 7,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 10),
+              title = element_text(face = "bold", size = 8),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 6),
+              legend.text = element_text(size = 8),
+              legend.key.size = unit(0.8, "lines"))
+
+      if (legend == FALSE){
+
+        g <- g + theme(legend.position = "none")
+
+        output <- girafe(code = {print(g)},
+                         width = 0.5
+        )
+        output
+
+      }else if (legend == TRUE){
+
+        g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+        output <- girafe(code = {print(g)},
+                         width = 0.5
+        )
+        output
+
+      }
     }
   }
 }
-
 
 
 # bullet plot Version 3: symbols ----------------------------------------------------------
@@ -347,6 +504,7 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
 #' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
 #' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 #' format "YYYY/MM/DD", Default: fis
+#' @param chart_type static of interactive (ggiraph) version
 #' @param small specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE
 #' @param legend specify whether you want to show the legend, Default: FALSE
 #' @param remove_no_targets remove indicators with Targets == NA or 0, Default: FALSE
@@ -380,6 +538,7 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
                                  actual_lastyear = "actual_lastyear",
                                  target = "target",
                                  for_year = year(Sys.Date()),
+                                 chart_type = "static",
                                  cal_type = "fis",
                                  small = FALSE, legend = FALSE,
                                  remove_no_targets = FALSE) {
@@ -400,112 +559,193 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
     )
   }
 
-  g <- ggplot(ammended_data) +
-    # 100% bar   NOTE: order is important, have interactive after or won't be able to hover-over
-    geom_col(aes(x = indicator_name, y = 100),
-             width = 0.5, alpha = 0.25) +
-    # interactive
-    geom_bar_interactive(aes(x = indicator_name, y = perc,
-                             tooltip = tooltip,
-                             data_id = indicator_name,
-                             fill = behind_by),
-                         stat = "identity",
-                         width = 0.15, color = "black") +
-    # Today
-    geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33, size = 1.25) +
-    coord_flip() +
-    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
-         x = " ") +
-    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
-    theme_minimal() +
-    expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
+  # static vs. interactive ----
 
-  if (small == FALSE){
+  if (chart_type == "static") {
+    ### static ----
+    g <- ggplot(ammended_data, aes(x = indicator_name)) +
+      geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+      geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
+      geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
+      coord_flip() +
+      labs(y = "Percent of Yearly Target\n&\n Percent of Year",
+           x = " ") +
+      ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
+      theme_minimal() +
+      expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
 
-    g <- g + scale_fill_gradient("", limits = c(low_level, 0),
-                                 low = "red", high = "green",
-                                 guide = FALSE,
-                                 labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
-                                 breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
-      geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
-                 size = 5, stroke = 1) +
-      geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
-                 size = 5, stroke = 1) +
-      scale_shape_manual(" ", values = c(23, 21)) +
-      geom_text(y = 1, aes(x = indicator_name, label = text), vjust = -1, hjust = 0, size = 4) +
-      annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
-               angle = 90, alpha = 0.5, size = 5) +
-      theme(axis.text.y = element_text(size = 15, face = "bold"),
-            axis.title.x = element_text(face = "bold", size = 10,
-                                        margin = margin(t = 25, r = 0, b = 20, l = 0)),
-            axis.text.x = element_text(face = "bold", size = 14),
-            title = element_text(face = "bold", size = 14),
-            plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 8),
-            legend.key.size = unit(1.5, "lines"))
+    if (small == FALSE) {
+      g <- g + scale_fill_gradient("", limits = c(low_level, 0),
+                                   low = "red", high = "green",
+                                   labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                                   breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+        geom_point(aes(y = perc_week, shape = "Last Week"), size = 6, stroke = 1) +
+        geom_point(aes(y = perc_year, shape = "Last Year"), size = 6, stroke = 1) +
+        scale_shape_manual(" ", values = c(23, 21)) +
+        geom_text(y = 1, aes(label = tooltip), vjust = -1.25, hjust = 0, size = 3) +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
+                 angle = 90, alpha = 0.5, size = 5) +
+        theme(axis.text.y = element_text(size = 15, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 10,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 14),
+              title = element_text(face = "bold", size = 14),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 8),
+              legend.key.size = unit(1.5, "lines"))
 
-    if (legend == FALSE){
+      if (legend == FALSE) {
 
-      g <- g + theme(legend.position = "none")
+        g <- g + theme(legend.position = "none")
 
-      output <- girafe(code = {print(g)},
-                       width = 0.5
-      )
-      output
+        print(g)
+      } else if (legend == TRUE) {
 
-    }else if (legend == TRUE){
+        print(g)
 
-      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
-      output <- girafe(code = {print(g)},
-                       width = 0.5
-      )
-      output
+      }
+    } else if (small == TRUE) {
 
+      g <- g +
+        scale_fill_gradient(" ", limits = c(low_level, 0),
+                            low = "red", high = "green",
+                            labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                            breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+        geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
+                   size = 3, stroke = 1) +
+        geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
+                   size = 3, stroke = 1) +
+        scale_shape_manual(" ", values = c(23, 21)) +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
+                 angle = 90, alpha = 0.5, size = 2.5) +
+        theme(axis.text.y = element_text(size = 8, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 7,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 10),
+              title = element_text(face = "bold", size = 8),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 6),
+              legend.text = element_text(size = 8),
+              legend.key.size = unit(0.8, "lines"))
+
+      if (legend == FALSE) {
+
+        g <- g + theme(legend.position = "none")
+
+        print(g)
+
+      } else if (legend == TRUE) {
+
+        print(g)
+      }
     }
+  } else if (chart_type == "interactive") {
+    ### interactive ----
+    g <- ggplot(ammended_data) +
+      # 100% bar   NOTE: order is important, have interactive after or won't be able to hover-over
+      geom_col(aes(x = indicator_name, y = 100),
+               width = 0.5, alpha = 0.25) +
+      # interactive
+      geom_bar_interactive(aes(x = indicator_name, y = perc,
+                               tooltip = tooltip2,
+                               data_id = indicator_name,
+                               fill = behind_by),
+                           stat = "identity",
+                           width = 0.15, color = "black") +
+      geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
+      coord_flip() +
+      labs(y = "Percent of Yearly Target\n&\n Percent of Year",
+           x = " ") +
+      ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
+      theme_minimal() +
+      expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
 
-  }else if (small == TRUE){
+    if (small == FALSE) {
 
-    g <- g +
-      scale_fill_gradient(" ", limits = c(low_level, 0),
-                          low = "red", high = "green",
-                          guide = FALSE,
-                          labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
-                          breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
-      geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
-                 size = 3, stroke = 1) +
-      geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
-                 size = 3, stroke = 1) +
-      scale_shape_manual(" ", values = c(23, 21)) +
-      geom_text(y = 1, aes(x = indicator_name, label = text), vjust = -1, hjust = 0, size = 2) +
-      annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
-               angle = 90, alpha = 0.5, size = 2.5) +
-      theme(axis.text.y = element_text(size = 8, face = "bold"),
-            axis.title.x = element_text(face = "bold", size = 7,
-                                        margin = margin(t = 25, r = 0, b = 20, l = 0)),
-            axis.text.x = element_text(face = "bold", size = 10),
-            title = element_text(face = "bold", size = 8),
-            plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 6),
-            legend.text = element_text(size = 8),
-            legend.key.size = unit(0.8, "lines"))
+      g <- g + scale_fill_gradient("", limits = c(low_level, 0),
+                                   low = "red", high = "green",
+                                   guide = FALSE,
+                                   labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                                   breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+        geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
+                   size = 5, stroke = 1) +
+        geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
+                   size = 5, stroke = 1) +
+        scale_shape_manual(" ", values = c(23, 21)) +
+        geom_text(y = 1, aes(x = indicator_name, label = text), vjust = -1, hjust = 0, size = 4) +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
+                 angle = 90, alpha = 0.5, size = 5) +
+        theme(axis.text.y = element_text(size = 15, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 10,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 14),
+              title = element_text(face = "bold", size = 14),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 8),
+              legend.key.size = unit(1.5, "lines"))
 
-    if (legend == FALSE){
+      if (legend == FALSE) {
 
-      g <- g + theme(legend.position = "none")
+        g <- g + theme(legend.position = "none")
 
-      output <- girafe(code = {print(g)},
-                       width = 0.4
-      )
-      output
+        output <- girafe(code = {print(g)},
+                         width = 0.5
+        )
+        output
 
-    }else if (legend == TRUE){
+      } else if (legend == TRUE) {
 
-      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
-      output <- girafe(code = {print(g)},
-                       width = 0.4
-      )
-      output
+        g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+        output <- girafe(code = {print(g)},
+                         width = 0.5
+        )
+        output
 
+      }
+
+    } else if (small == TRUE) {
+
+      g <- g +
+        scale_fill_gradient(" ", limits = c(low_level, 0),
+                            low = "red", high = "green",
+                            guide = FALSE,
+                            labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                            breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+        geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
+                   size = 3, stroke = 1) +
+        geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
+                   size = 3, stroke = 1) +
+        scale_shape_manual(" ", values = c(23, 21)) +
+        geom_text(y = 1, aes(x = indicator_name, label = text), vjust = -1, hjust = 0, size = 2) +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
+                 angle = 90, alpha = 0.5, size = 2.5) +
+        theme(axis.text.y = element_text(size = 8, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 7,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 10),
+              title = element_text(face = "bold", size = 8),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 6),
+              legend.text = element_text(size = 8),
+              legend.key.size = unit(0.8, "lines"))
+
+      if (legend == FALSE) {
+
+        g <- g + theme(legend.position = "none")
+
+        output <- girafe(code = {print(g)},
+                         width = 0.4
+        )
+        output
+
+      } else if (legend == TRUE) {
+
+        g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+        output <- girafe(code = {print(g)},
+                         width = 0.4
+        )
+        output
+      }
     }
   }
 }
@@ -527,6 +767,7 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 #' @param cal_type define what calendar you are using. Options are "fis" for fiscal year starting
 #' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 #' format "YYYY/MM/DD", Default: fis
+#' @param chart_type static of interactive (ggiraph) version
 #' @param small specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE
 #' @param legend specify whether you want to show the legend, Default: FALSE
 #' @param remove_no_targets remove indicators with Targets == NA or 0, Default: FALSE
@@ -548,6 +789,8 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 #' @importFrom dplyr mutate %>% select
 #' @importFrom ggiraph geom_bar_interactive ggiraph girafe
 
+## geom interactive no working!!
+
 bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
                                dataframe = NULL,
                                indicator_name = "indicator_name",
@@ -557,6 +800,7 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
                                target = "target",
                                for_year = year(Sys.Date()),
                                cal_type = "fis",
+                               chart_type = "static",
                                small = FALSE, legend = FALSE,
                                remove_no_targets = FALSE) {
 
@@ -576,89 +820,164 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
     )
   }
 
-  g <- ggplot(ammended_data, aes(x = indicator_name)) +
-    geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
-    geom_bar_interactive(aes(x = indicator_name, y = perc,
-                             tooltip = tooltip,
-                             data_id = indicator_name,
-                             fill = behind_by),
-                         stat = "identity",
-                         width = 0.15, color = "black") +
-    scale_fill_gradient("", limits = c(low_level, 0),
-                        low = "red", high = "green",
-                        guide = FALSE,
-                        labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
-                        breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
-    coord_flip() +
-    labs(y = "Percent of Yearly Target",
-         x = " ") +
-    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
-    theme_minimal() +
-    expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
+  if (chart_type == "static") {
 
-  if (small == FALSE){
+    g <- ggplot(ammended_data, aes(x = indicator_name)) +
+      geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+      scale_fill_gradient("", limits = c(low_level, 0),
+                          low = "red", high = "green",
+                          guide = FALSE,
+                          labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                          breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+      geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
+      coord_flip() +
+      labs(y = "Percent of Yearly Target",
+           x = " ") +
+      ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
+      theme_minimal() +
+      expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
 
-    g <- g + geom_point(aes(y = perc_year, shape = "Last Year"), size = 4.5, stroke = 3) +
-      scale_shape_manual(" ", values = 124) +
-      geom_text(y = 1, aes(label = text), vjust = -1.5, hjust = 0) +
-      theme(axis.text.y = element_text(size = 15, face = "bold"),
-            axis.title.x = element_text(face = "bold", size = 10,
-                                        margin = margin(t = 25, r = 0, b = 20, l = 0)),
-            axis.text.x = element_text(face = "bold", size = 12),
-            title = element_text(face = "bold"),
-            plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 8))
+    if (small == FALSE) {
 
-    if (legend == FALSE){
+      g <- g +
+        geom_point(aes(y = perc_year, shape = "Last Year"), size = 4.5, stroke = 3) +
+        scale_shape_manual(" ", values = 124) +
+        geom_text(y = 1, aes(label = tooltip), vjust = -1.5, hjust = 0) +
+        theme(axis.text.y = element_text(size = 15, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 10,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 12),
+              title = element_text(face = "bold"),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 8))
 
-      g <- g + theme(legend.position = "none")
+      if (legend == FALSE) {
 
-      output <- girafe(code = {print(g)},
-                       width = 0.4
-      )
-      output
+        g <- g + theme(legend.position = "none")
 
-    }else if (legend == TRUE){
+        print(g)
+      } else if (legend == TRUE) {
 
-      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
-      output <- girafe(code = {print(g)},
-                       width = 0.4
-      )
-      output
+        print(g)
 
+      }
+
+    } else if (small == TRUE) {
+
+      g <- g +
+        geom_point(aes(y = perc_year, shape = "Last Year"), size = 3, stroke = 3) +
+        scale_shape_manual(" ", values = 124) +
+        theme(axis.text.y = element_text(size = 8, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 7,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 10),
+              title = element_text(face = "bold", size = 8),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 6),
+              legend.text = element_text(size = 8),
+              legend.key.size = unit(0.8, "lines"))
+
+      if (legend == FALSE) {
+
+        g <- g + theme(legend.position = "none")
+
+        print(g)
+
+      } else if (legend == TRUE) {
+
+        print(g)
+
+      }
     }
+  } else if (chart_type == "interactive") {
 
-  } else if (small == TRUE){
+    g <- ggplot(ammended_data, aes(x = indicator_name)) +
+      geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
+      geom_bar_interactive(aes(x = indicator_name, y = perc,
+                               tooltip = tooltip2,
+                               data_id = indicator_name,
+                               fill = behind_by),
+                           stat = "identity",
+                           width = 0.15, color = "black") +
+      scale_fill_gradient("", limits = c(low_level, 0),
+                          low = "red", high = "green",
+                          guide = FALSE,
+                          labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                          breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+      geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
+      coord_flip() +
+      labs(y = "Percent of Yearly Target",
+           x = " ") +
+      ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
+      theme_minimal() +
+      expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
 
-    g <- g + geom_point(aes(y = perc_year, shape = "Last Year"), size = 3, stroke = 3) +
-      scale_shape_manual(" ", values = 124) +
-      theme(axis.text.y = element_text(size = 8, face = "bold"),
-            axis.title.x = element_text(face = "bold", size = 7,
-                                        margin = margin(t = 25, r = 0, b = 20, l = 0)),
-            axis.text.x = element_text(face = "bold", size = 10),
-            title = element_text(face = "bold", size = 8),
-            plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 6),
-            legend.text = element_text(size = 8),
-            legend.key.size = unit(0.8, "lines"))
+    if (small == FALSE) {
 
-    if (legend == FALSE){
+      g <- g +
+        geom_point(aes(y = perc_year, shape = "Last Year"), size = 4.5, stroke = 3) +
+        scale_shape_manual(" ", values = 124) +
+        geom_text(y = 1, aes(label = text), vjust = -1.5, hjust = 0) +
+        theme(axis.text.y = element_text(size = 15, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 10,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 12),
+              title = element_text(face = "bold"),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 8))
 
-      g <- g + theme(legend.position = "none")
+      if (legend == FALSE) {
 
-      output <- girafe(code = {print(g)},
-                       width = 0.4
-      )
-      output
+        g <- g + theme(legend.position = "none")
 
-    }else if (legend == TRUE){
+        output <- girafe(code = {print(g)},
+                         width = 0.4
+        )
+        output
 
-      g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
-      output <- girafe(code = {print(g)},
-                       width = 0.4
-      )
-      output
+      } else if (legend == TRUE) {
 
+        g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+        output <- girafe(code = {print(g)},
+                         width = 0.4
+        )
+        output
+
+      }
+
+    } else if (small == TRUE) {
+
+      g <- g +
+        geom_point(aes(y = perc_year, shape = "Last Year"), size = 3, stroke = 3) +
+        scale_shape_manual(" ", values = 124) +
+        theme(axis.text.y = element_text(size = 8, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 7,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 10),
+              title = element_text(face = "bold", size = 8),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 6),
+              legend.text = element_text(size = 8),
+              legend.key.size = unit(0.8, "lines"))
+
+      if (legend == FALSE) {
+
+        g <- g + theme(legend.position = "none")
+
+        output <- girafe(code = {print(g)},
+                         width = 0.4
+        )
+        output
+
+      } else if (legend == TRUE) {
+
+        g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+        output <- girafe(code = {print(g)},
+                         width = 0.4
+        )
+        output
+
+      }
     }
   }
 }

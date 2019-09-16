@@ -72,7 +72,7 @@ To use the functions included in this package, one can provide either a datafram
 
 bullet_chart(dataframe = df)
 
-bullet_chart(file_name = "data/Indicators_Targets.xlsx")
+bullet_chart(file_name = "inst/data/Indicators_Targets.xlsx")
 
 ```
 
@@ -96,7 +96,7 @@ As you can see we have some names like "WEEKS" or "YEArz". We can specify what e
 
 ```{r}
 
-bullet_chart(file_name = "data/test.xlsx",
+bullet_chart(file_name = "inst/data/test.xlsx",
              indicator_name = "Indicators",
              actual = "act",
              actual_lastweek = "WEEKS",
@@ -126,7 +126,7 @@ This is similar to the standard bullet chart but uses different thicknesses for 
 accentuate the difference graphically.
 
 ```{r, fig.width=6, fig.height=5, echo=TRUE}
-bullet_chart_wide(file_name = "data/Indicators_Targets_full.xlsx")
+bullet_chart_wide(file_name = "inst/data/Indicators_Targets_full.xlsx")
 ```
 
 
@@ -134,7 +134,7 @@ bullet_chart_wide(file_name = "data/Indicators_Targets_full.xlsx")
 last week (diamond) and last year (circle).
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart_symbols(file_name = "data/Indicators_Targets_full.xlsx")
+bullet_chart_symbols(file_name = "inst/data/Indicators_Targets_full.xlsx")
 ```
 
 
@@ -143,7 +143,7 @@ for the indicator along with a black vertical line representing the indicator va
 last year.
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart_vline(file_name = "data/Indicators_Targets_full.xlsx")
+bullet_chart_vline(file_name = "inst/data/Indicators_Targets_full.xlsx")
 
 ```
 
@@ -152,19 +152,19 @@ bullet_chart_vline(file_name = "data/Indicators_Targets_full.xlsx")
 The vertical line showing `Today` can be customized depending on whether you are measuring by a fiscal year, a calendar year, or a custom date. `Today` shown on a Fiscal Year calendar (considering that today's physical date is `r Sys.Date()`.) is show below:
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart_symbols(file_name = "data/Indicators_Targets_full.xlsx", cal_type = "fis")
+bullet_chart_symbols(file_name = "inst/data/Indicators_Targets_full.xlsx", cal_type = "fis")
 ```
 
 or for a calendar year:
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart_symbols(file_name = "data/Indicators_Targets_ext.xlsx", cal_type = "cal")
+bullet_chart_symbols(file_name = "inst/data/Indicators_Targets_ext.xlsx", cal_type = "cal")
 ```
 
 or using a custom date that you can feed directly into the plotting function:
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart_symbols(file_name = "data/Indicators_Targets_ext.xlsx", cal_type = "2018/02/15")
+bullet_chart_symbols(file_name = "inst/data/Indicators_Targets_ext.xlsx", cal_type = "2018/02/15")
 ```
 
 By doing this the function will automatically calculate your progress and targets according to the calendar type that you specified.
@@ -176,7 +176,7 @@ If you want to see a small version of your "Plot" panel just specify `small` = _
 
 ```{r,fig.width=4,fig.height=3, echo=TRUE}
 
-bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "TRUE")
+bullet_chart_wide(file_name = "inst/data/Indicators_Targets.xlsx", small = "TRUE")
 
 ```
 
@@ -186,7 +186,7 @@ You have the option to show legends for both the indicator schedule and the symb
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
 
-bullet_chart_symbols(file_name = "data/Indicators_Targets.xlsx", legend = TRUE)
+bullet_chart_symbols(file_name = "inst/data/Indicators_Targets.xlsx", legend = TRUE)
 
 ```
 

@@ -229,10 +229,12 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
   # Tooltip: hover-over text
 
   ammended_data <- ammended_data %>%
-    mutate(tooltip = glue("
+    mutate(tooltip = glue("{LWeek_tex}; {LY_tex}"),
+           tooltip = tooltip %>% str_replace_all(., "\\(|\\)", ""),
+           tooltip2 = glue("
                           {LWeek_tex}
                           {LY_tex}")) %>%
-    mutate(tooltip = tooltip %>% str_replace_all("'", "&#39"))
+    mutate(tooltip2 = tooltip2 %>% str_replace_all("'", "&#39"))
 
 
   # Behind By to lower limit = 0

@@ -10,13 +10,13 @@ context("extra_field_calculator")
 ################################################# TESTING
 
 
-# ## Inputs
-fileName = "Indicators_Targets.com"   # NOT excel file
-fileName = here::here("inst/data/Indicators_Targets.xlsx")  # excel file
-for_year = 2018 ## Specify Year the analysis represents
-FY = TRUE       ## Is this a fiscal year? (as opposed to calendar year)
-project_start_date <- "2016/03/01"   # as string! %Y/%D/%M
-
-##
-dataframe <- extra_field_calculator("data/Indicators_Targets.xlsx", for_year = 2018)
-df <- extra_field_calculator(fileName, for_year = 2018)
+# # ## Inputs
+# fileName = "Indicators_Targets.com"   # NOT excel file
+# fileName = here::here("inst/data/Indicators_Targets.xlsx")  # excel file
+# for_year = 2018 ## Specify Year the analysis represents
+# FY = TRUE       ## Is this a fiscal year? (as opposed to calendar year)
+# project_start_date <- "2016/03/01"   # as string! %Y/%D/%M
+#
+# ##
+# dataframe <- extra_field_calculator("data/Indicators_Targets.xlsx", for_year = 2018)
+# df <- extra_field_calculator(fileName, for_year = 2018)
