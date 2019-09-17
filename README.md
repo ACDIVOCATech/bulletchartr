@@ -28,7 +28,7 @@ The output of the `bullet_chart()` function most closely resembles
 Stephen Few’s design:
 
 ``` r
-bullet_chart(file_name = "inst/data/Indicators_Targets_ext.xlsx")
+bullet_chart(file_name = "data/Indicators_Targets_ext.xlsx")
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
@@ -81,7 +81,7 @@ contain columns with names that correspond to the following:
 
 bullet_chart(dataframe = df)
 
-bullet_chart(file_name = "inst/data/Indicators_Targets.xlsx")
+bullet_chart(file_name = "data/Indicators_Targets.xlsx")
 ```
 
 See below for an example of what this might look like (in an Excel
@@ -115,7 +115,7 @@ and we can still get a proper chart\!
 
 ``` r
 
-bullet_chart(file_name = "inst/data/test.xlsx",
+bullet_chart(file_name = "data/test.xlsx",
              indicator_name = "Indicators",
              actual = "act",
              actual_lastweek = "WEEKS",
@@ -155,7 +155,7 @@ time points (last week and last year) to further accentuate the
 difference graphically.
 
 ``` r
-bullet_chart_wide(file_name = "inst/data/Indicators_Targets_full.xlsx")
+bullet_chart_wide(file_name = "data/Indicators_Targets_full.xlsx")
 ```
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
@@ -165,7 +165,7 @@ representing the indicator value for last week (diamond) and last year
 (circle).
 
 ``` r
-bullet_chart_symbols(file_name = "inst/data/Indicators_Targets_full.xlsx")
+bullet_chart_symbols(file_name = "data/Indicators_Targets_full.xlsx")
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
@@ -175,7 +175,7 @@ representing the current value for the indicator along with a black
 vertical line representing the indicator value at this time last year.
 
 ``` r
-bullet_chart_vline(file_name = "inst/data/Indicators_Targets_full.xlsx")
+bullet_chart_vline(file_name = "data/Indicators_Targets_full.xlsx")
 ```
 
 <img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
@@ -189,7 +189,7 @@ physical date is 2019-09-17.) is show
 below:
 
 ``` r
-bullet_chart_symbols(file_name = "inst/data/Indicators_Targets_full.xlsx", cal_type = "fis")
+bullet_chart_symbols(file_name = "data/Indicators_Targets_full.xlsx", cal_type = "fis")
 ```
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
@@ -198,7 +198,7 @@ or for a calendar
 year:
 
 ``` r
-bullet_chart_symbols(file_name = "inst/data/Indicators_Targets_ext.xlsx", cal_type = "cal")
+bullet_chart_symbols(file_name = "data/Indicators_Targets_ext.xlsx", cal_type = "cal")
 ```
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
@@ -207,7 +207,7 @@ or using a custom date that you can feed directly into the plotting
 function:
 
 ``` r
-bullet_chart_symbols(file_name = "inst/data/Indicators_Targets_ext.xlsx", cal_type = "2018/02/15")
+bullet_chart_symbols(file_name = "data/Indicators_Targets_ext.xlsx", cal_type = "2018/02/15")
 ```
 
 <img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
@@ -225,7 +225,7 @@ limited space.
 
 ``` r
 
-bullet_chart_wide(file_name = "inst/data/Indicators_Targets.xlsx", small = "TRUE")
+bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "TRUE")
 ```
 
 <img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
@@ -237,7 +237,7 @@ the symbols by specifying `legend` = **TRUE**. Default is **FALSE**.
 
 ``` r
 
-bullet_chart_symbols(file_name = "inst/data/Indicators_Targets.xlsx", legend = TRUE)
+bullet_chart_symbols(file_name = "data/Indicators_Targets.xlsx", legend = TRUE)
 ```
 
 <img src="man/figures/README-unnamed-chunk-14-1.png" width="100%" />
