@@ -8,8 +8,9 @@ bullet_chart_wide(file_name = NULL, sheet_name = "Sheet1",
   dataframe = NULL, indicator_name = "indicator_name",
   actual = "actual", actual_lastweek = "actual_lastweek",
   actual_lastyear = "actual_lastyear", target = "target",
-  for_year = year(Sys.Date()), cal_type = "fis", small = FALSE,
-  legend = FALSE, remove_no_targets = FALSE)
+  for_year = year(Sys.Date()), cal_type = "fis",
+  chart_type = "static", small = FALSE, legend = FALSE,
+  remove_no_targets = FALSE)
 }
 \arguments{
 \item{file_name}{path of Excel file}
@@ -33,6 +34,8 @@ bullet_chart_wide(file_name = NULL, sheet_name = "Sheet1",
 \item{cal_type}{define what calendar you are using. Options are "fis" for fiscal year starting
 October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
 format "YYYY/MM/DD", Default: fis}
+
+\item{chart_type}{static of interactive (ggiraph) version}
 
 \item{small}{specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE}
 

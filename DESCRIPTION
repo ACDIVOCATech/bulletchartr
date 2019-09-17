@@ -1,7 +1,7 @@
 Package: bulletchartr
 Type: Package
 Title: Create Bullet Charts For Visualizing KPIs
-Version: 0.0.0.990
+Version: 0.2.0
 Authors@R: c(person("Ryo", "Nakagawara", email = "ryonakagawara@gmail.com",
                   role = c("aut", "cre")),
                   person("Amit", "Kohli", email= "mexindian@gmail.com",
@@ -30,6 +30,8 @@ Imports: dplyr (>= 0.7.4),
     rlang (>= 0.2.0), 
     ggiraph, 
     glue,
-    stringr
+    stringr,
+    here
 Suggests: knitr,
-    rmarkdown
+    rmarkdown,
+    tibble

@@ -2,7 +2,9 @@ language: r
 cache: packages
 
 r_github_packages:
-- jimhester/covr
-
+  - r-lib/covr
+warnings_are_errors: false
+notifications:
+  slack: avtechtalk:c3Fbd0zPPwTn253xw6N5eo5T
 after_success:
-- Rscript -e 'covr::coveralls()'
+  - Rscript -e 'covr::codecov(token = "d67ccbbe-5572-49fd-bd85-d4925a776a98")'
