@@ -306,7 +306,12 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
          x = " ") +
     ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
     theme_minimal() +
-    expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
+    expand_limits(x = nrow(ammended_data) + 1.25, y = 102) +
+    scale_fill_gradient("", limits = c(low_level, 0),
+                        low = "red3", high = "green3",
+                        guide = FALSE,
+                        labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                        breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5))
 
   # static vs. interactive ----
 
@@ -320,11 +325,6 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
                            values = c(0.6, 0.3),
                            labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
         geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
-        scale_fill_gradient("", limits = c(low_level, 0),
-                            low = "red3", high = "green3",
-                            guide = FALSE,
-                            labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
-                            breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
         geom_text(y = 1, aes(label = tooltip), vjust = -2, hjust = 0, size = 2.5) +
         annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
                  hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
@@ -356,11 +356,6 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
                            values = c(0.6, 0.3),
                            labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
         geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
-        scale_fill_gradient(" ", limits = c(low_level, 0),
-                            low = "red3", high = "green3",
-                            guide = FALSE,
-                            labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
-                            breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
         annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
                  angle = 90, alpha = 0.5, size = 2.5) +
         theme(axis.text.y = element_text(size = 8, face = "bold"),
@@ -400,11 +395,6 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
                                  fill = behind_by),
                              stat = "identity",
                              width = 0.15, color = "black") +
-        scale_fill_gradient("", limits = c(low_level, 0),
-                            low = "red3", high = "green3",
-                            guide = FALSE,
-                            labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
-                            breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
         geom_text(y = 1, aes(label = text), vjust = -2, hjust = 0, size = 4) +
         annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
                  hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
@@ -448,11 +438,6 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
                                  fill = behind_by),
                              stat = "identity",
                              width = 0.15, color = "black") +
-        scale_fill_gradient(" ", limits = c(low_level, 0),
-                            low = "red3", high = "green3",
-                            guide = FALSE,
-                            labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
-                            breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
         annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
                  angle = 90, alpha = 0.5, size = 2.5) +
         theme(axis.text.y = element_text(size = 8, face = "bold"),
@@ -572,13 +557,15 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
            x = " ") +
       ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
       theme_minimal() +
-      expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
+      expand_limits(x = nrow(ammended_data) + 1.25, y = 102) +
+      scale_fill_gradient("", limits = c(low_level, 0),
+                          low = "red", high = "green",
+                          labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                          breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5),
+                          guide = FALSE)
 
     if (small == FALSE) {
-      g <- g + scale_fill_gradient("", limits = c(low_level, 0),
-                                   low = "red", high = "green",
-                                   labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
-                                   breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+      g <- g +
         geom_point(aes(y = perc_week, shape = "Last Week"), size = 6, stroke = 1) +
         geom_point(aes(y = perc_year, shape = "Last Year"), size = 6, stroke = 1) +
         scale_shape_manual(" ", values = c(23, 21)) +
@@ -607,10 +594,6 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
     } else if (small == TRUE) {
 
       g <- g +
-        scale_fill_gradient(" ", limits = c(low_level, 0),
-                            low = "red", high = "green",
-                            labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
-                            breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
         geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
                    size = 3, stroke = 1) +
         geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
@@ -658,15 +641,16 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
            x = " ") +
       ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
       theme_minimal() +
-      expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
+      expand_limits(x = nrow(ammended_data) + 1.25, y = 102) +
+      scale_fill_gradient("", limits = c(low_level, 0),
+                          low = "red", high = "green",
+                          guide = FALSE,
+                          labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
+                          breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5))
 
     if (small == FALSE) {
 
-      g <- g + scale_fill_gradient("", limits = c(low_level, 0),
-                                   low = "red", high = "green",
-                                   guide = FALSE,
-                                   labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
-                                   breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
+      g <- g +
         geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
                    size = 5, stroke = 1) +
         geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
@@ -706,11 +690,6 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
     } else if (small == TRUE) {
 
       g <- g +
-        scale_fill_gradient(" ", limits = c(low_level, 0),
-                            low = "red", high = "green",
-                            guide = FALSE,
-                            labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
-                            breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
         geom_point(aes(x = indicator_name, y = perc_week, shape = "Last Week"),
                    size = 3, stroke = 1) +
         geom_point(aes(x = indicator_name, y = perc_year, shape = "Last Year"),
