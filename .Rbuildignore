@@ -8,3 +8,4 @@
 ^README\.html$
 ^README\.md$
 ^README\.rmd$
+^codecov\.yml$

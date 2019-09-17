@@ -32,7 +32,9 @@ Imports: dplyr (>= 0.7.4),
     glue,
     stringr,
     here
-Suggests: knitr,
+Suggests: 
+    knitr,
     rmarkdown,
     tibble,
-    checkmate
+    checkmate,
+    covr

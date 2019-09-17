@@ -25,7 +25,10 @@ load("inst/data/df.Rda")
 
 ```
 
-[![Travis-CI Build Status](https://travis-ci.org/ACDIVOCATech/bulletchartr.svg?branch=master)](https://travis-ci.org/ACDIVOCATech/bulletchartr)
+<!-- badges: start -->
+  [![Codecov test coverage](https://codecov.io/gh/ACDIVOCATech/bulletchartr/branch/master/graph/badge.svg)](https://codecov.io/gh/ACDIVOCATech/bulletchartr?branch=master)
+  [![Travis-CI Build Status](https://travis-ci.org/ACDIVOCATech/bulletchartr.svg?branch=master)](https://travis-ci.org/ACDIVOCATech/bulletchartr)
+  <!-- badges: end -->
 
 ## Announcements
 
