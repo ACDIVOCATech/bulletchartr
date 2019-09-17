@@ -25,15 +25,98 @@ testthat::test_that("Only one dataset inputted: dataframe OR file_name - not bot
 })
 
 
-## Expect inputs
-# testthat::test_that("correct arguments used", {
-#
-#   file_name <- "inst/data/Indicators_Targets.xlsx"
-#   checkmate::expect_data_frame(df)
-#   checkmate::expect_character(file_name)
-#
-# })
+# Expect inputs
+testthat::test_that("correct arguments used", {
 
+  checkmate::expect_data_frame(test_df)
+  #checkmate::expect_character(file_name)
+
+  ## default
+  small <- FALSE
+  legend <- FALSE
+  remove_no_targets <- FALSE
+  chart_type <- "static"
+
+  checkmate::expect_logical(small)
+  checkmate::expect_logical(legend)
+  checkmate::expect_logical(remove_no_targets)
+  checkmate::expect_character(chart_type)
+
+  ## tests
+  expect_error(bullet_chart(dataframe = test_df,
+                            small = small, legend = legend,
+                            remove_no_targets = remove_no_targets), NA)
+  expect_error(bullet_chart_symbols(dataframe = test_df,
+                                    small = small, legend = legend,
+                                    remove_no_targets = remove_no_targets), NA)
+  expect_error(bullet_chart_vline(dataframe = test_df,
+                                  small = small, legend = legend,
+                                  remove_no_targets = remove_no_targets), NA)
+  expect_error(bullet_chart_wide(dataframe = test_df,
+                                 small = small, legend = legend,
+                                 remove_no_targets = remove_no_targets), NA)
+
+  ## tests interactive
+  expect_error(bullet_chart(dataframe = test_df,
+                            small = small, legend = legend,
+                            remove_no_targets = remove_no_targets,
+                            chart_type = chart_type), NA)
+  expect_error(bullet_chart_symbols(dataframe = test_df,
+                                    small = small, legend = legend,
+                                    remove_no_targets = remove_no_targets,
+                                    chart_type = chart_type), NA)
+  expect_error(bullet_chart_vline(dataframe = test_df,
+                                  small = small, legend = legend,
+                                  remove_no_targets = remove_no_targets,
+                                  chart_type = chart_type), NA)
+  expect_error(bullet_chart_wide(dataframe = test_df,
+                                 small = small, legend = legend,
+                                 remove_no_targets = remove_no_targets,
+                                 chart_type = chart_type), NA)
+
+  ## non-default
+  small <- TRUE
+  legend <- TRUE
+  remove_no_targets <- TRUE
+  chart_type <- "interactive"
+
+  checkmate::expect_logical(small)
+  checkmate::expect_logical(legend)
+  checkmate::expect_logical(remove_no_targets)
+  checkmate::expect_character(chart_type)
+
+  ## tests static
+  expect_error(bullet_chart(dataframe = test_df,
+                            small = small, legend = legend,
+                            remove_no_targets = remove_no_targets), NA)
+  expect_error(bullet_chart_symbols(dataframe = test_df,
+                                    small = small, legend = legend,
+                                    remove_no_targets = remove_no_targets), NA)
+  expect_error(bullet_chart_vline(dataframe = test_df,
+                                  small = small, legend = legend,
+                                  remove_no_targets = remove_no_targets), NA)
+  expect_error(bullet_chart_wide(dataframe = test_df,
+                                 small = small, legend = legend,
+                                 remove_no_targets = remove_no_targets), NA)
+
+  ## tests interactive
+  expect_error(bullet_chart(dataframe = test_df,
+                            small = small, legend = legend,
+                            remove_no_targets = remove_no_targets,
+                            chart_type = chart_type), NA)
+  expect_error(bullet_chart_symbols(dataframe = test_df,
+                                    small = small, legend = legend,
+                                    remove_no_targets = remove_no_targets,
+                                    chart_type = chart_type), NA)
+  expect_error(bullet_chart_vline(dataframe = test_df,
+                                  small = small, legend = legend,
+                                  remove_no_targets = remove_no_targets,
+                                  chart_type = chart_type), NA)
+  expect_error(bullet_chart_wide(dataframe = test_df,
+                                 small = small, legend = legend,
+                                 remove_no_targets = remove_no_targets,
+                                 chart_type = chart_type), NA)
+})
 
 ## Expect outputs
 testthat::test_that("correct outputs", {
@@ -56,3 +139,7 @@ testthat::test_that("correct outputs", {
 })
 
 
+## need to create test for case when EMPTY data
+## need to create test for read_xlsx
+## need to create test for cal_type == CUSTOM DATE
+## need to create test for Target == 0 in ALL Targets
