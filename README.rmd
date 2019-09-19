@@ -60,7 +60,6 @@ This package, `bulletchartr` is based on visualizing M&E deliverables or "Indica
 # install.packages("devtools")
 
 devtools::install_github("ACDIVOCATech/bulletchartr")
-
 ```
 
 ## Dataframe or Excel input
@@ -68,11 +67,9 @@ devtools::install_github("ACDIVOCATech/bulletchartr")
 To use the functions included in this package, one can provide either a dataframe or Excel (.xlsx) file as the input. Either file input needs to contain columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`.
 
 ```{r, fig.width=6,fig.height=5, eval=FALSE}
-
 bullet_chart(dataframe = df)
 
 bullet_chart(file_name = "data/Indicators_Targets.xlsx")
-
 ```
 
 See below for an example of what this might look like (in an Excel sheet): 
@@ -94,14 +91,12 @@ With some tidy eval magic you can provide an input (Excel or dataframe) with dif
 As you can see we have some names like "WEEKS" or "YEArz". We can specify what each of these names correspond to inside the function call and we can still get a proper chart!
 
 ```{r}
-
 bullet_chart(file_name = "data/test.xlsx",
              indicator_name = "Indicators",
              actual = "act",
              actual_lastweek = "WEEKS",
              actual_lastyear = "YEArz",
              target = "MYGOUL")
-
 ```
 
 Now let's move on to the variables that are calculated internally by the function!
@@ -143,7 +138,6 @@ last year.
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart_vline(file_name = "data/Indicators_Targets_full.xlsx")
-
 ```
 
 ## Different calendars
@@ -172,11 +166,8 @@ By doing this the function will automatically calculate your progress and target
 
 If you want to see a small version of your "Plot" panel just specify `small` = __TRUE__. This will allow you to quickly check the entire plot without having to enlarge it over and over again in the pop-up window. The small version also hides the text so as to not clutter up the limited space.
 
-
 ```{r,fig.width=4,fig.height=3, echo=TRUE}
-
 bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "TRUE")
-
 ```
 
 ## Show legends
@@ -184,11 +175,8 @@ bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "TRUE")
 You have the option to show legends for both the indicator schedule and the symbols by specifying `legend` = **TRUE**. Default is **FALSE**.
 
 ```{r,fig.width=6,fig.height=5, echo=TRUE}
-
 bullet_chart_symbols(file_name = "data/Indicators_Targets.xlsx", legend = TRUE)
-
 ```
-
 
 ## Future direction
 

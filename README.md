@@ -78,7 +78,6 @@ contain columns with names that correspond to the following:
 `target`.
 
 ``` r
-
 bullet_chart(dataframe = df)
 
 bullet_chart(file_name = "data/Indicators_Targets.xlsx")
@@ -114,7 +113,6 @@ specify what each of these names correspond to inside the function call
 and we can still get a proper chart\!
 
 ``` r
-
 bullet_chart(file_name = "data/test.xlsx",
              indicator_name = "Indicators",
              actual = "act",
@@ -185,7 +183,7 @@ bullet_chart_vline(file_name = "data/Indicators_Targets_full.xlsx")
 The vertical line showing `Today` can be customized depending on whether
 you are measuring by a fiscal year, a calendar year, or a custom date.
 `Today` shown on a Fiscal Year calendar (considering that today’s
-physical date is 2019-09-17.) is show
+physical date is 2019-09-19.) is show
 below:
 
 ``` r
@@ -221,10 +219,10 @@ If you want to see a small version of your “Plot” panel just specify
 `small` = **TRUE**. This will allow you to quickly check the entire plot
 without having to enlarge it over and over again in the pop-up window.
 The small version also hides the text so as to not clutter up the
-limited space.
+limited
+space.
 
 ``` r
-
 bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "TRUE")
 ```
 
@@ -233,10 +231,10 @@ bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "TRUE")
 ## Show legends
 
 You have the option to show legends for both the indicator schedule and
-the symbols by specifying `legend` = **TRUE**. Default is **FALSE**.
+the symbols by specifying `legend` = **TRUE**. Default is
+**FALSE**.
 
 ``` r
-
 bullet_chart_symbols(file_name = "data/Indicators_Targets.xlsx", legend = TRUE)
 ```
 
