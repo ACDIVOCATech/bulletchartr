@@ -1,13 +1,15 @@
 # bulletchartr 0.2.0
 
 * Added a `NEWS.md` file to track changes to the package.
-
-
+* fixed fill legend code
+* added more tests
+* add legend symbol for 'Today' for `bulletchartr()`
 
 # bulletchartr 0.1.0
 
-* separate internal funs to separate script file 
+* separated internal funs to separate script file 
 * "No Non-Zero Targets!" as simple text
+* added more tests
 
 # bulletchartr 0.0.0.990
 
