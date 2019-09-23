@@ -60,6 +60,7 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
     )
   }
 
+  ## base plot
   g <- ggplot(ammended_data, aes(x = indicator_name)) +
     geom_col(aes(y = 100), fill = "grey85", width = 0.4) +
     geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
@@ -79,9 +80,13 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
       g <- g +
         geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
         geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
+        geom_col(aes(y = perc, alpha = "today"),
+                 fill = "grey10", width = 0.1, color = "grey10") +
         scale_alpha_manual(name = "",
-                           values = c(0.6, 0.3),
-                           labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
+                           values = c(0.3, 0.6, 0.9),
+                           labels = c("lastweek" = "Last Week",
+                                      "lastyear" = "Last Year",
+                                      "today" = "Today")) +
         geom_col(aes(y = perc), fill = "grey10", width = 0.1, color = "grey10", alpha = 0.9) +
         geom_text(y = 1, aes(label = tooltip), vjust = -2, hjust = 0, size = 4) +
         annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
@@ -111,10 +116,13 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
       g <- g +
         geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
         geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
+        geom_col(aes(y = perc, alpha = "today"),
+                 fill = "grey10", width = 0.1, color = "grey10") +
         scale_alpha_manual(name = "",
-                           values = c(0.6, 0.3),
-                           labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
-        geom_col(aes(y = perc), fill = "grey10", width = 0.1, color = "grey10", alpha = 0.9) +
+                           values = c(0.3, 0.6, 0.9),
+                           labels = c("lastweek" = "Last Week",
+                                      "lastyear" = "Last Year",
+                                      "today" = "Today")) +
         annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
                  angle = 90, alpha = 0.5, size = 2.5) +
         theme(axis.text.y = element_text(size = 8, face = "bold"),
@@ -146,9 +154,13 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
       g <- g +
         geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
         geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
+        geom_col(aes(y = perc, alpha = "today"),
+                 fill = "grey10", width = 0.1, color = "grey10") +
         scale_alpha_manual(name = "",
-                           values = c(0.6, 0.3),
-                           labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
+                           values = c(0.3, 0.6, 0.9),
+                           labels = c("lastweek" = "Last Week",
+                                      "lastyear" = "Last Year",
+                                      "today" = "Today")) +
         geom_bar_interactive(aes(x = indicator_name, y = perc,
                                  tooltip = tooltip2,
                                  data_id = indicator_name),
@@ -172,16 +184,16 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
         g <- g + theme(legend.position = "none")
 
         output <- girafe(code = {print(g)},
-                         width = 0.5
-        )
+                         width = 0.5)
         output
 
       } else if (legend == TRUE) {
 
-        g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
+        g <- g +
+          guides(shape = guide_legend(nrow = 1)) +
+          theme(legend.position = "bottom")
         output <- girafe(code = {print(g)},
-                         width = 0.5
-        )
+                         width = 0.5)
         output
 
       }
@@ -191,9 +203,13 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
       g <- g +
         geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
         geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
+        geom_col(aes(y = perc, alpha = "today"),
+                 fill = "grey10", width = 0.1, color = "grey10") +
         scale_alpha_manual(name = "",
-                           values = c(0.6, 0.3),
-                           labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
+                           values = c(0.3, 0.6, 0.9),
+                           labels = c("lastweek" = "Last Week",
+                                      "lastyear" = "Last Year",
+                                      "today" = "Today")) +
         geom_bar_interactive(aes(x = indicator_name, y = perc,
                                  tooltip = tooltip2,
                                  data_id = indicator_name),
@@ -217,16 +233,14 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
         g <- g + theme(legend.position = "none")
 
         output <- girafe(code = {print(g)},
-                         width = 0.5
-        )
+                         width = 0.5)
         output
 
       } else if (legend == TRUE){
 
         g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
         output <- girafe(code = {print(g)},
-                         width = 0.5
-        )
+                         width = 0.5)
         output
 
       }
@@ -768,8 +782,6 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 #' @importFrom dplyr mutate %>% select
 #' @importFrom ggiraph geom_bar_interactive ggiraph girafe
 
-## geom interactive no working!!
-
 bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
                                dataframe = NULL,
                                indicator_name = "indicator_name",
@@ -793,7 +805,7 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
   low_level <- ammended_data$low_level[1]
 
   ## check for Target == 0 in all Targets
-  if(all(ammended_data$target == 0)) {
+  if (all(ammended_data$target == 0)) {
     return(
       "No Non-Zero Targets!"
     )
@@ -883,7 +895,6 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
                           guide = FALSE,
                           labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                           breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
-      geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
       coord_flip() +
       labs(y = "Percent of Yearly Target",
            x = " ") +
@@ -896,7 +907,6 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
       g <- g +
         geom_point(aes(y = perc_year, shape = "Last Year"), size = 4.5, stroke = 3) +
         scale_shape_manual(" ", values = 124) +
-        geom_text(y = 1, aes(label = text), vjust = -1.5, hjust = 0) +
         theme(axis.text.y = element_text(size = 15, face = "bold"),
               axis.title.x = element_text(face = "bold", size = 10,
                                           margin = margin(t = 25, r = 0, b = 20, l = 0)),

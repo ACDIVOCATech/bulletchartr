@@ -1,9 +1,15 @@
 language: r
 cache: packages
-
+sudo: true
+r:
+  #- oldrel
+  - release
+  #- devel
 r_github_packages:
   - r-lib/covr
 warnings_are_errors: false
+cache: packages
+dist: xenial
 notifications:
   slack: avtechtalk:c3Fbd0zPPwTn253xw6N5eo5T
 after_success:
