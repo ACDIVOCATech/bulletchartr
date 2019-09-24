@@ -18,7 +18,7 @@ Description: This package attempts to provide a way to create
     (low-high, bad-good, etc.). This type of graph makes it very 
     easy to compare between related measures (e.g. present status 
     versus status at similar time in the past).
-License: GPL-3 + file LICENSE
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
@@ -32,7 +32,9 @@ Imports: dplyr (>= 0.7.4),
     glue,
     stringr,
     here
-Suggests: knitr,
+Suggests: 
+    knitr,
     rmarkdown,
     tibble,
-    checkmate
+    checkmate,
+    covr
