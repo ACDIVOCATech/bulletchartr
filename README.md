@@ -31,7 +31,7 @@ Stephen Few’s design:
 bullet_chart(file_name = "data/Indicators_Targets_ext.xlsx")
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+<img src="man/figures/README-bulletchart-1.png" width="100%" />
 
 The single black bar represents the current value of the indicator while
 the different hue columns represent last week’s value (darker hue) and
@@ -121,7 +121,7 @@ bullet_chart(file_name = "data/test.xlsx",
              target = "MYGOUL")
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+<img src="man/figures/README-weird-cols-1.png" width="100%" />
 
 Now let’s move on to the variables that are calculated internally by the
 function\!
@@ -156,7 +156,7 @@ difference graphically.
 bullet_chart_wide(file_name = "data/Indicators_Targets_full.xlsx")
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-wide-1.png" width="100%" />
 
 `bullet_chart_symbols()` shows a version with different symbols
 representing the indicator value for last week (diamond) and last year
@@ -166,7 +166,7 @@ representing the indicator value for last week (diamond) and last year
 bullet_chart_symbols(file_name = "data/Indicators_Targets_full.xlsx")
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+<img src="man/figures/README-symbols-1.png" width="100%" />
 
 `bullet_chart_vline()` provides a version with a single colored bar
 representing the current value for the indicator along with a black
@@ -176,21 +176,21 @@ vertical line representing the indicator value at this time last year.
 bullet_chart_vline(file_name = "data/Indicators_Targets_full.xlsx")
 ```
 
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+<img src="man/figures/README-vline-1.png" width="100%" />
 
 ## Different calendars
 
 The vertical line showing `Today` can be customized depending on whether
 you are measuring by a fiscal year, a calendar year, or a custom date.
 `Today` shown on a Fiscal Year calendar (considering that today’s
-physical date is 2019-09-19.) is show
+physical date is 2019-09-24.) is show
 below:
 
 ``` r
 bullet_chart_symbols(file_name = "data/Indicators_Targets_full.xlsx", cal_type = "fis")
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+<img src="man/figures/README-cal-type-1.png" width="100%" />
 
 or for a calendar
 year:
@@ -199,7 +199,7 @@ year:
 bullet_chart_symbols(file_name = "data/Indicators_Targets_ext.xlsx", cal_type = "cal")
 ```
 
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
+<img src="man/figures/README-cal-type2-1.png" width="100%" />
 
 or using a custom date that you can feed directly into the plotting
 function:
@@ -208,7 +208,7 @@ function:
 bullet_chart_symbols(file_name = "data/Indicators_Targets_ext.xlsx", cal_type = "2018/02/15")
 ```
 
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+<img src="man/figures/README-cal-custom-1.png" width="100%" />
 
 By doing this the function will automatically calculate your progress
 and targets according to the calendar type that you specified.
@@ -226,7 +226,7 @@ space.
 bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "TRUE")
 ```
 
-<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
+<img src="man/figures/README-small-1.png" width="100%" />
 
 ## Show legends
 
@@ -238,7 +238,7 @@ the symbols by specifying `legend` = **TRUE**. Default is
 bullet_chart_symbols(file_name = "data/Indicators_Targets.xlsx", legend = TRUE)
 ```
 
-<img src="man/figures/README-unnamed-chunk-14-1.png" width="100%" />
+<img src="man/figures/README-legends-1.png" width="100%" />
 
 ## Future direction
 

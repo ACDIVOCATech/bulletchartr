@@ -4,7 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r include=FALSE}
+```{r pkgs, include=FALSE}
 library(readxl)
 library(dplyr)
 library(lubridate)
@@ -41,7 +41,7 @@ This type of graph is a variation on a typical bar graph with a thick line prese
 
 The output of the `bullet_chart()` function most closely resembles Stephen Few's design: 
 
-```{r, fig.width=6,fig.height=5, echo=TRUE}
+```{r bulletchart, fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart(file_name = "data/Indicators_Targets_ext.xlsx")
 ```
 
@@ -55,7 +55,7 @@ This package, `bulletchartr` is based on visualizing M&E deliverables or "Indica
 
 ## Installation
 
-```{r, eval = FALSE}
+```{r install, eval = FALSE}
 # Install the package from GitHub:
 # install.packages("devtools")
 
@@ -66,7 +66,7 @@ devtools::install_github("ACDIVOCATech/bulletchartr")
 
 To use the functions included in this package, one can provide either a dataframe or Excel (.xlsx) file as the input. Either file input needs to contain columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`.
 
-```{r, fig.width=6,fig.height=5, eval=FALSE}
+```{r df-or-excel, fig.width=6,fig.height=5, eval=FALSE}
 bullet_chart(dataframe = df)
 
 bullet_chart(file_name = "data/Indicators_Targets.xlsx")
@@ -90,7 +90,7 @@ With some tidy eval magic you can provide an input (Excel or dataframe) with dif
 
 As you can see we have some names like "WEEKS" or "YEArz". We can specify what each of these names correspond to inside the function call and we can still get a proper chart!
 
-```{r}
+```{r weird-cols, fig.width=6,fig.height=5}
 bullet_chart(file_name = "data/test.xlsx",
              indicator_name = "Indicators",
              actual = "act",
@@ -119,7 +119,7 @@ Along with the `bullet_chart()` function that you saw above we also have `bullet
 This is similar to the standard bullet chart but uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
 accentuate the difference graphically.
 
-```{r, fig.width=6, fig.height=5, echo=TRUE}
+```{r wide, fig.width=6, fig.height=5, echo=TRUE}
 bullet_chart_wide(file_name = "data/Indicators_Targets_full.xlsx")
 ```
 
@@ -127,7 +127,7 @@ bullet_chart_wide(file_name = "data/Indicators_Targets_full.xlsx")
 `bullet_chart_symbols()` shows a version with different symbols representing the indicator value for 
 last week (diamond) and last year (circle).
 
-```{r,fig.width=6,fig.height=5, echo=TRUE}
+```{r symbols,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart_symbols(file_name = "data/Indicators_Targets_full.xlsx")
 ```
 
@@ -136,7 +136,7 @@ bullet_chart_symbols(file_name = "data/Indicators_Targets_full.xlsx")
 for the indicator along with a black vertical line representing the indicator value at this time
 last year.
 
-```{r,fig.width=6,fig.height=5, echo=TRUE}
+```{r vline,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart_vline(file_name = "data/Indicators_Targets_full.xlsx")
 ```
 
@@ -144,19 +144,19 @@ bullet_chart_vline(file_name = "data/Indicators_Targets_full.xlsx")
 
 The vertical line showing `Today` can be customized depending on whether you are measuring by a fiscal year, a calendar year, or a custom date. `Today` shown on a Fiscal Year calendar (considering that today's physical date is `r Sys.Date()`.) is show below:
 
-```{r,fig.width=6,fig.height=5, echo=TRUE}
+```{r cal-type,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart_symbols(file_name = "data/Indicators_Targets_full.xlsx", cal_type = "fis")
 ```
 
 or for a calendar year:
 
-```{r,fig.width=6,fig.height=5, echo=TRUE}
+```{r cal-type2,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart_symbols(file_name = "data/Indicators_Targets_ext.xlsx", cal_type = "cal")
 ```
 
 or using a custom date that you can feed directly into the plotting function:
 
-```{r,fig.width=6,fig.height=5, echo=TRUE}
+```{r cal-custom,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart_symbols(file_name = "data/Indicators_Targets_ext.xlsx", cal_type = "2018/02/15")
 ```
 
@@ -166,7 +166,7 @@ By doing this the function will automatically calculate your progress and target
 
 If you want to see a small version of your "Plot" panel just specify `small` = __TRUE__. This will allow you to quickly check the entire plot without having to enlarge it over and over again in the pop-up window. The small version also hides the text so as to not clutter up the limited space.
 
-```{r,fig.width=4,fig.height=3, echo=TRUE}
+```{r small,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "TRUE")
 ```
 
@@ -174,7 +174,7 @@ bullet_chart_wide(file_name = "data/Indicators_Targets.xlsx", small = "TRUE")
 
 You have the option to show legends for both the indicator schedule and the symbols by specifying `legend` = **TRUE**. Default is **FALSE**.
 
-```{r,fig.width=6,fig.height=5, echo=TRUE}
+```{r legends,fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart_symbols(file_name = "data/Indicators_Targets.xlsx", legend = TRUE)
 ```
 
