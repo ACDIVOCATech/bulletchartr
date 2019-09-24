@@ -10,3 +10,4 @@
 ^README\.rmd$
 ^codecov\.yml$
 ^README\.Rmd$
+^LICENSE\.md$

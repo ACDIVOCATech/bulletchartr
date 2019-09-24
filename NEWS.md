@@ -5,6 +5,7 @@
 * Fixed fill legend code.
 * Added more tests.
 * Added legend symbol for 'Today' for `bulletchartr()`.
+* Change license to MIT.
 
 # bulletchartr 0.1.0
 
