@@ -178,6 +178,20 @@ You have the option to show legends for both the indicator schedule and the symb
 bullet_chart_symbols(file_name = "data/Indicators_Targets.xlsx", legend = TRUE)
 ```
 
+## Show `Last Week` & `Last Year` info text
+
+```{r}
+
+```
+
+
+## remove indicators with Targets == NA or 0
+
+```{r}
+
+```
+
+
 ## Future direction
 
 Currently this package is geared more toward non-R using M&E people (therefore, the Excel file input alongside a dataframe input), however as we develop this package further we want to go towards being able to make the `bullet_chart` functions more customizable for general use cases. 

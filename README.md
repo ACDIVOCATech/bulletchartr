@@ -183,7 +183,7 @@ bullet_chart_vline(file_name = "data/Indicators_Targets_full.xlsx")
 The vertical line showing `Today` can be customized depending on whether
 you are measuring by a fiscal year, a calendar year, or a custom date.
 `Today` shown on a Fiscal Year calendar (considering that today’s
-physical date is 2019-09-24.) is show
+physical date is 2019-10-01.) is show
 below:
 
 ``` r
@@ -239,6 +239,10 @@ bullet_chart_symbols(file_name = "data/Indicators_Targets.xlsx", legend = TRUE)
 ```
 
 <img src="man/figures/README-legends-1.png" width="100%" />
+
+## Show `Last Week` & `Last Year` info text
+
+## remove indicators with Targets == NA or 0
 
 ## Future direction
 
