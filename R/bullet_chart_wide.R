@@ -85,40 +85,25 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
     ## static ----
     if (small == FALSE){
 
-      if (show_text == TRUE) {
+      g <- g +
+        geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.75) +
+        scale_alpha_manual(name = "",
+                           values = c(0.6, 0.3),
+                           labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
+        geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
+                 hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
+        theme(axis.text.y = element_text(size = 15, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 10,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 12),
+              title = element_text(face = "bold"),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 8))
 
+      if (show_text == TRUE) {
         g <- g +
-          geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.75) +
-          scale_alpha_manual(name = "",
-                             values = c(0.6, 0.3),
-                             labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
-          geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
-          geom_text(y = 1, aes(label = tooltip), vjust = -2, hjust = 0, size = 2.5) +
-          annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
-                   hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
-          theme(axis.text.y = element_text(size = 15, face = "bold"),
-                axis.title.x = element_text(face = "bold", size = 10,
-                                            margin = margin(t = 25, r = 0, b = 20, l = 0)),
-                axis.text.x = element_text(face = "bold", size = 12),
-                title = element_text(face = "bold"),
-                plot.title = element_text(hjust = 0.5),
-                plot.subtitle = element_text(hjust = 0.5, size = 8))
-      } else {
-        g <- g +
-          geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.75) +
-          scale_alpha_manual(name = "",
-                             values = c(0.6, 0.3),
-                             labels = c("lastweek" = "Last Week", "lastyear" = "Last Year")) +
-          geom_col(aes(y = perc, fill = behind_by), width = 0.15, color = "black") +
-          annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
-                   hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
-          theme(axis.text.y = element_text(size = 15, face = "bold"),
-                axis.title.x = element_text(face = "bold", size = 10,
-                                            margin = margin(t = 25, r = 0, b = 20, l = 0)),
-                axis.text.x = element_text(face = "bold", size = 12),
-                title = element_text(face = "bold"),
-                plot.title = element_text(hjust = 0.5),
-                plot.subtitle = element_text(hjust = 0.5, size = 8))
+          geom_text(y = 1, aes(label = tooltip), vjust = -2, hjust = 0, size = 2.5)
       }
 
       if (legend == FALSE) {
@@ -152,6 +137,11 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
               plot.subtitle = element_text(hjust = 0.5, size = 6),
               legend.text = element_text(size = 8),
               legend.key.size = unit(0.8, "lines"))
+
+      if (show_text == TRUE) {
+        g
+        warning("When 'small' is set to TRUE, text will not show up by default! \n")
+      }
 
       if (legend == FALSE) {
 
@@ -190,6 +180,11 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
               title = element_text(face = "bold"),
               plot.title = element_text(hjust = 0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 8))
+
+      if (show_text == TRUE) {
+        g
+        warning("When 'chart_type' is set to 'interactive', text will not show up by default! \n")
+      }
 
       if (legend == FALSE){
 
@@ -234,6 +229,11 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
               plot.subtitle = element_text(hjust = 0.5, size = 6),
               legend.text = element_text(size = 8),
               legend.key.size = unit(0.8, "lines"))
+
+      if (show_text == TRUE) {
+        g
+        warning("When 'chart_type' is set to 'interactive', text will not show up by default! \n")
+      }
 
       if (legend == FALSE){
 

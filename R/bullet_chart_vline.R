@@ -85,29 +85,21 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
 
     if (small == FALSE) {
 
+      g <- g +
+        geom_point(aes(y = perc_year, shape = "Last Year"), size = 4.5, stroke = 3) +
+        scale_shape_manual(" ", values = 124) +
+        geom_text(y = 1, aes(label = tooltip), vjust = -1.5, hjust = 0) +
+        theme(axis.text.y = element_text(size = 15, face = "bold"),
+              axis.title.x = element_text(face = "bold", size = 10,
+                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
+              axis.text.x = element_text(face = "bold", size = 12),
+              title = element_text(face = "bold"),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 8))
+
       if (show_text == TRUE) {
         g <- g +
-          geom_point(aes(y = perc_year, shape = "Last Year"), size = 4.5, stroke = 3) +
-          scale_shape_manual(" ", values = 124) +
-          geom_text(y = 1, aes(label = tooltip), vjust = -1.5, hjust = 0) +
-          theme(axis.text.y = element_text(size = 15, face = "bold"),
-                axis.title.x = element_text(face = "bold", size = 10,
-                                            margin = margin(t = 25, r = 0, b = 20, l = 0)),
-                axis.text.x = element_text(face = "bold", size = 12),
-                title = element_text(face = "bold"),
-                plot.title = element_text(hjust = 0.5),
-                plot.subtitle = element_text(hjust = 0.5, size = 8))
-      } else {
-        g <- g +
-          geom_point(aes(y = perc_year, shape = "Last Year"), size = 4.5, stroke = 3) +
-          scale_shape_manual(" ", values = 124) +
-          theme(axis.text.y = element_text(size = 15, face = "bold"),
-                axis.title.x = element_text(face = "bold", size = 10,
-                                            margin = margin(t = 25, r = 0, b = 20, l = 0)),
-                axis.text.x = element_text(face = "bold", size = 12),
-                title = element_text(face = "bold"),
-                plot.title = element_text(hjust = 0.5),
-                plot.subtitle = element_text(hjust = 0.5, size = 8))
+          geom_text(y = 1, aes(label = tooltip), vjust = -1.5, hjust = 0)
       }
 
       if (legend == FALSE) {
@@ -135,6 +127,11 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
               plot.subtitle = element_text(hjust = 0.5, size = 6),
               legend.text = element_text(size = 8),
               legend.key.size = unit(0.8, "lines"))
+
+      if (show_text == TRUE) {
+        g
+        warning("When 'small' is set to TRUE, text will not show up by default! \n")
+      }
 
       if (legend == FALSE) {
 
@@ -183,6 +180,11 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
               plot.title = element_text(hjust = 0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 8))
 
+      if (show_text == TRUE) {
+        g
+        warning("When 'chart_type' is set to 'interactive', text will not show up by default! \n")
+      }
+
       if (legend == FALSE) {
 
         g <- g + theme(legend.position = "none")
@@ -216,6 +218,11 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
               plot.subtitle = element_text(hjust = 0.5, size = 6),
               legend.text = element_text(size = 8),
               legend.key.size = unit(0.8, "lines"))
+
+      if (show_text == TRUE) {
+        g
+        warning("When 'chart_type' is set to 'interactive', text will not show up by default! \n")
+      }
 
       if (legend == FALSE) {
 
