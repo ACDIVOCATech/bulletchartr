@@ -38,3 +38,4 @@ Suggests:
     tibble,
     checkmate,
     covr
+VignetteBuilder: knitr

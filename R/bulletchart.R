@@ -78,8 +78,11 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
     if (small == FALSE) {
 
       g <- g +
+        ## Last Week
         geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
+        ## Last Year
         geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
+        ## Today
         geom_col(aes(y = perc, alpha = "today"),
                  fill = "grey10", width = 0.1, color = "grey10") +
         scale_alpha_manual(name = "",

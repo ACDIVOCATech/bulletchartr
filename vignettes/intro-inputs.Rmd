@@ -1,0 +1,71 @@
+---
+title: "bullchartr inputs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{bullchartr inputs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(bulletchartr)
+load("../data/df.rda")
+```
+
+
+# Dataframe or Excel input
+
+To use the functions included in this package, one can provide either a dataframe or Excel (.xlsx) file as the input. Either file input needs to contain columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`.
+
+```{r df-or-excel, fig.width=6,fig.height=5, eval=FALSE}
+bullet_chart(dataframe = df)
+
+bullet_chart(file_name = "../data/Indicators_Targets.xlsx")
+```
+
+See below for an example of what this might look like (in an Excel sheet): 
+
+![](inst/img/excelsheetEX.PNG)<!-- -->
+
+The following sections will describe these variables, as well as the extra variables calculated within the function in more detail. In later versions we hope to streamline this process to make it easier to use. 
+
+* `indicator_name`: the name of the indicator or KPI that you are measuring
+* `actual`: the value of the indicator at the current time of viewing ("Today")
+* `actual_lastweek`: Last week's value of the indicator
+* `actual_lastyear`: Last year's value of the indicator
+* `target`: the target value for the indicator (used to calculate the percent variables)
+
+With some tidy eval magic you can provide an input (Excel or dataframe) with different column names as long as you specify which corresponds to the column names listed above. For example, with an Excel sheet with these column names:
+
+![](inst/img/weirdcolnames.jpg)<!-- -->
+
+As you can see we have some names like "WEEKS" or "YEArz". We can specify what each of these names correspond to inside the function call and we can still get a proper chart!
+
+```{r weird-cols, fig.width=6,fig.height=5}
+bullet_chart(file_name = "../data/test.xlsx",
+             indicator_name = "Indicators",
+             actual = "act",
+             actual_lastweek = "WEEKS",
+             actual_lastyear = "YEArz",
+             target = "MYGOUL")
+```
+
+Now let's move on to the variables that are calculated internally by the function!
+
+The percentages along the horizontal axis are calculated by: 
+
+* `Perc`: Value of indicator as percent of yearly target and percent of the year at the current time
+* `PercWeek`: Last week's value of the indicator as percent of yearly target and percent of the year
+* `PercYear`: Last year's value of the indicator as percent of yearly target and percent of the year
+
+`BehindBy` is calculated by: `Perc - PercentTime` and shows how far behind the current value of the indicator is to the target value for the current time and shows up as the text above each bar: 
+
+* "OK!": Shows that the current value of the indicator meets the target value for the current time
+* "Need ___ more": Shows exactly how much more of the indicator is needed to reach the target value for the current time
