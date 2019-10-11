@@ -29,9 +29,9 @@ field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
                              indicator_name = "variable",
                              info = "info",
                              current = "current",
-                             bad = "bad",
-                             good = "good",
-                             great = "great",
+                             low = "low",
+                             medium = "medium",
+                             high = "high",
                              target = "target",
                              remove_no_targets = TRUE) {
 
@@ -58,18 +58,18 @@ field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
   ## Assign field names to this dataset
   ind <- enquo(indicator_name)
   inf <- enquo(info)
-  cur <- enquo(current)
-  bad <- enquo(bad)
-  good <- enquo(good)
-  great <- enquo(great)
+  Cur <- enquo(current)
+  Low <- enquo(low)
+  Medium <- enquo(medium)
+  High <- enquo(high)
   tar <- enquo(target)
 
   ammended_data <- ammended_data %>%
     select(indicator_name = !!ind,
-           current = !!cur,
-           bad = !!bad,
-           good = !!good,
-           great = !!great,
+           Current = !!Cur,
+           Low = !!Low,
+           Medium = !!Medium,
+           High = !!High,
            target = !!tar
     )
 
@@ -83,19 +83,35 @@ field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
 
   ammended_data <- ammended_data %>%
   ## Protect against values greater than what's set at "great"
-    mutate(current = if_else(current > great, great, current)) %>%
-  ## if target value greater than "great", move "great" to "Target" value
-    mutate(great = if_else(target > great, target, great))
+    mutate(Current = if_else(Current > High, High, Current)) %>%
+  ## if target value Higher than "High", move "High" to "Target" value
+  ## high should not be higher than target ??
+    #mutate(High = if_else(target > High, target, High))
+    mutate(tarhigh = if_else(target > High, TRUE, FALSE))
+
+  ## if Target > High then error out with name of columns
+  if (any(ammended_data$tarhigh == TRUE)) {
+    tarhighvars <- ammended_data %>%
+      filter(tarhigh == TRUE) %>%
+      pull(indicator_name) %>%
+      paste(collapse = ", ")
+    tarhighmess <- paste0("The following variables have Targets > High values:", tarhighvars)
+    return(tarhighmess)
+  }
 
   ## reshape
   ammended_data <- ammended_data %>%
     pivot_longer(-c(indicator_name, target),
                  names_to = "allvals",
-                 values_to = "vals")
+                 values_to = "vals") %>%
+    mutate(allvals = forcats::as_factor(allvals))
 
-  # Variale info text:
+  # Variable info text:
   ammended_data <- ammended_data %>%
     mutate(varinfo = glue("{indicator_name}: {info}"))
+
+  # ammended_data <- ammended_data %>%
+  #   mutate(allvals = forcats::fct_relevel(allvals, c("Current", "High", "Medium", "Low")))
 
   return(ammended_data)
 }

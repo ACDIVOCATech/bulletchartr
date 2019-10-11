@@ -6,8 +6,9 @@
 \usage{
 bulletchart(file_name = NULL, sheet_name = "Sheet1",
   dataframe = NULL, indicator_name = "variable", info = "info",
-  current = "current", bad = "bad", good = "good", great = "great",
-  target = "target", remove_no_targets = TRUE, legend = FALSE)
+  current = "current", low = "low", medium = "medium",
+  high = "high", target = "target", remove_no_targets = TRUE,
+  legend = FALSE)
 }
 \arguments{
 \item{file_name}{PARAM_DESCRIPTION, Default: NULL}
@@ -22,17 +23,17 @@ bulletchart(file_name = NULL, sheet_name = "Sheet1",
 
 \item{current}{PARAM_DESCRIPTION, Default: 'current'}
 
-\item{bad}{PARAM_DESCRIPTION, Default: 'bad'}
-
-\item{good}{PARAM_DESCRIPTION, Default: 'good'}
-
-\item{great}{PARAM_DESCRIPTION, Default: 'great'}
-
 \item{target}{PARAM_DESCRIPTION, Default: 'target'}
 
 \item{remove_no_targets}{PARAM_DESCRIPTION, Default: TRUE}
 
 \item{legend}{PARAM_DESCRIPTION, Default: FALSE}
+
+\item{bad}{PARAM_DESCRIPTION, Default: 'bad'}
+
+\item{good}{PARAM_DESCRIPTION, Default: 'good'}
+
+\item{great}{PARAM_DESCRIPTION, Default: 'great'}
 }
 \value{
 OUTPUT_DESCRIPTION

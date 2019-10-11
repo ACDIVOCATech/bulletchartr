@@ -6,8 +6,8 @@
 \usage{
 field_calculator(file_name = NULL, sheet_name = "Sheet1",
   dataframe = NULL, indicator_name = "variable", info = "info",
-  current = "current", bad = "bad", good = "good", great = "great",
-  target = "target", remove_no_targets = TRUE)
+  current = "current", low = "low", medium = "medium",
+  high = "high", target = "target", remove_no_targets = TRUE)
 }
 \arguments{
 \item{file_name}{path of Excel file}
@@ -22,6 +22,10 @@ field_calculator(file_name = NULL, sheet_name = "Sheet1",
 
 \item{current}{current value of indicator}
 
+\item{target}{column with value for the "target"}
+
+\item{remove_no_targets}{Removes indicators without a "target" value specified, default: TRUE}
+
 \item{bad}{column with value for "bad"}
 
 \item{good}{column with value for "good"}
@@ -29,10 +33,6 @@ field_calculator(file_name = NULL, sheet_name = "Sheet1",
 \item{great}{column with value for "great", if "target" exceeds "great" then
 "great" will be increased to "target" value. If "current" value exceeds "great"
 then "current" value will be decreased to "great" value.}
-
-\item{target}{column with value for the "target"}
-
-\item{remove_no_targets}{Removes indicators without a "target" value specified, default: TRUE}
 }
 \description{
 internal function for calculating the extra fields needed for bullet charts

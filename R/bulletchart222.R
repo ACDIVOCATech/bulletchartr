@@ -22,9 +22,9 @@ bulletchart <- function(file_name = NULL, sheet_name = "Sheet1",
                         indicator_name = "variable",
                         info = "info",
                         current = "current",
-                        bad = "bad",
-                        good = "good",
-                        great = "great",
+                        low = "low",
+                        medium = "medium",
+                        high = "high",
                         target = "target",
                         remove_no_targets = TRUE,
                         legend = FALSE) {
@@ -32,7 +32,7 @@ bulletchart <- function(file_name = NULL, sheet_name = "Sheet1",
   ammended_data <- field_calculator(file_name, sheet_name,
                                     dataframe,
                                     indicator_name, info,
-                                    current, bad, good, great,
+                                    current, low, medium, high,
                                     target, remove_no_targets)
 
   ## check for Target == 0 in all Targets
@@ -43,35 +43,41 @@ bulletchart <- function(file_name = NULL, sheet_name = "Sheet1",
   }
 
   ## fill colors
-  cols <- c(great = "#dcdcdc", good = "#c0c0c0", bad = "#696969",
-            current = "black")
+  cols <- c(High = "#dcdcdc", Medium = "#c0c0c0", Low = "#696969",
+            Current = "black")
 
   ## PLOT
   g <- ammended_data %>%
     ggplot() +
+    #geom_col(aes(x = 1, y = vals * 0.3), fill = "white") +
     ## great
-    geom_col(data = ammended_data %>% filter(allvals == "great"),
+    geom_col(data = ammended_data %>% filter(allvals == "High"),
              aes(x = 1, y = vals, fill = allvals)) +
     ## good
-    geom_col(data = ammended_data %>% filter(allvals == "good"),
+    geom_col(data = ammended_data %>% filter(allvals == "Medium"),
              aes(x = 1, y = vals, fill = allvals)) +
     ## bad
-    geom_col(data = ammended_data %>% filter(allvals == "bad"),
+    geom_col(data = ammended_data %>% filter(allvals == "Low"),
              aes(x = 1, y = vals, fill = allvals)) +
-    coord_flip() +
-    facet_wrap(~indicator_name, scales = "free_x", ncol = 1) +
     ## current
-    geom_col(data = ammended_data %>% filter(allvals == "current"),
-             aes(x = 1, y = vals), fill = "black" ,
+    geom_col(data = ammended_data %>% filter(allvals == "Current"),
+             aes(x = 1, y = vals, fill = allvals),
              width = 0.2) +
     ## target
+    # geom_point(aes(x = 1,
+    #                y = target), shape = 22,
+    #            fill = "red", size = 4) +
     geom_segment(aes(x = 0.75, xend = 1.25,
                      y = target, yend = target),
-                 color = "red", size = 2) +
+                 color = "red", size = 2.5) +
+    coord_flip() +
+    facet_wrap(~indicator_name, scales = "free_x", ncol = 1) +
     scale_y_continuous(limits = c(0, NA),
-                       expand = c(0, 0)) +
+                       expand = c(0, 0),
+                       breaks = scales::pretty_breaks()) +
     scale_x_continuous(expand = c(0, 0)) +
-    scale_fill_manual(values = cols, name = "Values") +
+    scale_fill_manual(values = cols, name = NULL,
+                      breaks = c("Current", "High", "Medium", "Low")) +
     theme(title = element_text(face = "bold"),
           plot.title = element_text(hjust = 0.5),
           plot.subtitle = element_text(hjust = 0.5, size = 8),
@@ -82,7 +88,10 @@ bulletchart <- function(file_name = NULL, sheet_name = "Sheet1",
           axis.text.y = element_blank(),
           axis.ticks.y = element_blank(),
           strip.text = element_text(face = "bold", size = 14),
-          strip.background = element_rect(fill = "white"))
+          strip.background = element_rect(fill = "white"),
+          plot.margin = margin(1, 1, 1, 1, "cm"),
+          legend.position = "bottom",
+          legend.direction = "horizontal")
 
   if (legend == FALSE) {
     g <- g + theme(legend.position = "none")
