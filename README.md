@@ -11,6 +11,8 @@ coverage](https://codecov.io/gh/ACDIVOCATech/bulletchartr/branch/master/graph/ba
 Status](https://travis-ci.org/ACDIVOCATech/bulletchartr.svg?branch=master)](https://travis-ci.org/ACDIVOCATech/bulletchartr)
 <!-- badges: end -->
 
+**Currently under another overhaul to allow for a more traditional bullet chart to be made among other MAJOR changes!**
+
 ## What is a bullet chart?
 
 The **bullet chart** was invented by [Stephen
