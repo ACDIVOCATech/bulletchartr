@@ -83,11 +83,11 @@ field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
 
   ammended_data <- ammended_data %>%
   ## Protect against values greater than what's set at "great"
-    mutate(Current = if_else(Current > High, High, Current)) %>%
+    mutate(Current = dplyr::if_else(Current > High, High, Current)) %>%
   ## if target value Higher than "High", move "High" to "Target" value
   ## high should not be higher than target ??
     #mutate(High = if_else(target > High, target, High))
-    mutate(tarhigh = if_else(target > High, TRUE, FALSE))
+    mutate(tarhigh = dplyr::if_else(target > High, TRUE, FALSE))
 
   ## if Target > High then error out with name of columns
   if (any(ammended_data$tarhigh == TRUE)) {
@@ -96,15 +96,15 @@ field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
       pull(indicator_name) %>%
       paste(collapse = ", ")
     tarhighmess <- paste0("The following variables have Targets > High values:", tarhighvars)
-    return(tarhighmess)
+    stop(tarhighmess)
   }
 
   ## reshape
   ammended_data <- ammended_data %>%
-    pivot_longer(-c(indicator_name, target),
+    tidyr::pivot_longer(-c(indicator_name, target),
                  names_to = "allvals",
                  values_to = "vals") %>%
-    mutate(allvals = forcats::as_factor(allvals))
+    dplyr::mutate(allvals = forcats::as_factor(allvals))
 
   # Variable info text:
   ammended_data <- ammended_data %>%
