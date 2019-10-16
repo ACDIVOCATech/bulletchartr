@@ -77,7 +77,7 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
                           breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
       geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
       coord_flip() +
-      labs(y = "Percent of Yearly Target",
+      labs(y = "Percent of Yearly Target\n&\n Percent of Year",
            x = " ") +
       ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
       theme_minimal() +
@@ -161,7 +161,7 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
                           labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                           breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
       coord_flip() +
-      labs(y = "Percent of Yearly Target",
+      labs(y = "Percent of Yearly Target\n&\n Percent of Year",
            x = " ") +
       ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
       theme_minimal() +

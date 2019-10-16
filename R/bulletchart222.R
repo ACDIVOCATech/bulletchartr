@@ -29,7 +29,7 @@ bulletchart <- function(file_name = NULL, sheet_name = "Sheet1",
                         remove_no_targets = TRUE,
                         legend = FALSE) {
   ## Transform data
-  ammended_data <- field_calculator(file_name, sheet_name,
+  ammended_data <- bulletchartr:::field_calculator(file_name, sheet_name,
                                     dataframe,
                                     indicator_name, info,
                                     current, low, medium, high,
@@ -57,7 +57,7 @@ bulletchart <- function(file_name = NULL, sheet_name = "Sheet1",
 
   indicator_vector <- ammended_data$indicator_name %>% unique()
 
-  bc_plotter <- function(data) {
+  bc_plotter <- function(data, indicator_name) {
 
     ## find mid + max
     min.bg <- 0
@@ -100,6 +100,7 @@ bulletchart <- function(file_name = NULL, sheet_name = "Sheet1",
       scale_x_continuous(expand = c(0, 0)) +
       scale_fill_manual(values = cols, name = NULL,
                         breaks = c("Current", "High", "Medium", "Low")) +
+      labs(title = glue::glue("{indicator_name}")) +
       theme(title = element_text(face = "bold"),
             plot.title = element_text(hjust = 0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 8),
@@ -125,12 +126,18 @@ bulletchart <- function(file_name = NULL, sheet_name = "Sheet1",
   plots_df <- ammended_data %>%
     group_by(indicator_name) %>%
     nest() %>%
-    mutate(plot = map(data,
-                      ~bc_plotter(.x)))
+    mutate(plot = map2(data, indicator_name,
+                       ~bc_plotter(data = .x, indicator_name = .y)))
   plots_df$plot[[1]]
   plots_df$plot[[2]]
   plots_df$plot[[3]]
   plots_df$plot[[4]]
+
+
+  cowplot::plot_grid(plotlist = plots_df$plot, align = "hv", ncol = 1)
+
+  ## legend ONLY onto bottom-most plot...
+  ## https://wilkelab.org/cowplot/articles/shared_legends.html
 
   ## legend or no?
   if (legend == FALSE) {
