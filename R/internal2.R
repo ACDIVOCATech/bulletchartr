@@ -8,11 +8,9 @@
 #' @param indicator_name specify the name of the column that has your indicator/KPI names
 #' @param info extra info for indicators (currency, percentage, symbol, etc.)
 #' @param current current value of indicator
-#' @param bad column with value for "bad"
-#' @param good column with value for "good"
-#' @param great column with value for "great", if "target" exceeds "great" then
-#' "great" will be increased to "target" value. If "current" value exceeds "great"
-#' then "current" value will be decreased to "great" value.
+#' @param low column with value for "low"
+#' @param medium column with value for "medium"
+#' @param high column with value for "high"
 #' @param target column with value for the "target"
 #' @param remove_no_targets Removes indicators without a "target" value specified, default: TRUE
 #' @details internal function for calculating the extra fields for the bullet chart
@@ -23,6 +21,7 @@
 #' @importFrom lubridate year month
 #' @importFrom rlang enquo !!
 #' @importFrom glue glue
+#' @importFrom forcats as_factor
 
 field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
                              dataframe = NULL,

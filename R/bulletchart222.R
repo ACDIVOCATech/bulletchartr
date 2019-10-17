@@ -6,16 +6,24 @@
 #' @param indicator_name PARAM_DESCRIPTION, Default: 'variable'
 #' @param info PARAM_DESCRIPTION, Default: 'info'
 #' @param current PARAM_DESCRIPTION, Default: 'current'
-#' @param bad PARAM_DESCRIPTION, Default: 'bad'
-#' @param good PARAM_DESCRIPTION, Default: 'good'
-#' @param great PARAM_DESCRIPTION, Default: 'great'
+#' @param low PARAM_DESCRIPTION, Default: 'low'
+#' @param medium PARAM_DESCRIPTION, Default: 'medium'
+#' @param high PARAM_DESCRIPTION, Default: 'high'
 #' @param target PARAM_DESCRIPTION, Default: 'target'
 #' @param remove_no_targets PARAM_DESCRIPTION, Default: TRUE
-#' @param legend PARAM_DESCRIPTION, Default: FALSE
+#' @param legend PARAM_DESCRIPTION, Default: TRUE
 #' @return OUTPUT_DESCRIPTION
 #' @details Stephen Few style bullet chart
 #' @rdname bulletchart
 #' @export
+#' @importFrom ggplot2 ggplot geom_col aes geom_segment coord_flip
+#' scale_x_continuous scale_y_continuous scale_fill_manual labs theme
+#' element_text element_blank element_rect margin
+#' @importFrom dplyr filter mutate %>% pull group_by
+#' @importFrom purrr map map2
+#' @importFrom cowplot get_legend plot_grid
+#' @importFrom ggplotify as.ggplot
+#' @importFrom tidyr nest
 
 bulletchart <- function(file_name = NULL, sheet_name = "Sheet1",
                         dataframe = NULL,
@@ -27,9 +35,9 @@ bulletchart <- function(file_name = NULL, sheet_name = "Sheet1",
                         high = "high",
                         target = "target",
                         remove_no_targets = TRUE,
-                        legend = FALSE) {
-  ## Transform data
-  ammended_data <- bulletchartr:::field_calculator(file_name, sheet_name,
+                        legend = TRUE) {
+  ## Transform data bulletchartr:::field_calculator
+  ammended_data <- field_calculator(file_name, sheet_name,
                                     dataframe,
                                     indicator_name, info,
                                     current, low, medium, high,
@@ -53,10 +61,10 @@ bulletchart <- function(file_name = NULL, sheet_name = "Sheet1",
   #   br_x <- c(br_x[-end(br_x)], max(x))
   #   }
 
-  ##
-
+  ## grab the names of all the indicators
   indicator_vector <- ammended_data$indicator_name %>% unique()
 
+  ## bullet chart plotter function
   bc_plotter <- function(data, indicator_name) {
 
     ## find mid + max
@@ -115,10 +123,11 @@ bulletchart <- function(file_name = NULL, sheet_name = "Sheet1",
             plot.margin = margin(1, 1, 1, 1, "cm"),
             legend.position = "bottom",
             legend.direction = "horizontal")
+
     return(g)
   }
 
-  ## map over each
+  ## map over each indicator
   # nested_df <- ammended_data %>%
   #   group_by(indicator_name) %>%
   #   nest()
@@ -128,24 +137,47 @@ bulletchart <- function(file_name = NULL, sheet_name = "Sheet1",
     nest() %>%
     mutate(plot = map2(data, indicator_name,
                        ~bc_plotter(data = .x, indicator_name = .y)))
-  plots_df$plot[[1]]
-  plots_df$plot[[2]]
-  plots_df$plot[[3]]
-  plots_df$plot[[4]]
+  # plots_df$plot[[1]]
+  # plots_df$plot[[2]]
+  # plots_df$plot[[3]]
+  # plots_df$plot[[4]]
 
-
-  cowplot::plot_grid(plotlist = plots_df$plot, align = "hv", ncol = 1)
-
-  ## legend ONLY onto bottom-most plot...
+  ## legend ONLY onto bottom-most plot... ----
   ## https://wilkelab.org/cowplot/articles/shared_legends.html
+  ## take legend from one of the plots
+  ## (always from the first plot as that should always exist...)
+  with_legend <- cowplot::get_legend(
+    plots_df$plot[[1]] + theme(legend.box.margin = margin(0, 0, 0, 10))
+  )
 
-  ## legend or no?
-  if (legend == FALSE) {
-    g <- g + theme(legend.position = "none")
-    print(g)
+  ## turn into ggplot object
+  with_legend_gg <- ggplotify::as.ggplot(with_legend)
+
+  ## remove legend on ALL plots
+  removeLegend <- function(plot) {
+    plot + theme(legend.position = "none")
   }
-  print(g)
 
+  plot_noLegend <- plots_df %>%
+    mutate(plot = map(plot, ~ removeLegend(.x)))
+
+  if (legend == FALSE) {
+    nolegendplots <- cowplot::plot_grid(plotlist = plot_noLegend$plot,
+                                        align = "hv", ncol = 1)
+
+    print(nolegendplots)
+  }
+
+  #plot_noLegend$plot[[1]]
+
+  ## append legend "plot" to list of all plots without legends!
+  bulletList <- c(plot_noLegend$plot, list(with_legend_gg))
+
+  ## PRINT PLOTS!!
+  withlegendplots <- cowplot::plot_grid(plotlist = bulletList,
+                                        align = "hv", ncol = 1)
+
+  print(withlegendplots)
 }
 
 

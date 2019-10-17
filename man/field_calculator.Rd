@@ -22,17 +22,15 @@ field_calculator(file_name = NULL, sheet_name = "Sheet1",
 
 \item{current}{current value of indicator}
 
+\item{low}{column with value for "low"}
+
+\item{medium}{column with value for "medium"}
+
+\item{high}{column with value for "high"}
+
 \item{target}{column with value for the "target"}
 
 \item{remove_no_targets}{Removes indicators without a "target" value specified, default: TRUE}
-
-\item{bad}{column with value for "bad"}
-
-\item{good}{column with value for "good"}
-
-\item{great}{column with value for "great", if "target" exceeds "great" then
-"great" will be increased to "target" value. If "current" value exceeds "great"
-then "current" value will be decreased to "great" value.}
 }
 \description{
 internal function for calculating the extra fields needed for bullet charts
