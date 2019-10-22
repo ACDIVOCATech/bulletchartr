@@ -55,7 +55,7 @@ uses different thicknesses for the bars as the benchmarks for previous time poin
 accentuate the difference graphically.
 }
 \examples{
-data(df)
+load(read_example("df.rda"))
 bullet_chart_wide(dataframe = df)
 }
 \seealso{

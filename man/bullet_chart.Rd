@@ -54,6 +54,6 @@ This version of the bullet chart most closely resembles Stephen Few's design. Th
 the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue).
 }
 \examples{
-data(df)
+load(read_example("df.rda"))
 bullet_chart(dataframe = df)
 }

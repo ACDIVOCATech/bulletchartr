@@ -24,7 +24,7 @@
 #' uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further
 #' accentuate the difference graphically.
 #' @examples
-#' data(df)
+#' load(read_example("df.rda"))
 #' bullet_chart_wide(dataframe = df)
 #' @seealso
 #'  \code{\link[ggplot2]{geom_bar}}

@@ -16,7 +16,6 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(bulletchartr)
-load("../data/df.rda")
 ```
 
 
@@ -25,9 +24,11 @@ load("../data/df.rda")
 To use the functions included in this package, one can provide either a dataframe or Excel (.xlsx) file as the input. Either file input needs to contain columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`.
 
 ```{r df-or-excel, fig.width=6,fig.height=5, eval=FALSE}
+## read in example dataframe, 'df'
+load(read_example("df.rda"))
 bullet_chart(dataframe = df)
 
-bullet_chart(file_name = "../data/Indicators_Targets.xlsx")
+bullet_chart(file_name = read_example("Indicators_Targets.xlsx"))
 ```
 
 See below for an example of what this might look like (in an Excel sheet): 
@@ -49,7 +50,7 @@ With some tidy eval magic you can provide an input (Excel or dataframe) with dif
 As you can see we have some names like "WEEKS" or "YEArz". We can specify what each of these names correspond to inside the function call and we can still get a proper chart!
 
 ```{r weird-cols, fig.width=6,fig.height=5}
-bullet_chart(file_name = "../data/test.xlsx",
+bullet_chart(file_name = read_example("test.xlsx"),
              indicator_name = "Indicators",
              actual = "act",
              actual_lastweek = "WEEKS",

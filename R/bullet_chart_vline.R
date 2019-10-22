@@ -26,7 +26,7 @@
 #' general "target" value), however at the current time you should change the values of "actual_lastyear"
 #' in the Excel file but not the variable name itself.
 #' @examples
-#' data(df)
+#' load(read_example("df.rda"))
 #' bullet_chart_vline(dataframe = df)
 #' @rdname bullet_chart_vline
 #' @export

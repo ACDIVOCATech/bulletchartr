@@ -28,7 +28,7 @@ The output of the `bullet_chart()` function most closely resembles
 Stephen Few’s design:
 
 ``` r
-bullet_chart(file_name = "data/Indicators_Targets_ext.xlsx")
+bullet_chart(file_name = read_example("Indicators_Targets_ext.xlsx"))
 ```
 
 <img src="man/figures/README-bulletchart-1.png" width="100%" />

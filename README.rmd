@@ -21,8 +21,6 @@ library(dplyr)
 library(lubridate)
 library(ggplot2)
 library(bulletchartr)
-
-load("data/df.Rda")
 ```
 
 # bulletchartr
@@ -42,7 +40,7 @@ This type of graph is a variation on a typical bar graph with a thick line prese
 The output of the `bullet_chart()` function most closely resembles Stephen Few's design: 
 
 ```{r bulletchart, fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart(file_name = "data/Indicators_Targets_ext.xlsx")
+bullet_chart(file_name = read_example("Indicators_Targets_ext.xlsx"))
 ```
 
 The single black bar represents the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue). The bar for each Indicator show the progression along the horizontal-axis presenting the percentage of the yearly target completed. This axis also shows the percent of the year gone by with the vertical line indicating what exact percentage "Today" is, along this percentage. 
