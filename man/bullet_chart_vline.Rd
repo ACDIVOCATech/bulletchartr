@@ -9,7 +9,7 @@ bullet_chart_vline(file_name = NULL, sheet_name = "Sheet1",
   actual = "actual", actual_lastweek = "actual_lastweek",
   actual_lastyear = "actual_lastyear", target = "target",
   for_year = year(Sys.Date()), cal_type = "fis",
-  chart_type = "static", small = FALSE, legend = FALSE,
+  chart_type = "static", small = FALSE, legend = TRUE,
   remove_no_targets = FALSE, show_text = FALSE)
 }
 \arguments{
@@ -39,7 +39,7 @@ format "YYYY/MM/DD", Default: fis}
 
 \item{small}{specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE}
 
-\item{legend}{specify whether you want to show the legend, Default: FALSE}
+\item{legend}{specify whether you want to show the legend, Default: TRUE}
 
 \item{remove_no_targets}{remove indicators with Targets == NA or 0, Default: FALSE}
 

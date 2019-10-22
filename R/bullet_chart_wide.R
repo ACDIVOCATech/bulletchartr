@@ -16,7 +16,7 @@
 #' format "YYYY/MM/DD", Default: fis
 #' @param chart_type static of interactive (ggiraph) version
 #' @param small specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE
-#' @param legend specify whether you want to show the legend, Default: FALSE
+#' @param legend specify whether you want to show the legend, Default: TRUE
 #' @param remove_no_targets remove indicators with Targets == NA or 0, Default: FALSE
 #' @param show_text Show 'Last Week' & 'Last Year' text, when `small = TRUE` or
 #' `chart_type = "interactive"` then no text will be shown by default.
@@ -46,7 +46,7 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
                               for_year = year(Sys.Date()),
                               cal_type = "fis",
                               chart_type = "static",
-                              small = FALSE, legend = FALSE,
+                              small = FALSE, legend = TRUE,
                               remove_no_targets = FALSE,
                               show_text = FALSE) {
 
