@@ -2,58 +2,46 @@
 % Please edit documentation in R/bulletchart.R
 \name{bullet_chart}
 \alias{bullet_chart}
-\title{bullet_chart}
+\title{'Stephen Few'-style Bullet Chart}
 \usage{
 bullet_chart(file_name = NULL, sheet_name = "Sheet1",
-  dataframe = NULL, indicator_name = "indicator_name",
-  actual = "actual", actual_lastweek = "actual_lastweek",
-  actual_lastyear = "actual_lastyear", target = "target",
-  for_year = year(Sys.Date()), cal_type = "fis",
-  chart_type = "static", small = FALSE, legend = TRUE,
-  remove_no_targets = FALSE, show_text = FALSE)
+  dataframe = NULL, indicator_name = "variable", info = "info",
+  current = "current", low = "low", medium = "medium",
+  high = "high", target = "target", remove_no_targets = TRUE,
+  legend = TRUE)
 }
 \arguments{
 \item{file_name}{path of Excel file}
 
-\item{sheet_name}{Specify which sheet in Excel file, Default: "Sheet1"}
+\item{sheet_name}{specify which sheet in Excel file, Default: "Sheet1"}
 
-\item{dataframe}{Specify R dataframe input}
+\item{dataframe}{specify R dataframe input}
 
-\item{indicator_name}{Specify the name of the column that has your indicator/KPI names}
+\item{indicator_name}{specify the name of the column that has your indicator/KPI names,
+Default: 'variable'}
 
-\item{actual}{Specify the name of the column that has the current value of your indicators/KPIs}
+\item{info}{PARAM_DESCRIPTION, Default: 'info'}
 
-\item{actual_lastweek}{Specify the name of the column that has the indicator/KPI value from the previous week}
+\item{current}{PARAM_DESCRIPTION, Default: 'current'}
 
-\item{actual_lastyear}{Specify the name of the column that has the indicator/KPI value from the previous year}
+\item{low}{PARAM_DESCRIPTION, Default: 'low'}
 
-\item{target}{Specify the name of the column that has the target value for the indicator/KPI}
+\item{medium}{PARAM_DESCRIPTION, Default: 'medium'}
 
-\item{for_year}{Specify the year in which the report is being made, Default: year(Sys.Date())}
+\item{high}{PARAM_DESCRIPTION, Default: 'high'}
 
-\item{cal_type}{Define what calendar you are using. Options are "fis" for fiscal year starting
-October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
-format "YYYY/MM/DD", Default: fis}
+\item{target}{PARAM_DESCRIPTION, Default: 'target'}
 
-\item{chart_type}{Specify a static or interactive (ggiraph) version}
+\item{remove_no_targets}{PARAM_DESCRIPTION, Default: TRUE}
 
-\item{small}{Specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE}
-
-\item{legend}{Specify whether you want to show the legend, Default: TRUE}
-
-\item{remove_no_targets}{Remove indicators with Targets == NA or 0, Default: FALSE}
-
-\item{show_text}{Show 'Last Week' & 'Last Year' text, when `small = TRUE` or
-`chart_type = "interactive"` then no text will be shown by default.}
+\item{legend}{PARAM_DESCRIPTION, Default: TRUE}
+}
+\value{
+bullet chart plot(s)
 }
 \description{
-create a Stephen Few bullet chart
+Creates a bullet chart using an indicator's values for the axis scales.
 }
 \details{
-This version of the bullet chart most closely resembles Stephen Few's design. The single black bar represents
-the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue).
-}
-\examples{
-load(read_example("df.rda"))
-bullet_chart(dataframe = df)
+Stephen Few style bullet chart
 }

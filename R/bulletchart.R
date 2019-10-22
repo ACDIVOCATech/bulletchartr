@@ -1,57 +1,51 @@
 # bullet plot Version 1: actual Stephen FEW  -------------------------------------------------
 
-#' @title bullet_chart
-#' @description create a Stephen Few bullet chart
+#' @title 'Stephen Few'-style Bullet Chart
+#' @description Creates a bullet chart using an indicator's values for the axis scales.
 #' @param file_name path of Excel file
-#' @param sheet_name Specify which sheet in Excel file, Default: "Sheet1"
-#' @param dataframe Specify R dataframe input
-#' @param indicator_name Specify the name of the column that has your indicator/KPI names
-#' @param actual Specify the name of the column that has the current value of your indicators/KPIs
-#' @param actual_lastweek Specify the name of the column that has the indicator/KPI value from the previous week
-#' @param actual_lastyear Specify the name of the column that has the indicator/KPI value from the previous year
-#' @param target Specify the name of the column that has the target value for the indicator/KPI
-#' @param for_year Specify the year in which the report is being made, Default: year(Sys.Date())
-#' @param cal_type Define what calendar you are using. Options are "fis" for fiscal year starting
-#' October 1st, "cal" for calendar year starting January 1st, or enter your own custom date in the
-#' format "YYYY/MM/DD", Default: fis
-#' @param chart_type Specify a static or interactive (ggiraph) version
-#' @param small Specify whether you want the small version of the plot (TRUE or FALSE), Default: FALSE
-#' @param legend Specify whether you want to show the legend, Default: TRUE
-#' @param remove_no_targets Remove indicators with Targets == NA or 0, Default: FALSE
-#' @param show_text Show 'Last Week' & 'Last Year' text, when `small = TRUE` or
-#' `chart_type = "interactive"` then no text will be shown by default.
-#' @details This version of the bullet chart most closely resembles Stephen Few's design. The single black bar represents
-#' the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue).
-#' @examples
-#' load(read_example("df.rda"))
-#' bullet_chart(dataframe = df)
+#' @param sheet_name specify which sheet in Excel file, Default: "Sheet1"
+#' @param dataframe specify R dataframe input
+#' @param indicator_name specify the name of the column that has your indicator/KPI names,
+#' Default: 'variable'
+#' @param info PARAM_DESCRIPTION, Default: 'info'
+#' @param current PARAM_DESCRIPTION, Default: 'current'
+#' @param low PARAM_DESCRIPTION, Default: 'low'
+#' @param medium PARAM_DESCRIPTION, Default: 'medium'
+#' @param high PARAM_DESCRIPTION, Default: 'high'
+#' @param target PARAM_DESCRIPTION, Default: 'target'
+#' @param remove_no_targets PARAM_DESCRIPTION, Default: TRUE
+#' @param legend PARAM_DESCRIPTION, Default: TRUE
+#' @return bullet chart plot(s)
+#' @details Stephen Few style bullet chart
 #' @rdname bullet_chart
 #' @export
-#' @importFrom ggplot2 ggplot aes geom_col geom_hline coord_flip labs ggtitle theme_minimal
-#' expand_limits scale_alpha_manual geom_text annotate theme element_text margin unit
-#' @importFrom dplyr mutate %>% select
-#' @importFrom ggiraph geom_bar_interactive ggiraph girafe
+#' @importFrom ggplot2 ggplot geom_col aes geom_segment coord_flip
+#' scale_x_continuous scale_y_continuous scale_fill_manual labs theme
+#' element_text element_blank element_rect margin
+#' @importFrom dplyr filter mutate %>% pull group_by
+#' @importFrom purrr map map2
+#' @importFrom cowplot get_legend plot_grid
+#' @importFrom ggplotify as.ggplot
+#' @importFrom tidyr nest
+#' @importFrom utils head
 
 bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
-                         dataframe = NULL,
-                         indicator_name = "indicator_name",
-                         actual = "actual",
-                         actual_lastweek = "actual_lastweek",
-                         actual_lastyear = "actual_lastyear",
-                         target = "target",
-                         for_year = year(Sys.Date()),
-                         cal_type = "fis",
-                         chart_type = "static",
-                         small = FALSE, legend = TRUE,
-                         remove_no_targets = FALSE,
-                         show_text = FALSE) {
-
-  ammended_data <- extra_field_calculator(file_name, sheet_name,
-                                          dataframe,
-                                          indicator_name, actual,
-                                          actual_lastweek, actual_lastyear,
-                                          target, for_year, cal_type,
-                                          remove_no_targets)
+                        dataframe = NULL,
+                        indicator_name = "variable",
+                        info = "info",
+                        current = "current",
+                        low = "low",
+                        medium = "medium",
+                        high = "high",
+                        target = "target",
+                        remove_no_targets = TRUE,
+                        legend = TRUE) {
+  ## Transform data bulletchartr:::field_calculator
+  ammended_data <- field_calculator(file_name, sheet_name,
+                                    dataframe,
+                                    indicator_name, info,
+                                    current, low, medium, high,
+                                    target, remove_no_targets)
 
   ## check for Target == 0 in all Targets
   if(all(ammended_data$target == 0)) {
@@ -60,210 +54,135 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
     )
   }
 
-  ## base plot
-  g <- ggplot(ammended_data, aes(x = indicator_name)) +
-    geom_col(aes(y = 100), fill = "grey85", width = 0.4) +
-    geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
-    coord_flip() +
-    labs(y = "Percent of Yearly Target\n&\n Percent of Year",
-         x = " ") +
-    ggtitle(paste("Ongoing Indicator Accomplishment (", for_year, ")", sep = "")) +
-    theme_minimal() +
-    expand_limits(x = nrow(ammended_data) + 1.25, y = 102)
+  ## fill colors
+  cols <- c(High = "#dcdcdc", Medium = "#c0c0c0", Low = "#696969",
+            Current = "black")
 
-  # static vs. interactive ----
+  ## grab the names of all the indicators
+  indicator_vector <- ammended_data$indicator_name %>% unique()
 
-  if (chart_type == "static") {
-    ### static ----
-    if (small == FALSE) {
+  ## bullet chart plotter function
+  bc_plotter <- function(data, indicator_name) {
 
-      g <- g +
-        ## Last Week
-        geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
-        ## Last Year
-        geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
-        ## Today
-        geom_col(aes(y = perc, alpha = "today"),
-                 fill = "grey10", width = 0.1, color = "grey10") +
-        scale_alpha_manual(name = "",
-                           values = c(0.3, 0.6, 0.9),
-                           labels = c("lastweek" = "Last Week",
-                                      "lastyear" = "Last Year",
-                                      "today" = "Today")) +
-        geom_col(aes(y = perc), fill = "grey10", width = 0.1, color = "grey10", alpha = 0.9) +
-        annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
-                 hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
-        theme(axis.text.y = element_text(size = 15, face = "bold"),
-              axis.title.x = element_text(face = "bold", size = 10,
-                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
-              axis.text.x = element_text(face = "bold", size = 12),
-              title = element_text(face = "bold"),
-              plot.title = element_text(hjust = 0.5),
-              plot.subtitle = element_text(hjust = 0.5, size = 8))
+    ## find mid + max
+    min.bg <- 0
+    max.bg <- max(data %>%
+                    filter(allvals == "High") %>% pull(vals))
 
-      if (show_text == TRUE) {
-        g <- g +
-          geom_text(y = 1, aes(label = tooltip), vjust = -2, hjust = 0, size = 4)
-      }
+    ## min max for 5 labels
+    sequence1 <- seq(min.bg, max.bg, length.out = 5) %>% signif(2) %>% head(-1)
+    seqbreaks <- c(sequence1, max.bg)
 
-      if (legend == FALSE) {
+    ## PLOT
+    g <- data %>%
+      ggplot() +
+      ## great
+      geom_col(data = data %>% filter(allvals == "High"),
+               aes(x = 1, y = vals, fill = allvals)) +
+      ## good
+      geom_col(data = data %>% filter(allvals == "Medium"),
+               aes(x = 1, y = vals, fill = allvals)) +
+      ## bad
+      geom_col(data = data %>% filter(allvals == "Low"),
+               aes(x = 1, y = vals, fill = allvals)) +
+      ## current
+      geom_col(data = data %>% filter(allvals == "Current"),
+               aes(x = 1, y = vals, fill = allvals),
+               width = 0.2) +
+      ## target
+      geom_segment(aes(x = 0.75, xend = 1.25,
+                       y = target, yend = target),
+                   color = "red", size = 2.5) +
+      coord_flip() +
+      scale_y_continuous(limits = c(0, NA),
+                         expand = c(0, 0),
+                         labels = seq(min.bg, max.bg, length.out = 5) %>% floor(),
+                         breaks = seq(min.bg, max.bg, length.out = 5) %>% floor()) +
+      scale_x_continuous(expand = c(0, 0)) +
+      scale_fill_manual(values = cols, name = NULL,
+                        breaks = c("Current", "High", "Medium", "Low")) +
+      ## var_info takes Indicator name AND any extra info provided in
+      ## the 'info' variable, all calculated in `field_calculator()`
+      labs(title = glue::glue("{data$var_info}")) +
+      theme(title = element_text(face = "bold"),
+            plot.title = element_text(hjust = 0.5),
+            plot.subtitle = element_text(hjust = 0.5, size = 8),
+            panel.grid = element_blank(),
+            axis.title.x = element_blank(),
+            axis.text.x = element_text(face = "bold", size = 12),
+            axis.title.y = element_blank(),
+            axis.text.y = element_blank(),
+            axis.ticks.y = element_blank(),
+            strip.text = element_text(face = "bold", size = 14),
+            strip.background = element_rect(fill = "white"),
+            plot.margin = margin(1, 1, 1, 1, "cm"),
+            legend.position = "bottom",
+            legend.direction = "horizontal")
 
-        g <- g + theme(legend.position = "none")
-
-        print(g)
-
-      } else if (legend == TRUE) {
-
-        print(g)
-
-      }
-
-    } else if (small == TRUE) {
-
-      g <- g +
-        geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
-        geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
-        geom_col(aes(y = perc, alpha = "today"),
-                 fill = "grey10", width = 0.1, color = "grey10") +
-        scale_alpha_manual(name = "",
-                           values = c(0.3, 0.6, 0.9),
-                           labels = c("lastweek" = "Last Week",
-                                      "lastyear" = "Last Year",
-                                      "today" = "Today")) +
-        annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
-                 angle = 90, alpha = 0.5, size = 2.5) +
-        theme(axis.text.y = element_text(size = 8, face = "bold"),
-              axis.title.x = element_text(face = "bold", size = 7,
-                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
-              axis.text.x = element_text(face = "bold", size = 10),
-              title = element_text(face = "bold", size = 8),
-              plot.title = element_text(hjust = 0.5),
-              plot.subtitle = element_text(hjust = 0.5, size = 6),
-              legend.text = element_text(size = 8),
-              legend.key.size = unit(0.8, "lines"))
-
-      if (show_text == TRUE) {
-        g
-        warning("When 'small' is set to TRUE, text will not show up by default! \n")
-      }
-
-      if (legend == FALSE) {
-
-        g <- g + theme(legend.position = "none")
-
-        print(g)
-
-      } else if (legend == TRUE){
-
-        print(g)
-
-      }
-    }
-  } else if (chart_type == "interactive") {
-    ### interactive ----
-    if (small == FALSE) {
-
-      g <- g +
-        geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
-        geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
-        geom_col(aes(y = perc, alpha = "today"),
-                 fill = "grey10", width = 0.1, color = "grey10") +
-        scale_alpha_manual(name = "",
-                           values = c(0.3, 0.6, 0.9),
-                           labels = c("lastweek" = "Last Week",
-                                      "lastyear" = "Last Year",
-                                      "today" = "Today")) +
-        geom_bar_interactive(aes(x = indicator_name, y = perc,
-                                 tooltip = tooltip2,
-                                 data_id = indicator_name),
-                             stat = "identity", alpha = 0.9,
-                             fill = "grey10",
-                             width = 0.1, color = "grey10") +
-        annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
-                 hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
-        theme(axis.text.y = element_text(size = 15, face = "bold"),
-              axis.title.x = element_text(face = "bold", size = 10,
-                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
-              axis.text.x = element_text(face = "bold", size = 12),
-              title = element_text(face = "bold"),
-              plot.title = element_text(hjust = 0.5),
-              plot.subtitle = element_text(hjust = 0.5, size = 8))
-
-      if (show_text == TRUE) {
-        g
-        warning("When 'chart_type' is set to 'interactive', text will not show up by default! \n")
-      }
-
-      if (legend == FALSE) {
-
-        g <- g + theme(legend.position = "none")
-
-        output <- girafe(code = {print(g)},
-                         width = 0.5)
-        output
-
-      } else if (legend == TRUE) {
-
-        g <- g +
-          guides(shape = guide_legend(nrow = 1)) +
-          theme(legend.position = "bottom")
-        output <- girafe(code = {print(g)},
-                         width = 0.5)
-        output
-
-      }
-
-    } else if (small == TRUE) {
-
-      g <- g +
-        geom_col(aes(y = perc_week, alpha = "lastweek"), width = 0.4) +
-        geom_col(aes(y = perc_year, alpha = "lastyear"), width = 0.4) +
-        geom_col(aes(y = perc, alpha = "today"),
-                 fill = "grey10", width = 0.1, color = "grey10") +
-        scale_alpha_manual(name = "",
-                           values = c(0.3, 0.6, 0.9),
-                           labels = c("lastweek" = "Last Week",
-                                      "lastyear" = "Last Year",
-                                      "today" = "Today")) +
-        geom_bar_interactive(aes(x = indicator_name, y = perc,
-                                 tooltip = tooltip2,
-                                 data_id = indicator_name),
-                             stat = "identity", alpha = 0.9,
-                             fill = "grey10",
-                             width = 0.1, color = "grey10") +
-        annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
-                 angle = 90, alpha = 0.5, size = 2.5) +
-        theme(axis.text.y = element_text(size = 8, face = "bold"),
-              axis.title.x = element_text(face = "bold", size = 7,
-                                          margin = margin(t = 25, r = 0, b = 20, l = 0)),
-              axis.text.x = element_text(face = "bold", size = 10),
-              title = element_text(face = "bold", size = 8),
-              plot.title = element_text(hjust = 0.5),
-              plot.subtitle = element_text(hjust = 0.5, size = 6),
-              legend.text = element_text(size = 8),
-              legend.key.size = unit(0.8, "lines"))
-
-      if (show_text == TRUE) {
-        g
-        warning("When 'chart_type' is set to 'interactive', text will not show up by default! \n")
-      }
-
-      if (legend == FALSE) {
-
-        g <- g + theme(legend.position = "none")
-
-        output <- girafe(code = {print(g)},
-                         width = 0.5)
-        output
-
-      } else if (legend == TRUE){
-
-        g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
-        output <- girafe(code = {print(g)},
-                         width = 0.5)
-        output
-
-      }
-    }
+    return(g)
   }
+
+  ## map over each indicator
+  # nested_df <- ammended_data %>%
+  #   group_by(indicator_name) %>%
+  #   nest()
+
+  plots_df <- ammended_data %>%
+    group_by(indicator_name) %>%
+    nest() %>%
+    mutate(plot = map2(data, indicator_name,
+                       ~bc_plotter(data = .x, indicator_name = .y)))
+  # plots_df$plot[[1]]
+  # plots_df$plot[[2]]
+  # plots_df$plot[[3]]
+  # plots_df$plot[[4]]
+
+  ## legend ONLY onto bottom-most plot... ----
+  ## https://wilkelab.org/cowplot/articles/shared_legends.html
+  ## take legend from one of the plots
+  ## (always from the first plot as that should always exist...)
+  with_legend <- cowplot::get_legend(
+    plots_df$plot[[1]] + theme(legend.box.margin = margin(0, 0, 0, 10))
+  )
+
+  ## turn into ggplot object
+  with_legend_gg <- ggplotify::as.ggplot(with_legend)
+
+  ## remove legend on ALL plots
+  removeLegend <- function(plot) {
+    plot + theme(legend.position = "none")
+  }
+
+  plot_noLegend <- plots_df %>%
+    mutate(plot = map(plot, ~ removeLegend(.x)))
+
+  if (legend == FALSE) {
+    nolegendplots <- cowplot::plot_grid(plotlist = plot_noLegend$plot,
+                                        align = "hv", ncol = 1)
+
+    print(nolegendplots)
+  }
+
+  #plot_noLegend$plot[[1]]
+
+  ## append legend "plot" to list of all plots without legends!
+  bulletList <- c(plot_noLegend$plot, list(with_legend_gg))
+
+  ## PRINT PLOTS!!
+  withlegendplots <- cowplot::plot_grid(plotlist = bulletList,
+                                        align = "hv", ncol = 1)
+
+  print(withlegendplots)
 }
+
+
+
+
+
+
+
+
+
+
+
+

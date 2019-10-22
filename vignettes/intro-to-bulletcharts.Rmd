@@ -24,10 +24,17 @@ The output of the `bullet_chart()` function most closely resembles Stephen Few's
 
 ```{r bulletchart, fig.width=6,fig.height=5, echo=TRUE}
 library(bulletchartr)
-bullet_chart(file_name = read_example("Indicators_Targets_ext.xlsx"))
+#bullet_chart(file_name = read_example("Indicators_Targets_ext.xlsx"))
 ```
 
 The single black bar represents the current value of the indicator while the different hue columns represent last week's value (darker hue) and last year's value (lighter hue). The bar for each Indicator show the progression along the horizontal-axis presenting the percentage of the yearly target completed. This axis also shows the percent of the year gone by with the vertical line indicating what exact percentage "Today" is, along this percentage. 
+
+
+## Time-constraint bullet chart
+
+```{r bulletchart-time, fig.width=6,fig.height=5, echo=TRUE}
+bullet_chart_wide(file_name = read_example("Indicators_Targets_ext.xlsx"))
+```
 
 As you can see, the bars show the progression along the horizontal-axis presenting the percentage of the yearly target completed. Also, along this axis is the percent of the year gone by with a vertical line indicating what exact percentage __"Today"__ is along this percentage. It is necessary to use percentages as we have multiple indicators of varying units/parameters for each project! 
 

@@ -27,7 +27,7 @@ This is the original chart created by Stephen Few.
 
 
 ```{r bulletchart, fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart(file_name = read_example("Indicators_Targets_ext.xlsx"))
+#bullet_chart(file_name = read_example("Indicators_Targets_ext.xlsx"))
 ```
 
 
