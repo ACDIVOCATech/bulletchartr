@@ -56,6 +56,7 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
                                           actual_lastweek, actual_lastyear,
                                           target, for_year, cal_type,
                                           remove_no_targets)
+  ## for vline we don't want LW data??
 
   low_level <- ammended_data$low_level[1]
 
@@ -76,6 +77,7 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
                           labels = c("Very Behind Schedule", "Behind Schedule", "Slightly Behind", "On Time"),
                           breaks = c(low_level + 1.5, low_level + 4.15, low_level + 6.25, low_level + 8.5)) +
       geom_col(aes(y = 100), width = 0.5, alpha = 0.25) +
+      geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
       coord_flip() +
       labs(y = "Percent of Yearly Target\n&\n Percent of Year",
            x = " ") +
@@ -89,6 +91,8 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
         geom_point(aes(y = perc_year, shape = "Last Year"), size = 4.5, stroke = 3) +
         scale_shape_manual(" ", values = 124) +
         geom_text(y = 1, aes(label = tooltip), vjust = -1.5, hjust = 0) +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
+                 hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
         theme(axis.text.y = element_text(size = 15, face = "bold"),
               axis.title.x = element_text(face = "bold", size = 10,
                                           margin = margin(t = 25, r = 0, b = 20, l = 0)),
@@ -117,6 +121,8 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
 
       g <- g +
         geom_point(aes(y = perc_year, shape = "Last Year"), size = 3, stroke = 3) +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
+                 angle = 90, alpha = 0.5, size = 2.5) +
         scale_shape_manual(" ", values = 124) +
         theme(axis.text.y = element_text(size = 8, face = "bold"),
               axis.title.x = element_text(face = "bold", size = 7,
@@ -155,6 +161,7 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
                                fill = behind_by),
                            stat = "identity",
                            width = 0.15, color = "black") +
+      geom_hline(yintercept = ammended_data$percent_time, alpha = 0.33) +
       scale_fill_gradient("", limits = c(low_level, 0),
                           low = "red", high = "green",
                           guide = FALSE,
@@ -171,6 +178,8 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
 
       g <- g +
         geom_point(aes(y = perc_year, shape = "Last Year"), size = 4.5, stroke = 3) +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
+                 hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
         scale_shape_manual(" ", values = 124) +
         theme(axis.text.y = element_text(size = 15, face = "bold"),
               axis.title.x = element_text(face = "bold", size = 10,
@@ -209,6 +218,8 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
       g <- g +
         geom_point(aes(y = perc_year, shape = "Last Year"), size = 3, stroke = 3) +
         scale_shape_manual(" ", values = 124) +
+        annotate("text", x = 0, y = ammended_data$percent_time + 1.5, hjust = 0, label = "Today",
+                 angle = 90, alpha = 0.5, size = 2.5) +
         theme(axis.text.y = element_text(size = 8, face = "bold"),
               axis.title.x = element_text(face = "bold", size = 7,
                                           margin = margin(t = 25, r = 0, b = 20, l = 0)),

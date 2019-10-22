@@ -43,7 +43,8 @@ To read the chart you need to:
 accentuate the difference graphically.
 
 ```{r wide, fig.width=6, fig.height=5, echo=TRUE}
-bullet_chart_wide(file_name = read_example("Indicators_Targets_full.xlsx"))
+bullet_chart_wide(file_name = read_example("Indicators_Targets_full.xlsx"),
+                  legend = TRUE)
 ```
 
 ## `bullet_chart_symbols()`
@@ -62,7 +63,8 @@ for the indicator along with a black vertical line representing the indicator va
 last year.
 
 ```{r vline,fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart_vline(file_name = read_example("Indicators_Targets_ext.xlsx"))
+bullet_chart_vline(file_name = read_example("Indicators_Targets_ext.xlsx"),
+                   cal_type = "cal")
 ```
 
 
@@ -80,8 +82,9 @@ bullet_chart_symbols(file_name = read_example("Indicators_Targets_full.xlsx"),
 or for a calendar year:
 
 ```{r cal-type2,fig.width=6,fig.height=5, echo=TRUE}
-bullet_chart_symbols(file_name = read_example("Indicators_Targets_ext.xlsx"), 
-                     cal_type = "cal")
+bullet_chart_wide(file_name = read_example("Indicators_Targets_ext.xlsx"), 
+                     cal_type = "cal",
+                  legend = TRUE)
 ```
 
 or using a custom date that you can feed directly into the plotting function:
