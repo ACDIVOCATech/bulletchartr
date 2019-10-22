@@ -79,8 +79,7 @@ testthat::test_that("correct arguments used", {
 
   ## tests
   expect_error(bullet_chart(dataframe = bcdatatest,
-                            legend = legend,
-                            remove_no_targets = remove_no_targets), NA)
+                            legend = legend), NA)
   expect_error(bullet_chart_symbols(dataframe = test_df,
                                     chart_type = chart_type,
                                     small = small, legend = legend,
@@ -127,8 +126,7 @@ testthat::test_that("correct arguments used", {
 
   ## tests static
   expect_error(bullet_chart(dataframe = bcdatatest,
-                            legend = legend,
-                            remove_no_targets = remove_no_targets), NA)
+                            legend = legend), NA)
   expect_error(bullet_chart_symbols(dataframe = test_df,
                                     chart_type = chart_type,
                                     small = small, legend = legend,
@@ -175,8 +173,7 @@ testthat::test_that("correct arguments used", {
 
   ## tests static
   expect_error(bullet_chart(dataframe = bcdatatest,
-                            legend = legend,
-                            remove_no_targets = remove_no_targets), NA)
+                            legend = legend), NA)
   expect_error(bullet_chart_symbols(dataframe = test_df,
                                     chart_type = chart_type,
                                     small = small, legend = legend,
@@ -223,8 +220,7 @@ testthat::test_that("correct arguments used", {
 
   ## tests static
   expect_error(bullet_chart(dataframe = bcdatatest,
-                            legend = legend,
-                            remove_no_targets = remove_no_targets), NA)
+                            legend = legend), NA)
   expect_error(bullet_chart_symbols(dataframe = test_df,
                                     chart_type = chart_type,
                                     small = small, legend = legend,
@@ -266,8 +262,7 @@ testthat::test_that("correct arguments used", {
 
   ## static
   expect_error(bullet_chart(dataframe = bcdatatest,
-                            legend = legend,
-                            remove_no_targets = remove_no_targets), NA)
+                            legend = legend), NA)
   expect_error(bullet_chart_symbols(dataframe = test_df,
                                     cal_type = cal_type,
                                     small = small, legend = legend,

@@ -1,6 +1,5 @@
 #' example dataframe of indicators and targets
-#'
-#' This data set contains indicator values and target data used in the examples in README.
+#' @format This data set contains indicator values and target data used in the examples in README.
 #'
 #' The variables are as follows:
 #'
@@ -13,8 +12,7 @@
 #'
 #'  }
 #'
-#' @docType data
 #' @keywords datasets
 #' @name df
 #' @usage data(df)
-NULL
+"df"

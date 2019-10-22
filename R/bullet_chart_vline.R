@@ -26,8 +26,8 @@
 #' general "target" value), however at the current time you should change the values of "actual_lastyear"
 #' in the Excel file but not the variable name itself.
 #' @examples
-#' load(read_example("df.rda"))
-#' bullet_chart_vline(dataframe = df)
+#' data("df")
+#' bullet_chart_symbols(dataframe = df)
 #' @rdname bullet_chart_vline
 #' @export
 #' @importFrom ggplot2 ggplot aes geom_col geom_hline coord_flip labs ggtitle theme_minimal

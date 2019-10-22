@@ -100,6 +100,7 @@ field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
 
   ## reshape
   ammended_data <- ammended_data %>%
+    select(-tarhigh) %>%
     tidyr::pivot_longer(-c(indicator_name, target),
                  names_to = "allvals",
                  values_to = "vals") %>%

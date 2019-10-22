@@ -55,8 +55,8 @@ uses different thicknesses for the bars as the benchmarks for previous time poin
 accentuate the difference graphically.
 }
 \examples{
-load(read_example("df.rda"))
-bullet_chart_wide(dataframe = df)
+data("df")
+bullet_chart_symbols(dataframe = df)
 }
 \seealso{
 \code{\link[ggplot2]{geom_bar}}

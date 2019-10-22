@@ -4,22 +4,22 @@
 \name{df}
 \alias{df}
 \title{example dataframe of indicators and targets}
-\usage{
-data(df)
-}
-\description{
-This data set contains indicator values and target data used in the examples in README.
-}
-\details{
+\format{This data set contains indicator values and target data used in the examples in README.
+
 The variables are as follows:
 
-\itemize{
+ \itemize{
   \item indicator_name. name of the indicator
   \item actual. present value of indicator
   \item actual_lastweek. value of indicator in previous week
   \item actual_lastyear. value of indicator on same day of last year
   \item target. target value of indicator
 
+ }}
+\usage{
+data(df)
 }
+\description{
+example dataframe of indicators and targets
 }
 \keyword{datasets}

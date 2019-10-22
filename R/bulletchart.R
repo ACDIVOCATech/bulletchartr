@@ -54,10 +54,6 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
     )
   }
 
-  ## fill colors
-  cols <- c(High = "#dcdcdc", Medium = "#c0c0c0", Low = "#696969",
-            Current = "black")
-
   ## grab the names of all the indicators
   indicator_vector <- ammended_data$indicator_name %>% unique()
 
@@ -69,9 +65,16 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
     max.bg <- max(data %>%
                     filter(allvals == "High") %>% pull(vals))
 
-    ## min max for 5 labels
-    sequence1 <- seq(min.bg, max.bg, length.out = 5) %>% signif(2) %>% head(-1)
+    ## min max for 6 labels
+    ## ex. Min == 1, 2, 3, 4, Max == 5
+    sequence1 <- seq(min.bg, max.bg, length.out = 6) %>% signif(2) %>% head(-1)
     seqbreaks <- c(sequence1, max.bg)
+
+    # seq(min.bg, max.bg, length.out = 5) %>% floor()
+
+    ## fill colors
+    cols <- c(High = "#dcdcdc", Medium = "#c0c0c0", Low = "#696969",
+              Current = "black")
 
     ## PLOT
     g <- data %>%
@@ -96,11 +99,11 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
       coord_flip() +
       scale_y_continuous(limits = c(0, NA),
                          expand = c(0, 0),
-                         labels = seq(min.bg, max.bg, length.out = 5) %>% floor(),
-                         breaks = seq(min.bg, max.bg, length.out = 5) %>% floor()) +
+                         labels = seqbreaks,
+                         breaks = seqbreaks) +
       scale_x_continuous(expand = c(0, 0)) +
       scale_fill_manual(values = cols, name = NULL,
-                        breaks = c("Current", "High", "Medium", "Low")) +
+                        labels = c("Current", "High", "Medium", "Low")) +
       ## var_info takes Indicator name AND any extra info provided in
       ## the 'info' variable, all calculated in `field_calculator()`
       labs(title = glue::glue("{data$var_info}")) +
