@@ -90,7 +90,6 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
       g <- g +
         geom_point(aes(y = perc_year, shape = "Last Year"), size = 4.5, stroke = 3) +
         scale_shape_manual(" ", values = 124) +
-        geom_text(y = 1, aes(label = tooltip), vjust = -1.5, hjust = 0) +
         annotate("text", x = 0, y = ammended_data$percent_time + 1.5,
                  hjust = 0, label = "Today", angle = 90, alpha = 0.5, size = 5) +
         theme(axis.text.y = element_text(size = 15, face = "bold"),
@@ -135,7 +134,6 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
               legend.key.size = unit(0.8, "lines"))
 
       if (show_text == TRUE) {
-        g
         warning("When 'small' is set to TRUE, text will not show up by default! \n")
       }
 
@@ -190,7 +188,6 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
               plot.subtitle = element_text(hjust = 0.5, size = 8))
 
       if (show_text == TRUE) {
-        g
         warning("When 'chart_type' is set to 'interactive', text will not show up by default! \n")
       }
 
@@ -199,7 +196,7 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
         g <- g + theme(legend.position = "none")
 
         output <- girafe(code = {print(g)},
-                         width = 0.4
+                         width_svg = 12
         )
         output
 
@@ -207,7 +204,7 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
 
         g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
         output <- girafe(code = {print(g)},
-                         width = 0.4
+                         width_svg = 12
         )
         output
 
@@ -231,7 +228,6 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
               legend.key.size = unit(0.8, "lines"))
 
       if (show_text == TRUE) {
-        g
         warning("When 'chart_type' is set to 'interactive', text will not show up by default! \n")
       }
 
@@ -240,7 +236,7 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
         g <- g + theme(legend.position = "none")
 
         output <- girafe(code = {print(g)},
-                         width = 0.4
+                         width_svg = 20
         )
         output
 
@@ -248,7 +244,7 @@ bullet_chart_vline <- function(file_name = NULL, sheet_name = "Sheet1",
 
         g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
         output <- girafe(code = {print(g)},
-                         width = 0.4
+                         width_svg = 20
         )
         output
 

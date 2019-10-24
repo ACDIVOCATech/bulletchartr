@@ -69,7 +69,8 @@ field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
            Low = !!Low,
            Medium = !!Medium,
            High = !!High,
-           target = !!tar
+           target = !!tar,
+           info = !!inf
     )
 
   ## filter NO Target indicators
@@ -101,14 +102,18 @@ field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
   ## reshape
   ammended_data <- ammended_data %>%
     select(-tarhigh) %>%
-    tidyr::pivot_longer(-c(indicator_name, target),
+    tidyr::pivot_longer(-c(indicator_name, target, info),
                  names_to = "allvals",
                  values_to = "vals") %>%
     dplyr::mutate(allvals = forcats::as_factor(allvals))
 
-  # Variable info text:
+  ## Variable info text
+  ## relevel qualitative labels so show up in order on legend
+  ## ammended_data$allvals %>% levels()
   ammended_data <- ammended_data %>%
-    mutate(varinfo = glue("{indicator_name}: {info}"))
+   mutate(varinfo = glue("{indicator_name}: {info}")) %>%
+   mutate(allvals = forcats::fct_relevel(allvals,
+                                         c("Current", "High", "Medium", "Low")))
 
   # ammended_data <- ammended_data %>%
   #   mutate(allvals = forcats::fct_relevel(allvals, c("Current", "High", "Medium", "Low")))

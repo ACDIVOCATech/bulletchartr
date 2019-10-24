@@ -1,8 +1,8 @@
 ---
-title: "bullchartr inputs"
+title: "bulletchartr data inputs"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{bullchartr inputs}
+  %\VignetteIndexEntry{bulletchartr data inputs}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -10,6 +10,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  warning = FALSE,
   comment = "#>"
 )
 ```
@@ -21,14 +22,11 @@ library(bulletchartr)
 
 # Dataframe or Excel input
 
-To use the functions included in this package, one can provide either a dataframe or Excel (.xlsx) file as the input. Either file input needs to contain columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`.
+To use the functions included in this package, one can provide either a dataframe or Excel (.xlsx) file as the input. For the "time-constraint" version of the bullet chart (`bullet_chart_symbol()`, `bullet_chart_wide()`, or `bullet_chart_vline()`) either file input needs to contain columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`.
 
 ```{r df-or-excel, fig.width=6,fig.height=5, eval=FALSE}
-## read in example dataframe, 'df'
-load(read_example("df.rda"))
-bullet_chart(dataframe = df)
-
-bullet_chart(file_name = read_example("Indicators_Targets.xlsx"))
+## read in example "Indicators_Targets.xlsx" file
+bullet_chart_symbols(file_name = read_example("Indicators_Targets.xlsx"))
 ```
 
 See below for an example of what this might look like (in an Excel sheet): 
@@ -66,7 +64,13 @@ The percentages along the horizontal axis are calculated by:
 * `PercWeek`: Last week's value of the indicator as percent of yearly target and percent of the year
 * `PercYear`: Last year's value of the indicator as percent of yearly target and percent of the year
 
-`BehindBy` is calculated by: `Perc - PercentTime` and shows how far behind the current value of the indicator is to the target value for the current time and shows up as the text above each bar: 
 
-* "OK!": Shows that the current value of the indicator meets the target value for the current time
-* "Need ___ more": Shows exactly how much more of the indicator is needed to reach the target value for the current time
+## Inputs for regular `bullet_chart()`
+
+For the regular `bullet_chart()` either file input (Excel file or dataframe) needs to contain columns with names that correspond to the following: `indicator_name`, `info`, `current`, `low`, `medium`, `high`, and `target`. Just like with the other bullet chart functions your data can contain the values corresponding to these columns with any name you wish, but you need to specify which of your data's column names matches up with the ones that the function recognizes. 
+
+For example if the "high" values for indicators are stored in a column called "highest_values" then within the function you need to specify:
+
+`bullet_chart(dataframe = df, high = "highest_values")` 
+
+And so on. Do note that even if __your__ column name is different from any of the qualitative labels ("low", "medium", "high") they will still show up on the graph as "Low", "Medium", "High". In the future we would like to extend the qualitative labels on the graph to allow for user input. For example, you may want the qualitative labels to be "Poor", "Satisfactory", "Excellent" instead.

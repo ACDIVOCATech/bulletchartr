@@ -17,6 +17,9 @@
 #' @param legend PARAM_DESCRIPTION, Default: TRUE
 #' @return bullet chart plot(s)
 #' @details Stephen Few style bullet chart
+#' @examples
+#' data("df_bc")
+#' bullet_chart(dataframe = df_bc)
 #' @rdname bullet_chart
 #' @export
 #' @importFrom ggplot2 ggplot geom_col aes geom_segment coord_flip
@@ -103,10 +106,10 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
                          breaks = seqbreaks) +
       scale_x_continuous(expand = c(0, 0)) +
       scale_fill_manual(values = cols, name = NULL,
-                        labels = c("Current", "High", "Medium", "Low")) +
+                        breaks = c("Current", "High", "Medium", "Low")) +
       ## var_info takes Indicator name AND any extra info provided in
       ## the 'info' variable, all calculated in `field_calculator()`
-      labs(title = glue::glue("{data$var_info}")) +
+      labs(title = glue::glue("{data$varinfo}")) +
       theme(title = element_text(face = "bold"),
             plot.title = element_text(hjust = 0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 8),

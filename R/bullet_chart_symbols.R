@@ -145,7 +145,6 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
               legend.key.size = unit(0.8, "lines"))
 
       if (show_text == TRUE) {
-        g
         warning("When 'small' is set to TRUE, text will not show up by default! \n")
       }
 
@@ -207,7 +206,6 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
               legend.key.size = unit(1.5, "lines"))
 
       if (show_text == TRUE) {
-        g
         warning("When 'chart_type' is set to 'interactive', text will not show up by default! \n")
       }
 
@@ -216,7 +214,7 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
         g <- g + theme(legend.position = "none")
 
         output <- girafe(code = {print(g)},
-                         width = 0.5
+                         width_svg = 12
         )
         output
 
@@ -224,10 +222,9 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 
         g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
         output <- girafe(code = {print(g)},
-                         width = 0.5
+                         width_svg = 12
         )
         output
-
       }
 
     } else if (small == TRUE) {
@@ -252,8 +249,7 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
               legend.key.size = unit(0.8, "lines"))
 
       if (show_text == TRUE) {
-        g
-        warning("When 'chart_type' is set to 'interactive', text will not show up by default! \n")
+         warning("When 'chart_type' is set to 'interactive', text will not show up by default! \n")
       }
 
       if (legend == FALSE) {
@@ -261,7 +257,7 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
         g <- g + theme(legend.position = "none")
 
         output <- girafe(code = {print(g)},
-                         width = 0.4
+                         width_svg = 20
         )
         output
 
@@ -269,7 +265,7 @@ bullet_chart_symbols <- function(file_name = NULL, sheet_name = "Sheet1",
 
         g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
         output <- girafe(code = {print(g)},
-                         width = 0.4
+                         width_svg = 20
         )
         output
       }

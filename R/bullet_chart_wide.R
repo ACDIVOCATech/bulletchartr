@@ -139,7 +139,6 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
               legend.key.size = unit(0.8, "lines"))
 
       if (show_text == TRUE) {
-        g
         warning("When 'small' is set to TRUE, text will not show up by default! \n")
       }
 
@@ -182,7 +181,6 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
               plot.subtitle = element_text(hjust = 0.5, size = 8))
 
       if (show_text == TRUE) {
-        g
         warning("When 'chart_type' is set to 'interactive', text will not show up by default! \n")
       }
 
@@ -191,7 +189,7 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
         g <- g + theme(legend.position = "none")
 
         output <- girafe(code = {print(g)},
-                         width = 0.5
+                         width_svg = 12
         )
         output
 
@@ -199,7 +197,7 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
 
         g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
         output <- girafe(code = {print(g)},
-                         width = 0.5
+                         width_svg = 12
         )
         output
 
@@ -231,7 +229,6 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
               legend.key.size = unit(0.8, "lines"))
 
       if (show_text == TRUE) {
-        g
         warning("When 'chart_type' is set to 'interactive', text will not show up by default! \n")
       }
 
@@ -240,7 +237,7 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
         g <- g + theme(legend.position = "none")
 
         output <- girafe(code = {print(g)},
-                         width = 0.5
+                         width_svg = 20
         )
         output
 
@@ -248,7 +245,7 @@ bullet_chart_wide <- function(file_name = NULL, sheet_name = "Sheet1",
 
         g <- g + guides(shape = guide_legend(nrow = 1)) + theme(legend.position = "bottom")
         output <- girafe(code = {print(g)},
-                         width = 0.5
+                         width_svg = 20
         )
         output
 

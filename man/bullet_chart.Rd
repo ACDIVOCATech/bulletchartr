@@ -45,3 +45,7 @@ Creates a bullet chart using an indicator's values for the axis scales.
 \details{
 Stephen Few style bullet chart
 }
+\examples{
+data("df_bc")
+bullet_chart(dataframe = df_bc)
+}
