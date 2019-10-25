@@ -22,7 +22,7 @@ library(bulletchartr)
 
 # Dataframe or Excel input
 
-To use the functions included in this package, one can provide either a dataframe or Excel (.xlsx) file as the input. For the "time-constraint" version of the bullet chart (`bullet_chart_symbol()`, `bullet_chart_wide()`, or `bullet_chart_vline()`) either file input needs to contain columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`.
+To use the functions included in this package, one can provide either a dataframe or Excel (.xlsx) file as the input. For the "time-comparison" version of the bullet chart (`bullet_chart_symbol()`, `bullet_chart_wide()`, or `bullet_chart_vline()`) either file input needs to contain columns with names that correspond to the following: `indicator_name`, `actual`, `actual_lastweek`, `actual_lastyear`, and `target`.
 
 ```{r df-or-excel, fig.width=6,fig.height=5, eval=FALSE}
 ## read in example "Indicators_Targets.xlsx" file

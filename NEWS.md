@@ -1,10 +1,21 @@
+# bulletchartr 0.3.0
+
+* `bullet_chart()` function now uses regular scale **only**
+* `bullet_chart()` uses 'Low-Medium-High' qualitative labels
+* Other bullet chart variants still use time-comparison scale
+* Fixed how data is used/stored for package
+* Fixed sizing issues to comply with new 'ggiraph' version
+* Fixed 'show_text' option for time-comparison variants
+* Revamped all vignettes and README to be consistent with all changes
+* 'legend' argument defaults to TRUE
+* Created pkgdown website
+* Fixed "TODAY" label not appearing for `_vline()` function
+
 # bulletchartr 0.2.0
 
 * Added a `NEWS.md` file to track changes to the package.
-* `chart_type` option to toggle between "static" or "interactive" ('ggiraph') version of bulletchart.
 * Fixed fill legend code.
 * Added more tests.
-* Added legend symbol for 'Today' for `bulletchartr()`.
 * Change license to MIT.
 
 # bulletchartr 0.1.0

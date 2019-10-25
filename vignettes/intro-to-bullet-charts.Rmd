@@ -23,7 +23,7 @@ This type of graph is a variation on a typical bar graph with a thick line prese
 
 # The {bulletchartr} functions
 
-{bulletchartr} contains 4 different chart functions divided into two categories, the regular bullet chart (`bullet_chart()`) and the time-constraint versions (`bullet_chart_wide()`, `bullet_chart_symbol()`, and `bullet_chart_vline()`).
+{bulletchartr} contains 4 different chart functions divided into two categories, the regular bullet chart (`bullet_chart()`) and the time-comparison versions (`bullet_chart_wide()`, `bullet_chart_symbol()`, and `bullet_chart_vline()`).
 
 ## Regular `bullet_chart()`
 
@@ -41,9 +41,9 @@ The single black bar represents the current value of the indicator while the dif
 
 Each indicator has it's own set scale with a minimum value set to 0 and a maximum value with several breaks/labels in between. For now the original Stephen Few design bullet chart is the only one using a regular scale along the x-axis. This may change in the future.
 
-## Time-constraint bullet chart
+## Time-comparison bullet chart
 
-The time-constraint version of the bullet chart is what we use at ACDI/VOCA to track the progress of our indicators/KPIs against a target. It is a slightly modified version of the original bullet chart with the main difference being the x-axis. As you can see, the bars show the progression along the horizontal-axis presenting the percentage of the yearly target completed. Also, along this axis is the percent of the year gone by with a vertical line indicating what exact percentage __"Today"__ is along this percentage. It is necessary to use percentages as we have multiple indicators of varying units/parameters for each project!
+The time-comparison version of the bullet chart is what we use at ACDI/VOCA to track the progress of our indicators/KPIs against a target. It is a slightly modified version of the original bullet chart with the main difference being the x-axis. As you can see, the bars show the progression along the horizontal-axis presenting the percentage of the yearly target completed. Also, along this axis is the percent of the year gone by with a vertical line indicating what exact percentage __"Today"__ is along this percentage. It is necessary to use percentages as we have multiple indicators of varying units/parameters for each project!
 
 ```{r bulletchart-time, fig.width=6,fig.height=5, echo=TRUE}
 bullet_chart_wide(file_name = read_example("Indicators_Targets_ext.xlsx"),

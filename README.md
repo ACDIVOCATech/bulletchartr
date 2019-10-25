@@ -9,6 +9,8 @@
 coverage](https://codecov.io/gh/ACDIVOCATech/bulletchartr/branch/master/graph/badge.svg)](https://codecov.io/gh/ACDIVOCATech/bulletchartr?branch=master)
 [![Travis-CI Build
 Status](https://travis-ci.org/ACDIVOCATech/bulletchartr.svg?branch=master)](https://travis-ci.org/ACDIVOCATech/bulletchartr)
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
 This package, `bulletchartr` is based on visualizing M\&E deliverables
@@ -50,7 +52,7 @@ percentage of the year that has passed. There is a vertical line showing
 `TODAY`, which shows at what percentage of the year **and** what
 percentage of the target we are at right now. The color inside the bar
 is **green** if we are near or past the `TODAY` line, **orange** when
-we’re close and **red** when we’re very behind schedule/target.
+weâ€™re close and **red** when we’re very behind schedule/target.
 
 ``` r
 bullet_chart_symbols(file_name = read_example("Indicators_Targets_ext.xlsx"))

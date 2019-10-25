@@ -28,6 +28,7 @@ library(bulletchartr)
 <!-- badges: start -->
   [![Codecov test coverage](https://codecov.io/gh/ACDIVOCATech/bulletchartr/branch/master/graph/badge.svg)](https://codecov.io/gh/ACDIVOCATech/bulletchartr?branch=master)
   [![Travis-CI Build Status](https://travis-ci.org/ACDIVOCATech/bulletchartr.svg?branch=master)](https://travis-ci.org/ACDIVOCATech/bulletchartr)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
 This package, `bulletchartr` is based on visualizing M&E deliverables or "Indicators", however, it can be handy for anyone that depends on monitoring Key Performance Indicators (KPIs) or needs to track progress against different targets.
@@ -55,7 +56,7 @@ bullet_chart(dataframe = df_bc)
 The outputs of `bullet_chart_symbols()`, `bullet_chart_wide()`, and `bullet_chart_vline()` have a different x-axis scale to a regular bullet chart. 
 
 The x-axis represents both the percentage of the yearly target AND the percentage of the year that has passed. There is a vertical line showing `TODAY`, which shows at what percentage of the year __and__ what percentage of the target we are at right now. 
-The color inside the bar is __green__ if we are near or past the `TODAY` line, __orange__ when we’re close and __red__ when we're very behind schedule/target.
+The color inside the bar is __green__ if we are near or past the `TODAY` line, __orange__ when weâ€™re close and __red__ when we're very behind schedule/target.
 
 ```{r}
 bullet_chart_symbols(file_name = read_example("Indicators_Targets_ext.xlsx"))
