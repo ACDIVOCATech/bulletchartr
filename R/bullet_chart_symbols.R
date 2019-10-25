@@ -30,8 +30,8 @@
 #' The symbols represent the indicator value for last week (diamond) and last year (circle).
 #'
 #' @examples
-#' data("df")
-#' bullet_chart_symbols(dataframe = df)
+#' data("bc_ex_TC")
+#' bullet_chart_symbols(dataframe = bc_ex_TC)
 #' @seealso
 #'  \code{\link[ggplot2]{geom_bar}}, \code{\link[ggplot2]{scale_manual}}
 #' @rdname bullet_chart_symbols

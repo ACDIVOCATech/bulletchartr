@@ -20,21 +20,21 @@ bullet_chart(file_name = NULL, sheet_name = "Sheet1",
 \item{indicator_name}{specify the name of the column that has your indicator/KPI names,
 Default: 'variable'}
 
-\item{info}{PARAM_DESCRIPTION, Default: 'info'}
+\item{info}{extra info for indicators (currency, percentage, symbol, etc.)}
 
-\item{current}{PARAM_DESCRIPTION, Default: 'current'}
+\item{current}{current value of indicator}
 
-\item{low}{PARAM_DESCRIPTION, Default: 'low'}
+\item{low}{column with value for "low"}
 
-\item{medium}{PARAM_DESCRIPTION, Default: 'medium'}
+\item{medium}{column with value for "medium"}
 
-\item{high}{PARAM_DESCRIPTION, Default: 'high'}
+\item{high}{column with value for "high"}
 
-\item{target}{PARAM_DESCRIPTION, Default: 'target'}
+\item{target}{column with value for the "target"}
 
-\item{remove_no_targets}{PARAM_DESCRIPTION, Default: TRUE}
+\item{remove_no_targets}{Removes indicators without a "target" value specified, default: TRUE}
 
-\item{legend}{PARAM_DESCRIPTION, Default: TRUE}
+\item{legend}{Show legend, Default: TRUE}
 }
 \value{
 bullet chart plot(s)
@@ -46,6 +46,6 @@ Creates a bullet chart using an indicator's values for the axis scales.
 Stephen Few style bullet chart
 }
 \examples{
-data("df_bc")
-bullet_chart(dataframe = df_bc)
+data("bc_ex")
+bullet_chart(dataframe = bc_ex)
 }

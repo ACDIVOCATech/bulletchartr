@@ -7,19 +7,19 @@
 #' @param dataframe specify R dataframe input
 #' @param indicator_name specify the name of the column that has your indicator/KPI names,
 #' Default: 'variable'
-#' @param info PARAM_DESCRIPTION, Default: 'info'
-#' @param current PARAM_DESCRIPTION, Default: 'current'
-#' @param low PARAM_DESCRIPTION, Default: 'low'
-#' @param medium PARAM_DESCRIPTION, Default: 'medium'
-#' @param high PARAM_DESCRIPTION, Default: 'high'
-#' @param target PARAM_DESCRIPTION, Default: 'target'
-#' @param remove_no_targets PARAM_DESCRIPTION, Default: TRUE
-#' @param legend PARAM_DESCRIPTION, Default: TRUE
+#' @param info extra info for indicators (currency, percentage, symbol, etc.)
+#' @param current current value of indicator
+#' @param low column with value for "low"
+#' @param medium column with value for "medium"
+#' @param high column with value for "high"
+#' @param target column with value for the "target"
+#' @param remove_no_targets Removes indicators without a "target" value specified, default: TRUE
+#' @param legend Show legend, Default: TRUE
 #' @return bullet chart plot(s)
 #' @details Stephen Few style bullet chart
 #' @examples
-#' data("df_bc")
-#' bullet_chart(dataframe = df_bc)
+#' data("bc_ex")
+#' bullet_chart(dataframe = bc_ex)
 #' @rdname bullet_chart
 #' @export
 #' @importFrom ggplot2 ggplot geom_col aes geom_segment coord_flip

@@ -1,6 +1,6 @@
 # internal functions ------------------------------------------------------
 
-#' @title Field calculator for time-constraint scale
+#' @title Field calculator for time-comparison scale
 #' @description internal function for calculating the extra fields needed for bullet charts
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file

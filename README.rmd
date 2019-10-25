@@ -23,7 +23,7 @@ library(ggplot2)
 library(bulletchartr)
 ```
 
-# bulletchartr
+# bulletchartr <a href='https:/acdivocatech.github.io/bulletchartr'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
   [![Codecov test coverage](https://codecov.io/gh/ACDIVOCATech/bulletchartr/branch/master/graph/badge.svg)](https://codecov.io/gh/ACDIVOCATech/bulletchartr?branch=master)
@@ -48,29 +48,33 @@ The output of the `bullet_chart()` function most closely resembles Stephen Few's
 
 ```{r bulletchart, fig.width=6,fig.height=8, echo=TRUE}
 ## load example data
-load(read_example("df_bc.rda"))
+load(read_example("bc_ex.rda"))
 
-bullet_chart(dataframe = df_bc)
+bullet_chart(dataframe = bc_ex)
 ```
+
+## Time-comparison bullet charts
 
 The outputs of `bullet_chart_symbols()`, `bullet_chart_wide()`, and `bullet_chart_vline()` have a different x-axis scale to a regular bullet chart. 
 
 The x-axis represents both the percentage of the yearly target AND the percentage of the year that has passed. There is a vertical line showing `TODAY`, which shows at what percentage of the year __and__ what percentage of the target we are at right now. 
-The color inside the bar is __green__ if we are near or past the `TODAY` line, __orange__ when weâ€™re close and __red__ when we're very behind schedule/target.
+The color inside the bar is __green__ if we are near or past the `TODAY` line, __orange__ when weâ€™re close and __red__ when we're very behind schedule/target. One of the main differences between this set of functions is how they present the values for "Last Week" and "Last Year" for each of the indicators.
 
 ```{r}
-bullet_chart_symbols(file_name = read_example("Indicators_Targets_ext.xlsx"))
+bullet_chart_symbols(file_name = read_example("Indicators_Targets_ext.xlsx"),
+                     cal_type = "2019/05/02")
 ```
 
 ```{r}
-bullet_chart_wide(file_name = read_example("Indicators_Targets_ext.xlsx"))
+bullet_chart_wide(file_name = read_example("Indicators_Targets_ext.xlsx"),
+                  cal_type = "cal")
 ```
 
 ```{r}
 bullet_chart_vline(file_name = read_example("Indicators_Targets_ext.xlsx"))
 ```
 
-Please read the package vignette, "Introduction to bullet charts" for a more detailed overview!
+Please read the package vignette, ["Introduction to bullet charts"](https://acdivocatech.github.io/bulletchartr/articles/intro-to-bullet-charts.html) for a more detailed overview!
 
 ## Future direction
 

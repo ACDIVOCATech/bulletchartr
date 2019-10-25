@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# bulletchartr
+# bulletchartr <a href='https:/acdivocatech.github.io/bulletchartr'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
@@ -36,12 +36,14 @@ Stephen Few’s design:
 
 ``` r
 ## load example data
-load(read_example("df_bc.rda"))
+load(read_example("bc_ex.rda"))
 
-bullet_chart(dataframe = df_bc)
+bullet_chart(dataframe = bc_ex)
 ```
 
 <img src="man/figures/README-bulletchart-1.png" width="100%" />
+
+## Time-comparison bullet charts
 
 The outputs of `bullet_chart_symbols()`, `bullet_chart_wide()`, and
 `bullet_chart_vline()` have a different x-axis scale to a regular bullet
@@ -52,16 +54,21 @@ percentage of the year that has passed. There is a vertical line showing
 `TODAY`, which shows at what percentage of the year **and** what
 percentage of the target we are at right now. The color inside the bar
 is **green** if we are near or past the `TODAY` line, **orange** when
-weâ€™re close and **red** when we’re very behind schedule/target.
+weâ€™re close and **red** when we’re very behind schedule/target. One
+of the main differences between this set of functions is how they
+present the values for “Last Week” and “Last Year” for each of the
+indicators.
 
 ``` r
-bullet_chart_symbols(file_name = read_example("Indicators_Targets_ext.xlsx"))
+bullet_chart_symbols(file_name = read_example("Indicators_Targets_ext.xlsx"),
+                     cal_type = "2019/05/02")
 ```
 
 <img src="man/figures/README-unnamed-chunk-1-1.png" width="100%" />
 
 ``` r
-bullet_chart_wide(file_name = read_example("Indicators_Targets_ext.xlsx"))
+bullet_chart_wide(file_name = read_example("Indicators_Targets_ext.xlsx"),
+                  cal_type = "cal")
 ```
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
@@ -72,8 +79,9 @@ bullet_chart_vline(file_name = read_example("Indicators_Targets_ext.xlsx"))
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
-Please read the package vignette, “Introduction to bullet charts” for a
-more detailed overview\!
+Please read the package vignette, [“Introduction to bullet
+charts”](https://acdivocatech.github.io/bulletchartr/articles/intro-to-bullet-charts.html)
+for a more detailed overview\!
 
 ## Future direction
 

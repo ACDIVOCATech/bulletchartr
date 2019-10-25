@@ -14,9 +14,9 @@
 #'  }
 #'
 #' @keywords datasets
-#' @name df
-#' @usage data(df)
-"df"
+#' @name bc_ex_TC
+#' @usage data(bc_ex_TC)
+"bc_ex_TC"
 
 #' example dataframe for regular scale bullet chart
 #' @format This data set contains indicator values and target data
@@ -36,6 +36,6 @@
 #'  }
 #'
 #' @keywords datasets
-#' @name df_bc
-#' @usage data(df_bc)
-"df_bc"
+#' @name bc_ex
+#' @usage data(bc_ex)
+"bc_ex"

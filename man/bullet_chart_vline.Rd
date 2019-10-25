@@ -57,6 +57,6 @@ general "target" value), however at the current time you should change the value
 in the Excel file but not the variable name itself.
 }
 \examples{
-data("df")
-bullet_chart_symbols(dataframe = df)
+data("bc_ex_TC")
+bullet_chart_symbols(dataframe = bc_ex_TC)
 }
