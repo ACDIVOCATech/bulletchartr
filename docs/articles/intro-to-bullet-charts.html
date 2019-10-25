@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Introduction to bullet charts • bulletchartr</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to bullet charts">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -38,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -76,6 +77,7 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -101,12 +103,12 @@
 <p>{bulletchartr} contains 4 different chart functions divided into two categories, the regular bullet chart (<code><a href="../reference/bullet_chart.html">bullet_chart()</a></code>) and the time-comparison versions (<code><a href="../reference/bullet_chart_wide.html">bullet_chart_wide()</a></code>, <code>bullet_chart_symbol()</code>, and <code><a href="../reference/bullet_chart_vline.html">bullet_chart_vline()</a></code>).</p>
 <div id="regular-bullet_chart" class="section level2">
 <h2 class="hasAnchor">
-<a href="#regular-bullet_chart" class="anchor"></a>Regular <code><a href="../reference/bullet_chart.html">bullet_chart()</a></code>
+<a href="#regular-bullet_chart" class="anchor"></a>Regular <code>bullet_chart()</code>
 </h2>
 <p>The output of the <code><a href="../reference/bullet_chart.html">bullet_chart()</a></code> function most closely resembles Stephen Few’s design:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(bulletchartr)</a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(bulletchartr)</a>
 <a class="sourceLine" id="cb1-2" title="2"><span class="co">## load example data</span></a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/load">load</a></span>(<span class="kw"><a href="../reference/read_example.html">read_example</a></span>(<span class="st">"df_bc.rda"</span>))</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw"><a href="https://rdrr.io/r/base/load.html">load</a></span>(<span class="kw"><a href="../reference/read_example.html">read_example</a></span>(<span class="st">"df_bc.rda"</span>))</a>
 <a class="sourceLine" id="cb1-4" title="4"></a>
 <a class="sourceLine" id="cb1-5" title="5"><span class="kw"><a href="../reference/bullet_chart.html">bullet_chart</a></span>(<span class="dt">dataframe =</span> df_bc)</a></code></pre></div>
 <p><img src="intro-to-bullet-charts_files/figure-html/bulletchart-1.png" width="576"></p>
@@ -123,7 +125,7 @@
 <p>The different grey colored bars represent the values of the indicator at “Last Week” and “Last Year”. The grey scaled bars can represent any qualitative ranges such as “bad - good - excellent” or “disabled - repairing - fixed”, etc. In the near future we will look to expand the capabilities of this package to allow users to specify these qualitative ranges to fit their needs.</p>
 <div id="bullet_chart_wide" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bullet_chart_wide" class="anchor"></a><code><a href="../reference/bullet_chart_wide.html">bullet_chart_wide()</a></code>
+<a href="#bullet_chart_wide" class="anchor"></a><code>bullet_chart_wide()</code>
 </h3>
 <p><code><a href="../reference/bullet_chart_wide.html">bullet_chart_wide()</a></code> is similar to the standard bullet chart but uses different thicknesses for the bars as the benchmarks for previous time points (last week and last year) to further accentuate the difference graphically.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="../reference/bullet_chart_wide.html">bullet_chart_wide</a></span>(<span class="dt">file_name =</span> <span class="kw"><a href="../reference/read_example.html">read_example</a></span>(<span class="st">"Indicators_Targets_full.xlsx"</span>),</a>
@@ -132,7 +134,7 @@
 </div>
 <div id="bullet_chart_symbols" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bullet_chart_symbols" class="anchor"></a><code><a href="../reference/bullet_chart_symbols.html">bullet_chart_symbols()</a></code>
+<a href="#bullet_chart_symbols" class="anchor"></a><code>bullet_chart_symbols()</code>
 </h3>
 <p><code><a href="../reference/bullet_chart_symbols.html">bullet_chart_symbols()</a></code> shows a version with different symbols representing the indicator value for last week (diamond) and last year (circle).</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="../reference/bullet_chart_symbols.html">bullet_chart_symbols</a></span>(<span class="dt">file_name =</span> <span class="kw"><a href="../reference/read_example.html">read_example</a></span>(<span class="st">"Indicators_Targets_full.xlsx"</span>))</a></code></pre></div>
@@ -140,7 +142,7 @@
 </div>
 <div id="bullet_chart_vline" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bullet_chart_vline" class="anchor"></a><code><a href="../reference/bullet_chart_vline.html">bullet_chart_vline()</a></code>
+<a href="#bullet_chart_vline" class="anchor"></a><code>bullet_chart_vline()</code>
 </h3>
 <p><code><a href="../reference/bullet_chart_vline.html">bullet_chart_vline()</a></code> provides a version with a single colored bar representing the current value for the indicator along with a black vertical line representing the indicator value at this time last year.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw"><a href="../reference/bullet_chart_vline.html">bullet_chart_vline</a></span>(<span class="dt">file_name =</span> <span class="kw"><a href="../reference/read_example.html">read_example</a></span>(<span class="st">"Indicators_Targets_ext.xlsx"</span>),</a>
@@ -167,7 +169,7 @@
 <li><a href="#what-is-a-bullet-chart">What is a bullet chart?</a></li>
       <li>
 <a href="#the-bulletchartr-functions">The {bulletchartr} functions</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#regular-bullet_chart">Regular <code><a href="--/reference/bullet_chart-html">bullet_chart()</a></code></a></li>
+<li><a href="#regular-bullet_chart">Regular <code>bullet_chart()</code></a></li>
       <li><a href="#time-comparison-bullet-chart">Time-comparison bullet chart</a></li>
       </ul>
 </li>
@@ -179,17 +181,20 @@
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Ryo Nakagawara, Amit Kohli.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>
