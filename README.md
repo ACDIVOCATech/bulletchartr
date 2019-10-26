@@ -27,9 +27,26 @@ against different targets.
 devtools::install_github("ACDIVOCATech/bulletchartr")
 ```
 
+## Introductory Vignettes
+
+  - [Intro to Bullet
+    Charts](https://acdivocatech.github.io/bulletchartr/articles/intro-to-bullet-charts.html)
+  - [Intro to bulletchartr data
+    inputs](https://acdivocatech.github.io/bulletchartr/articles/intro-inputs.html)
+  - [Intro to bulletchartr function
+    arguments](https://acdivocatech.github.io/bulletchartr/articles/intro-arguments.html)
+
+## Quick Overview
+
 The **bullet chart** was invented by [Stephen
 Few](https://www.perceptualedge.com/articles/misc/Bullet_Graph_Design_Spec.pIndicatorData),
-for the purpose of showing tons of info in a condensed form in KPIs.
+for the purpose of showing tons of info in a condensed form in KPIs. It
+is basically a variation of a bar chart that allows you to compare one
+measure against other metrics such as a target value and/or some
+qualitative measures of performance (ex. low - medium - high or poor -
+satisfactory - good). These qualitative labels are displayed as varying
+intensities of a single color from dark (low/bad/negative) to light
+(high/good/positive).
 
 The output of the `bullet_chart()` function most closely resembles
 Stephen Few’s design:
@@ -78,10 +95,6 @@ bullet_chart_vline(file_name = read_example("Indicators_Targets_ext.xlsx"))
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
-
-Please read the package vignette, [“Introduction to bullet
-charts”](https://acdivocatech.github.io/bulletchartr/articles/intro-to-bullet-charts.html)
-for a more detailed overview\!
 
 ## Future direction
 
