@@ -96,17 +96,18 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
                aes(x = 1, y = vals, fill = allvals),
                width = 0.2) +
       ## target
+      # geom_point(aes(x = 1, y = target), color = "red", size = 2.5) +
       geom_segment(aes(x = 0.75, xend = 1.25,
                        y = target, yend = target),
                    color = "red", size = 2.5) +
       coord_flip() +
       scale_y_continuous(limits = c(0, NA),
-                         expand = c(0, 0),
+                         expand = c(0.01, 0),
                          labels = seqbreaks,
                          breaks = seqbreaks) +
       scale_x_continuous(expand = c(0, 0)) +
       scale_fill_manual(values = cols, name = NULL,
-                        breaks = c("Current", "High", "Medium", "Low")) +
+                        breaks = c("Low", "Medium", "High", "Current")) +
       ## var_info takes Indicator name AND any extra info provided in
       ## the 'info' variable, all calculated in `field_calculator()`
       labs(title = glue::glue("{data$varinfo}")) +
@@ -122,6 +123,7 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
             strip.text = element_text(face = "bold", size = 14),
             strip.background = element_rect(fill = "white"),
             plot.margin = margin(1, 1, 1, 1, "cm"),
+            panel.background = element_rect(fill = "white"),
             legend.position = "bottom",
             legend.direction = "horizontal")
 

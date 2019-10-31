@@ -113,7 +113,7 @@ field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
   ammended_data <- ammended_data %>%
    mutate(varinfo = glue("{indicator_name}: {info}")) %>%
    mutate(allvals = forcats::fct_relevel(allvals,
-                                         c("Current", "High", "Medium", "Low")))
+                                         c("Low", "Medium", "High", "Current")))
 
   # ammended_data <- ammended_data %>%
   #   mutate(allvals = forcats::fct_relevel(allvals, c("Current", "High", "Medium", "Low")))
