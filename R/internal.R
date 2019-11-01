@@ -147,6 +147,10 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
              TRUE ~ OldPer
            ))
 
+  ammended_data <- ammended_data %>%
+    mutate(LWeek_tex = NA,
+           LY_tex = NA)
+
   ## Calculate how far behind LAST for text
   ammended_data$LWeek_tex[
     ammended_data$BehindFromLastWeek > 0 & !is.na(ammended_data$BehindFromLastWeek)] <- paste("(+",
