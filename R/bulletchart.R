@@ -80,64 +80,66 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
               Current = "black", Target = "red")
 
     ## PLOT
-    g <- data %>%
-      ggplot() +
-      ## great
-      geom_col(data = data %>% filter(allvals == "High"),
-               aes(x = 1, y = vals, fill = allvals)) +
-      ## good
-      geom_col(data = data %>% filter(allvals == "Medium"),
-               aes(x = 1, y = vals, fill = allvals)) +
-      ## bad
-      geom_col(data = data %>% filter(allvals == "Low"),
-               aes(x = 1, y = vals, fill = allvals)) +
-      ## current
-      geom_col(data = data %>% filter(allvals == "Current"),
-               aes(x = 1, y = vals, fill = allvals),
-               width = 0.2) +
-      ## target
-      # geom_point(data = data %>% filter(allvals == "Target"),
-      #            aes(x = 1, y = vals, fill = allvals),
-      #            shape = 22, size = 4.5, color = "red",
-      #            show.legend = FALSE) +
-      geom_segment(data = data %>% filter(allvals == "Target"),
-                   aes(x = 0.75, xend = 1.25,
-                       y = vals, yend = vals, fill = allvals),
-                   color = "red", size = 2.5) +
-      # geom_rect(data = data %>% filter(allvals == "Target"),
-      #              aes(xmin = 0.75, xmax = 1.25,
-      #                  ymin = vals * -0.25, ymax = vals * 0.25,
-      #                  fill = allvals),
-      #              size = 2.5, show.legend = FALSE) +
-      coord_flip() +
-      scale_y_continuous(limits = c(0, NA),
-                         expand = c(0.01, 0),
-                         labels = seqbreaks,
-                         breaks = seqbreaks) +
-      scale_x_continuous(expand = c(0, 0)) +
-      scale_fill_manual(values = cols, name = NULL,
-                        breaks = c("Low", "Medium", "High", "Current", "Target")) +
-      ## var_info takes Indicator name AND any extra info provided in
-      ## the 'info' variable, all calculated in `field_calculator()`
-      labs(title = glue::glue("{data$varinfo}")) +
-      theme(title = element_text(face = "bold"),
-            plot.title = element_text(hjust = 0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 8),
-            panel.grid = element_blank(),
-            axis.title.x = element_blank(),
-            axis.text.x = element_text(face = "bold", size = 12),
-            axis.title.y = element_blank(),
-            axis.text.y = element_blank(),
-            axis.ticks.y = element_blank(),
-            strip.text = element_text(face = "bold", size = 14),
-            strip.background = element_rect(fill = "white"),
-            plot.margin = margin(1, 1, 1, 1, "cm"),
-            panel.background = element_rect(fill = "white"),
-            legend.text = element_text(face = "bold", size = 12),
-            legend.position = "bottom",
-            legend.direction = "horizontal")
+    g <- suppressWarnings(
+      data %>%
+        ggplot() +
+        ## great
+        geom_col(data = data %>% filter(allvals == "High"),
+                 aes(x = 1, y = vals, fill = allvals)) +
+        ## good
+        geom_col(data = data %>% filter(allvals == "Medium"),
+                 aes(x = 1, y = vals, fill = allvals)) +
+        ## bad
+        geom_col(data = data %>% filter(allvals == "Low"),
+                 aes(x = 1, y = vals, fill = allvals)) +
+        ## current
+        geom_col(data = data %>% filter(allvals == "Current"),
+                 aes(x = 1, y = vals, fill = allvals),
+                 width = 0.2) +
+        ## target
+        # geom_point(data = data %>% filter(allvals == "Target"),
+        #            aes(x = 1, y = vals, fill = allvals),
+        #            shape = 22, size = 4.5, color = "red",
+        #            show.legend = FALSE) +
+        geom_segment(data = data %>% filter(allvals == "Target"),
+                     aes(x = 0.75, xend = 1.25,
+                         y = vals, yend = vals, fill = allvals),
+                     color = "red", size = 2.5) +
+        # geom_rect(data = data %>% filter(allvals == "Target"),
+        #              aes(xmin = 0.75, xmax = 1.25,
+        #                  ymin = vals * -0.25, ymax = vals * 0.25,
+        #                  fill = allvals),
+        #              size = 2.5, show.legend = FALSE) +
+        coord_flip() +
+        scale_y_continuous(limits = c(0, NA),
+                           expand = c(0.01, 0),
+                           labels = seqbreaks,
+                           breaks = seqbreaks) +
+        scale_x_continuous(expand = c(0, 0)) +
+        scale_fill_manual(values = cols, name = NULL,
+                          breaks = c("Low", "Medium", "High", "Current", "Target")) +
+        ## var_info takes Indicator name AND any extra info provided in
+        ## the 'info' variable, all calculated in `field_calculator()`
+        labs(title = glue::glue("{data$varinfo}")) +
+        theme(title = element_text(face = "bold"),
+              plot.title = element_text(hjust = 0.5),
+              plot.subtitle = element_text(hjust = 0.5, size = 8),
+              panel.grid = element_blank(),
+              axis.title.x = element_blank(),
+              axis.text.x = element_text(face = "bold", size = 12),
+              axis.title.y = element_blank(),
+              axis.text.y = element_blank(),
+              axis.ticks.y = element_blank(),
+              strip.text = element_text(face = "bold", size = 14),
+              strip.background = element_rect(fill = "white"),
+              plot.margin = margin(1, 1, 1, 1, "cm"),
+              panel.background = element_rect(fill = "white"),
+              legend.text = element_text(face = "bold", size = 12),
+              legend.position = "bottom",
+              legend.direction = "horizontal")
+      )
 
-    return(g)
+    #print(g)
   }
 
   ## map over each indicator
@@ -149,7 +151,8 @@ bullet_chart <- function(file_name = NULL, sheet_name = "Sheet1",
     group_by(indicator_name) %>%
     nest() %>%
     mutate(plot = map2(data, indicator_name,
-                       ~bc_plotter(data = .x, indicator_name = .y)))
+                       ~ bc_plotter(data = .x, indicator_name = .y)
+                       ))
   # plots_df$plot[[1]]
   # plots_df$plot[[2]]
   # plots_df$plot[[3]]
