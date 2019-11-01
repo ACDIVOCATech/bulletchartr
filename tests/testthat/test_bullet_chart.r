@@ -24,8 +24,8 @@ zero_df <- tibble::tibble(
 
 ## data for regular scale bulletchart
 bcdatatest <- tibble::tibble(
-  variable = c("Revenue", "Order Size",
-           "New Customers", "Satisfaction"),
+  variable = c("Order Size", "New Customers",
+           "Revenue", "Satisfaction"),
   info = c("Count", "US $", "US $ (1000s)", "Likert Scale of 5"),
   target = c(350, 500, 975, 4.5),
   current = c(365, 310, 1050, 4),

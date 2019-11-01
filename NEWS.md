@@ -1,3 +1,12 @@
+# bulletchartr 0.3.1
+
+* Added legend entry for "Target" as per [#24](https://github.com/ACDIVOCATech/bulletchartr/issues/24)
+* Fixed [#34](https://github.com/ACDIVOCATech/bulletchartr/issues/34) regarding 'Unknown or uninitialized column' warnings
+* Reordered items in legend as per [#36](https://github.com/ACDIVOCATech/bulletchartr/issues/36)
+* Updated README
+* pkgdown website updated
+* Update package logo with new target legend changes
+
 # bulletchartr 0.3.0
 
 * `bullet_chart()` function now uses regular scale **only**

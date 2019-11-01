@@ -69,14 +69,14 @@ field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
            Low = !!Low,
            Medium = !!Medium,
            High = !!High,
-           target = !!tar,
+           Target = !!tar,
            info = !!inf
     )
 
   ## filter NO Target indicators
   if(remove_no_targets == TRUE) {
     ammended_data <- ammended_data %>%
-      filter(!is.na(target), target != 0)
+      filter(!is.na(Target), Target != 0)
   } else {
     ammended_data
   }
@@ -87,7 +87,7 @@ field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
   ## if target value Higher than "High", move "High" to "Target" value
   ## high should not be higher than target ??
     #mutate(High = if_else(target > High, target, High))
-    mutate(tarhigh = dplyr::if_else(target > High, TRUE, FALSE))
+    mutate(tarhigh = dplyr::if_else(Target > High, TRUE, FALSE))
 
   ## if Target > High then error out with name of columns
   if (any(ammended_data$tarhigh == TRUE)) {
@@ -102,7 +102,7 @@ field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
   ## reshape
   ammended_data <- ammended_data %>%
     select(-tarhigh) %>%
-    tidyr::pivot_longer(-c(indicator_name, target, info),
+    tidyr::pivot_longer(-c(indicator_name, info),
                  names_to = "allvals",
                  values_to = "vals") %>%
     dplyr::mutate(allvals = forcats::as_factor(allvals))
@@ -113,7 +113,7 @@ field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
   ammended_data <- ammended_data %>%
    mutate(varinfo = glue("{indicator_name}: {info}")) %>%
    mutate(allvals = forcats::fct_relevel(allvals,
-                                         c("Current", "High", "Medium", "Low")))
+                                         c("Low", "Medium", "High", "Current", "Target")))
 
   # ammended_data <- ammended_data %>%
   #   mutate(allvals = forcats::fct_relevel(allvals, c("Current", "High", "Medium", "Low")))

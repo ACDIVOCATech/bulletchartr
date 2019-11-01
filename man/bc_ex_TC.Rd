@@ -3,9 +3,9 @@
 \docType{data}
 \name{bc_ex_TC}
 \alias{bc_ex_TC}
-\title{example dataframe of indicators and targets}
+\title{example dataframe for time-comparison scale bullet chart}
 \format{This data set contains indicator values and target data
-used in the examples in README.
+used in the examples in README for the time-comparison scale bullet charts.
 
 The variables are as follows:
 
@@ -21,6 +21,6 @@ The variables are as follows:
 data(bc_ex_TC)
 }
 \description{
-example dataframe of indicators and targets
+example dataframe for time-comparison scale bullet chart
 }
 \keyword{datasets}
