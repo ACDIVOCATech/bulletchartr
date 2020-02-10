@@ -1,0 +1,46 @@
+url: https://acdivocatech.github.io/bulletchartr/
+
+template:
+  params:
+    bootswatch: simplex
+
+home:
+  links:
+  - text: 'Visit <a href="https://www.acdivoca.org/"><img alt="ACDIVOCA" src="https://www.acdivoca.org/wp-content/themes/acdi/images/logo.png" width="70"></a> website'
+    href: https://www.acdivoca.org/
+
+
+authors:
+  Ryo Nakagawara:
+    href: https://github.com/Ryo-N7
+  Amit Kohli:
+    href: https://github.com/DataStrategist
+
+reference:
+  - title: Example data
+    contents:
+      - starts_with("bc_")
+      - matches("read_example")
+  - title: Bullet chart (regular scale)
+    contents:
+      - matches("bullet_chart()")
+  - title: Bullet chart (time-comparison scale)
+    contents:
+      - starts_with("bullet_chart_")
+
+navbar:
+  title: bulletchartr
+  type: default
+  left:
+  - text: Home
+    href: index.html
+  - text: Intro
+    href: articles/intro-to-bullet-charts.html
+  - text: Reference
+    href: reference/index.html
+  - text: Vignettes
+    menu:
+    - text: Intro to Inputs
+      href: articles/intro-inputs.html
+    - text: Intro to Arguments
+      href: articles/intro-arguments.html

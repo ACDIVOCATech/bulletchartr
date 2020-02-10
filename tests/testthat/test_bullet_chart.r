@@ -22,17 +22,29 @@ zero_df <- tibble::tibble(
   target = c(0, 0, 0, 0, 0, 0)
 )
 
+## data for regular scale bulletchart
+bcdatatest <- tibble::tibble(
+  variable = c("Order Size", "New Customers",
+           "Revenue", "Satisfaction"),
+  info = c("Count", "US $", "US $ (1000s)", "Likert Scale of 5"),
+  target = c(350, 500, 975, 4.5),
+  current = c(365, 310, 1050, 4),
+  low = c(220, 430, 600, 2.5),
+  medium = c(240, 480, 770, 3.25),
+  high = c(400, 505, 1100, 5)
+)
+
 
 ## test empty ----
 
 testthat::test_that("error out for empty df", {
-  expect_error(bullet_chart(dataframe = empty_df))
+  expect_error(bullet_chart_wide(dataframe = empty_df))
 })
 
 ## test all 0 targets ----
 
 testthat::test_that("error out for zero targets df", {
-  expect_equal(bullet_chart(dataframe = zero_df), "No Non-Zero Targets!")
+  expect_equal(bullet_chart_wide(dataframe = zero_df), "No Non-Zero Targets!")
 })
 
 ## Ensure both dataframe and file not provided
@@ -40,7 +52,7 @@ testthat::test_that("Only one dataset inputted: dataframe OR file_name - not bot
 
   #expect_error(bullet_chart(dataframe = df, file_name = "inst/data/Indicators_Targets.xlsx"))
 
-  expect_error(bullet_chart(dataframe = test_df), NA)
+  expect_error(bullet_chart_wide(dataframe = test_df), NA)
 
   #expect_error(bullet_chart(file_name = "inst/data/Indicators_Targets.xlsx"), NA)
 
@@ -66,26 +78,28 @@ testthat::test_that("correct arguments used", {
   checkmate::expect_character(chart_type)
 
   ## tests
-  expect_error(bullet_chart(dataframe = test_df,
-                            small = small, legend = legend,
-                            remove_no_targets = remove_no_targets), NA)
+  expect_error(bullet_chart(dataframe = bcdatatest,
+                            legend = legend), NA)
   expect_error(bullet_chart_symbols(dataframe = test_df,
+                                    chart_type = chart_type,
                                     small = small, legend = legend,
                                     remove_no_targets = remove_no_targets), NA)
   expect_error(bullet_chart_vline(dataframe = test_df,
+                                  chart_type = chart_type,
                                   small = small, legend = legend,
                                   remove_no_targets = remove_no_targets), NA)
   expect_error(bullet_chart_wide(dataframe = test_df,
+                                 chart_type = chart_type,
                                  small = small, legend = legend,
                                  remove_no_targets = remove_no_targets), NA)
 
   ## tests interactive
   chart_type <- "interactive"
   checkmate::expect_character(chart_type)
-  expect_error(bullet_chart(dataframe = test_df,
-                            small = small, legend = legend,
-                            remove_no_targets = remove_no_targets,
-                            chart_type = chart_type), NA)
+  # expect_error(bullet_chart(dataframe = bcdatatest,
+  #                           legend = legend,
+  #                           remove_no_targets = remove_no_targets,
+  #                           chart_type = chart_type), NA)
   expect_error(bullet_chart_symbols(dataframe = test_df,
                                     small = small, legend = legend,
                                     remove_no_targets = remove_no_targets,
@@ -111,26 +125,28 @@ testthat::test_that("correct arguments used", {
   checkmate::expect_character(chart_type)
 
   ## tests static
-  expect_error(bullet_chart(dataframe = test_df,
-                            small = small, legend = legend,
-                            remove_no_targets = remove_no_targets), NA)
+  expect_error(bullet_chart(dataframe = bcdatatest,
+                            legend = legend), NA)
   expect_error(bullet_chart_symbols(dataframe = test_df,
+                                    chart_type = chart_type,
                                     small = small, legend = legend,
                                     remove_no_targets = remove_no_targets), NA)
   expect_error(bullet_chart_vline(dataframe = test_df,
+                                  chart_type = chart_type,
                                   small = small, legend = legend,
                                   remove_no_targets = remove_no_targets), NA)
   expect_error(bullet_chart_wide(dataframe = test_df,
+                                 chart_type = chart_type,
                                  small = small, legend = legend,
                                  remove_no_targets = remove_no_targets), NA)
 
   ## tests interactive
   chart_type <- "interactive"
   checkmate::expect_character(chart_type)
-  expect_error(bullet_chart(dataframe = test_df,
-                            small = small, legend = legend,
-                            remove_no_targets = remove_no_targets,
-                            chart_type = chart_type), NA)
+  # expect_error(bullet_chart(dataframe = bcdatatest,
+  #                           legend = legend,
+  #                           remove_no_targets = remove_no_targets,
+  #                           chart_type = chart_type), NA)
   expect_error(bullet_chart_symbols(dataframe = test_df,
                                     small = small, legend = legend,
                                     remove_no_targets = remove_no_targets,
@@ -156,26 +172,28 @@ testthat::test_that("correct arguments used", {
   checkmate::expect_character(chart_type)
 
   ## tests static
-  expect_error(bullet_chart(dataframe = test_df,
-                            small = small, legend = legend,
-                            remove_no_targets = remove_no_targets), NA)
+  expect_error(bullet_chart(dataframe = bcdatatest,
+                            legend = legend), NA)
   expect_error(bullet_chart_symbols(dataframe = test_df,
+                                    chart_type = chart_type,
                                     small = small, legend = legend,
                                     remove_no_targets = remove_no_targets), NA)
   expect_error(bullet_chart_vline(dataframe = test_df,
+                                  chart_type = chart_type,
                                   small = small, legend = legend,
                                   remove_no_targets = remove_no_targets), NA)
   expect_error(bullet_chart_wide(dataframe = test_df,
+                                 chart_type = chart_type,
                                  small = small, legend = legend,
                                  remove_no_targets = remove_no_targets), NA)
 
   ## tests interactive
   chart_type <- "interactive"
   checkmate::expect_character(chart_type)
-  expect_error(bullet_chart(dataframe = test_df,
-                            small = small, legend = legend,
-                            remove_no_targets = remove_no_targets,
-                            chart_type = chart_type), NA)
+  # expect_error(bullet_chart(dataframe = bcdatatest,
+  #                           legend = legend,
+  #                           remove_no_targets = remove_no_targets,
+  #                           chart_type = chart_type), NA)
   expect_error(bullet_chart_symbols(dataframe = test_df,
                                     small = small, legend = legend,
                                     remove_no_targets = remove_no_targets,
@@ -201,26 +219,28 @@ testthat::test_that("correct arguments used", {
   checkmate::expect_character(chart_type)
 
   ## tests static
-  expect_error(bullet_chart(dataframe = test_df,
-                            small = small, legend = legend,
-                            remove_no_targets = remove_no_targets), NA)
+  expect_error(bullet_chart(dataframe = bcdatatest,
+                            legend = legend), NA)
   expect_error(bullet_chart_symbols(dataframe = test_df,
+                                    chart_type = chart_type,
                                     small = small, legend = legend,
                                     remove_no_targets = remove_no_targets), NA)
   expect_error(bullet_chart_vline(dataframe = test_df,
+                                  chart_type = chart_type,
                                   small = small, legend = legend,
                                   remove_no_targets = remove_no_targets), NA)
   expect_error(bullet_chart_wide(dataframe = test_df,
+                                 chart_type = chart_type,
                                  small = small, legend = legend,
                                  remove_no_targets = remove_no_targets), NA)
 
   ## tests interactive
   chart_type <- "interactive"
   checkmate::expect_character(chart_type)
-  expect_error(bullet_chart(dataframe = test_df,
-                            small = small, legend = legend,
-                            remove_no_targets = remove_no_targets,
-                            chart_type = chart_type), NA)
+  # expect_error(bullet_chart(dataframe = bcdatatest,
+  #                           legend = legend,
+  #                           remove_no_targets = remove_no_targets,
+  #                           chart_type = chart_type), NA)
   expect_error(bullet_chart_symbols(dataframe = test_df,
                                     small = small, legend = legend,
                                     remove_no_targets = remove_no_targets,
@@ -241,10 +261,8 @@ testthat::test_that("correct arguments used", {
   checkmate::expect_character(chart_type)
 
   ## static
-  expect_error(bullet_chart(dataframe = test_df,
-                            cal_type = cal_type,
-                            small = small, legend = legend,
-                            remove_no_targets = remove_no_targets), NA)
+  expect_error(bullet_chart(dataframe = bcdatatest,
+                            legend = legend), NA)
   expect_error(bullet_chart_symbols(dataframe = test_df,
                                     cal_type = cal_type,
                                     small = small, legend = legend,
@@ -261,11 +279,11 @@ testthat::test_that("correct arguments used", {
   ## interactive
   chart_type <- "interactive"
   checkmate::expect_character(chart_type)
-  expect_error(bullet_chart(dataframe = test_df,
-                            cal_type = cal_type,
-                            small = small, legend = legend,
-                            remove_no_targets = remove_no_targets,
-                            chart_type = chart_type), NA)
+  # expect_error(bullet_chart(dataframe = bcdatatest,
+  #                           cal_type = cal_type,
+  #                           legend = legend,
+  #                           remove_no_targets = remove_no_targets,
+  #                           chart_type = chart_type), NA)
   expect_error(bullet_chart_symbols(dataframe = test_df,
                                     cal_type = cal_type,
                                     small = small, legend = legend,
@@ -287,14 +305,14 @@ testthat::test_that("correct arguments used", {
 testthat::test_that("correct outputs", {
 
   ## static
-  expect_equal(class(bullet_chart(dataframe = test_df)), c("gg", "ggplot"))
+  # expect_equal(class(bullet_chart(dataframe = bcdatatest)), c("gg", "ggplot"))
   expect_equal(class(bullet_chart_symbols(dataframe = test_df)), c("gg", "ggplot"))
   expect_equal(class(bullet_chart_vline(dataframe = test_df)), c("gg", "ggplot"))
   expect_equal(class(bullet_chart_wide(dataframe = test_df)), c("gg", "ggplot"))
 
   ## interactive
-  expect_equal(class(bullet_chart(dataframe = test_df,
-                                  chart_type = "interactive")), c("girafe", "htmlwidget"))
+  # expect_equal(class(bullet_chart(dataframe = bcdatatest,
+  #                                 chart_type = "interactive")), c("girafe", "htmlwidget"))
   expect_equal(class(bullet_chart_symbols(dataframe = test_df,
                                           chart_type = "interactive")), c("girafe", "htmlwidget"))
   expect_equal(class(bullet_chart_vline(dataframe = test_df,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/internal.R
 \name{extra_field_calculator}
 \alias{extra_field_calculator}
-\title{extra_field_calculator}
+\title{Field calculator for time-comparison scale}
 \usage{
 extra_field_calculator(file_name = NULL, sheet_name = "Sheet1",
   dataframe = NULL, indicator_name = "indicator_name",

@@ -1,0 +1,11 @@
+pandoc: 2.7.1
+pkgdown: 1.4.1
+pkgdown_sha: ~
+articles:
+  intro-arguments: intro-arguments.html
+  intro-inputs: intro-inputs.html
+  intro-to-bullet-charts: intro-to-bullet-charts.html
+urls:
+  reference: https://acdivocatech.github.io/bulletchartr//reference
+  article: https://acdivocatech.github.io/bulletchartr//articles
+
