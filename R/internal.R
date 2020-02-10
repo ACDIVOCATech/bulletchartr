@@ -1,6 +1,6 @@
 # internal functions ------------------------------------------------------
 
-#' @title extra_field_calculator
+#' @title Field calculator for time-comparison scale
 #' @description internal function for calculating the extra fields needed for bullet charts
 #' @param file_name path of Excel file
 #' @param sheet_name specify which sheet in Excel file
@@ -146,6 +146,10 @@ extra_field_calculator <- function(file_name = NULL, sheet_name = "Sheet1",
              OldPer > 100 ~ 100,
              TRUE ~ OldPer
            ))
+
+  ammended_data <- ammended_data %>%
+    mutate(LWeek_tex = NA,
+           LY_tex = NA)
 
   ## Calculate how far behind LAST for text
   ammended_data$LWeek_tex[
