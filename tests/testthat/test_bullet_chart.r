@@ -50,11 +50,11 @@ testthat::test_that("error out for zero targets df", {
 ## Ensure both dataframe and file not provided
 testthat::test_that("Only one dataset inputted: dataframe OR file_name - not both", {
 
-  #expect_error(bullet_chart(dataframe = df, file_name = "inst/data/Indicators_Targets.xlsx"))
+  #expect_error(bullet_chart(dataframe = df, file_name = "inst/data/Indicators_Targets_NEW.xlsx"))
 
   expect_error(bullet_chart_wide(dataframe = test_df), NA)
 
-  #expect_error(bullet_chart(file_name = "inst/data/Indicators_Targets.xlsx"), NA)
+  #expect_error(bullet_chart(file_name = "inst/data/Indicators_Targets_NEW.xlsx"), NA)
 
 })
 
