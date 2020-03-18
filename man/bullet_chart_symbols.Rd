@@ -4,13 +4,23 @@
 \alias{bullet_chart_symbols}
 \title{bullet_chart_symbols}
 \usage{
-bullet_chart_symbols(file_name = NULL, sheet_name = "Sheet1",
-  dataframe = NULL, indicator_name = "indicator_name",
-  actual = "actual", actual_lastweek = "actual_lastweek",
-  actual_lastyear = "actual_lastyear", target = "target",
-  for_year = year(Sys.Date()), chart_type = "static",
-  cal_type = "fis", small = FALSE, legend = TRUE,
-  remove_no_targets = FALSE, show_text = FALSE)
+bullet_chart_symbols(
+  file_name = NULL,
+  sheet_name = "Sheet1",
+  dataframe = NULL,
+  indicator_name = "indicator_name",
+  actual = "actual",
+  actual_lastweek = "actual_lastweek",
+  actual_lastyear = "actual_lastyear",
+  target = "target",
+  for_year = year(Sys.Date()),
+  chart_type = "static",
+  cal_type = "fis",
+  small = FALSE,
+  legend = TRUE,
+  remove_no_targets = FALSE,
+  show_text = FALSE
+)
 }
 \arguments{
 \item{file_name}{path of Excel file}
