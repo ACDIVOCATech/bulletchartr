@@ -4,10 +4,19 @@
 \alias{field_calculator}
 \title{Field calculator for regular scale}
 \usage{
-field_calculator(file_name = NULL, sheet_name = "Sheet1",
-  dataframe = NULL, indicator_name = "variable", info = "info",
-  current = "current", low = "low", medium = "medium",
-  high = "high", target = "target", remove_no_targets = TRUE)
+field_calculator(
+  file_name = NULL,
+  sheet_name = "Sheet1",
+  dataframe = NULL,
+  indicator_name = "variable",
+  info = "info",
+  current = "current",
+  low = "low",
+  medium = "medium",
+  high = "high",
+  target = "target",
+  remove_no_targets = TRUE
+)
 }
 \arguments{
 \item{file_name}{path of Excel file}
