@@ -10,5 +10,3 @@ r_github_packages:
 warnings_are_errors: false
 cache: packages
 dist: xenial
-after_success:
-  - Rscript -e 'covr::codecov(token = "d67ccbbe-5572-49fd-bd85-d4925a776a98")'
