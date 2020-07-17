@@ -4,7 +4,8 @@
 \name{bc_ex}
 \alias{bc_ex}
 \title{example dataframe for regular scale bullet chart}
-\format{This data set contains indicator values and target data
+\format{
+This data set contains indicator values and target data
 used in the examples in README for the regular scale bullet charts.
 
 The variables are as follows:
@@ -18,7 +19,8 @@ The variables are as follows:
   \item medium. medium value of indicator
   \item high. high value of indicator
 
- }}
+ }
+}
 \usage{
 data(bc_ex)
 }
