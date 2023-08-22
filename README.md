@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# bulletchartr <a href='https:/acdivocatech.github.io/bulletchartr'><img src='man/figures/logo.png' align="right" height="139" /></a>
+# bulletchartr <a href='https://acdivocatech.github.io/bulletchartr/'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
